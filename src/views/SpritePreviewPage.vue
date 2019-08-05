@@ -36,11 +36,13 @@
 import axios from 'axios';
 import Sprite from '../classes/Sprite';
 import { Component, Vue, Watch } from 'vue-property-decorator';
+import openSocket from 'socket.io-client';
 
 @Component({})
 export default class SpritePreviewPage extends Vue {
   private sprites: Array<string> = [];
   private selectedSprite: string = '';
+  private socket: any = openSocket('http://localhost:3020');
 
   private jsons: Array<string> = [];
   private selectedJson: string = '';
@@ -58,6 +60,9 @@ export default class SpritePreviewPage extends Vue {
     this.initCanvas();
     this.fetchData();
     this.animationLoop();
+    this.socket.on('connect', () => {
+      this.socket.emit('broadcast', '{ data : fuck}');
+    });
   }
 
   // 음 돌아가는 시나리오를 좀 생각해 보자.
