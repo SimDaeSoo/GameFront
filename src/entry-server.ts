@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import { createApp } from './App';
-import * as fs from 'fs';
 
 export default function createContext(context: any): Promise<Vue> {
     return new Promise<Vue>((resolve, reject) => {

@@ -17,10 +17,10 @@ export default class GamePage extends Vue {
   mounted() {
     this.socket = io('http://localhost:3020');
     this.socket.on('connect', (): void => {
-      this.socket.emit('broadcast', 'addCharacter(1)');
+      this.socket.emit('broadcast', 'addCharacter(1)', Date.now());
 
-      this.socket.on('broadcast', (message: string): void => {
-        console.log(`broadcast: ${message}`);
+      this.socket.on('broadcast', (message: string, date: number): void => {
+        console.log(`Broadcast: ${message} (${Date.now() - date}ms)`);
       });
     });
   }
