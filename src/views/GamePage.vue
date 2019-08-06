@@ -1,5 +1,5 @@
 <template>
-  <div class="SpritePreviewPage">
+  <div class="GamePage">
   </div>
 </template>
 
@@ -8,7 +8,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import io from 'socket.io-client';
 
 @Component({})
-export default class SpritePreviewPage extends Vue {
+export default class GamePage extends Vue {
   private socket: any;
 
   created() {

@@ -19,15 +19,6 @@ var renderer = createRenderer(bundle, {
 var app = express();
 app.use('/dist', express.static(resolve('./dist')));
 app.use('/static', express.static(resolve('./static')));
-app.use('/assets', express.static(resolve('../src/assets')));
-var jsons = fs.readdirSync('src/assets/jsons');
-var sprites = fs.readdirSync('src/assets/sprites');
-app.get('/sprites', function (req, res) {
-    res.send(sprites);
-});
-app.get('/jsons', function (req, res) {
-    res.send(jsons);
-});
 app.get('*', render);
 function render(req, res) {
     res.setHeader("Content-Type", "text/html");

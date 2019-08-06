@@ -5,7 +5,7 @@ export function createRouter() {
     return new VueRouter({
         mode: 'history',
         routes: [
-            { path: '', name: 'SpritePreviewPage', component: function () { return import('../views/SpritePreviewPage.vue'); } }
+            { path: '', name: 'GamePage', component: function () { return import('../views/GamePage.vue'); } }
         ]
     });
 }

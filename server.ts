@@ -26,23 +26,21 @@ const app = express();
 
 app.use('/dist', express.static(resolve('./dist')));
 app.use('/static', express.static(resolve('./static')));
-app.use('/assets', express.static(resolve('../src/assets')));
+// app.use('/assets', express.static(resolve('../src/assets')));
 
 
 // 에바야.. TODO : 서버를 구성해 본적이 없으니.. 이런식으로 밖에 구성을 못하는 모습을 보니.. 한숨밖에 안나온다.. 새로 잘 짤것.. 리팩토링좀 하고.. 잘 짜여진 양식좀 볼것..
 // 음.. 어떻게 만들어야 할까 모르겠다.. 사실 서버부분 인데.. Back-End를 구분하지 않았으니.. 이렇게라도 보내야겠지..?
-const jsons: Array<string> = fs.readdirSync('src/assets/jsons');
-const sprites: Array<string> = fs.readdirSync('src/assets/sprites');
+// const jsons: Array<string> = fs.readdirSync('src/assets/jsons');
+// const sprites: Array<string> = fs.readdirSync('src/assets/sprites');
 
-app.get('/sprites', (req: any, res: any) => {
-    res.send(sprites);
-});
+// app.get('/sprites', (req: any, res: any) => {
+//     res.send(sprites);
+// });
 
-app.get('/jsons', (req: any, res: any) => {
-    res.send(jsons);
-});
-// 에바야.. TODO : 서버를 구성해 본적이 없으니.. 이런식으로 밖에 구성을 못하는 모습을 보니.. 한숨밖에 안나온다.. 새로 잘 짤것.. 리팩토링좀 하고.. 잘 짜여진 양식좀 볼것..
-
+// app.get('/jsons', (req: any, res: any) => {
+//     res.send(jsons);
+// });
 
 app.get('*', render);
 
