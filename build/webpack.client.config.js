@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
