@@ -1,8 +1,12 @@
+import Vue from 'vue';
+;
 import { createApp } from './App';
+import customPixi from './plugins/customPixi';
 var _a = createApp(), app = _a.app, router = _a.router, store = _a.store;
 if (window.__INITIAL_STATE__) {
     store.replaceState(window.__INITIAL_STATE__);
 }
+Vue.use(customPixi);
 router.onReady(function () {
     router.beforeResolve(function (to, from, next) {
         var matched = router.getMatchedComponents(to);

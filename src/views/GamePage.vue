@@ -5,24 +5,23 @@
 
 <script lang='ts'>
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import io from 'socket.io-client';
+import GameClient from '../game/gameClient';
+import GameRenderer from '../game/gameRenderer';
 
 @Component({})
 export default class GamePage extends Vue {
-  private socket: any;
+  private client: GameClient;
+  private gameRenderer: GameRenderer;
 
   created() {
   }
 
   mounted() {
-    this.socket = io('http://localhost:3020');
-    this.socket.on('connect', (): void => {
-      this.socket.emit('broadcast', `addCharacter(${this.socket.id}, 1, { x: ${Math.random()*100}, y: ${Math.random()*100}})`, Date.now());
+    this.client = new GameClient();
+    this.client.initRenderer(this.$pixi);
+    this.client.run();
 
-      this.socket.on('broadcast', (message: string, date: number): void => {
-        console.log(`Broadcast: ${message} (${Date.now() - date}ms)`);
-      });
-    });
+    document.body.appendChild(this.client.gameRenderer.view);
   }
 }
 </script>

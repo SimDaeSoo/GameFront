@@ -8,6 +8,7 @@ declare module 'vue/types/vue' {
     // 3. Vue에 보강할 내용을 선언
     interface Vue {
         readonly $i18n: VueI18n & IVueI18n;
+        readonly $pixi: any;
     }
 
     interface VueConstructor {
