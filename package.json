@@ -4,12 +4,11 @@
   "description": "Game Front End Practice.",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --hot --inline",
     "build": "rimraf dist && tsc && npm run build:client-bundle && npm run build:server-bundle",
     "build:client-bundle": "npm-run cross-env NODE_ENV=production npm-run webpack --config ./build/webpack.client.config.js",
     "build:server-bundle": "npm-run cross-env NODE_ENV=production npm-run webpack --config ./build/webpack.server.config.js",
     "run-dist": "cross-env NODE_ENV=production node ./dist/server.js",
-    "report": "webpack-bundle-analyzer --port 4200 ./dist/client_stat.json"
+    "report": "webpack-bundle-analyzer --port 4200 dist/stats.json"
   },
   "repository": {
     "type": "git",
@@ -49,7 +48,7 @@
     "vuex": "^3.1.0",
     "vuex-router-sync": "^5.0.0",
     "webpack": "^4.29.6",
-    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "^3.3.6"
   }
 }

@@ -1,24 +1,27 @@
-import GameLogic from "./gameLogic";
-import { IScript } from "./scriptParser";
+import GameData from "./gameData";
 
 export default class GameRenderer {
     private app: PIXI.Application;
+    public data: GameData;
 
     constructor(pixi: any) {
         this.app = new pixi.Application({ width: 800, height: 400, autoStart: false });
     }
-    
-    public addCharacter(token: string, position: {x:number,y:number}): void {
+
+    public async update(dt: number): Promise<void> {
+        if (this.data.beGenerates.length > 0) {
+            this.data.beGenerates.forEach((id: string) => {
+                this.data.doneGenerate(id);
+            });
+        }
+        if (this.data.dirties.length > 0) {
+            this.data.dirties.forEach((id: string) => {
+                this.data.clean(id);
+            });
+        }
     }
 
-    public deleteCharacter(token: string, position: {x:number,y:number}): void {
-    }
-
-    public runscript(data: {parsedScript: IScript, result: any}) {
-        console.log('runrun');
-    }
-
-    public get view() {
+    public get view(): any {
         return this.app.view;
     }
 
@@ -28,9 +31,8 @@ export default class GameRenderer {
         });
     }
     
-    public render(t_1: number, t_2: number) {
+    public render(t_1: number, t_2: number): void {
         const dt: number = t_1 - t_2;
-        console.log(`render ${dt.toFixed(2)}ms`);
         this.app.render();
         window.requestAnimationFrame((now: number) => {
             this.render(now, t_1);

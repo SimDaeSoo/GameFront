@@ -1,6 +1,7 @@
 const path = require('path');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     entry: ['./src/entry-client.ts'],
@@ -14,7 +15,12 @@ module.exports = {
     plugins: [
         // make sure to include the plugin!
         new VueSSRClientPlugin(),
-        new VueLoaderPlugin()
+        new VueLoaderPlugin(),
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'disabled',
+            generateStatsFile: true,
+            statsOptions: { source: false }
+        }),
     ],
     module: {
         rules: [
