@@ -17,6 +17,7 @@ export default class GameRenderer {
 
     public async update(dt: number): Promise<void> {
         await this.objectGenerate();
+        await this.objectDelete();
         await this.objectUpdate();
     }
 
@@ -29,6 +30,18 @@ export default class GameRenderer {
                         this.objectDict[type][id].y = this.gameData.data[type][id].position.y;
                         this.gameData.clean(id, type);
                     }
+                });
+            }
+        }
+    }
+
+    private async objectDelete(): Promise<void> {
+        for (let type in this.gameData.beDeletes) {
+            if (this.gameData.beDeletes[type].length > 0) {
+                this.gameData.beDeletes[type].forEach((id: string) => {
+                    this.app.stage.removeChild(this.objectDict[type][id]);
+                    delete this.objectDict[type][id];
+                    this.gameData.doneDelete(id, type);
                 });
             }
         }
@@ -53,6 +66,12 @@ export default class GameRenderer {
 
     public get view(): any {
         return this.app.view;
+    }
+
+    public clearRenderer(): void {
+        for (var i = this.app.stage.children.length - 1; i >= 0; i--) {
+            this.app.stage.removeChild(this.app.stage.children[i]);
+        };
     }
 
     public start() {

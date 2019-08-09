@@ -4,6 +4,7 @@ import Updater from './updater';
 import GameRenderer from './gameRenderer';
 import GameData from './gameData';
 import { system } from '../utils/utils';
+import Keyboard from './keyboard';
 
 // Main Socket Server의 Room과 흡사.
 export default class GameClient {
@@ -12,17 +13,17 @@ export default class GameClient {
     public gameData: GameData;
     public gameRenderer: GameRenderer;
     public updater: Updater;
+    public keyboard: Keyboard;
 
     constructor() {
+        this.keyboard = new Keyboard();
         this.gameLogic = new GameLogic();
         this.updater = new Updater();
-        this.gameData = new GameData();
-        this.gameLogic.gameData = this.gameData;
+        this.gameData;
     }
 
-    public initRenderer(pixi: any): void {
+    public setRenderer(pixi: any): void {
         this.gameRenderer = new GameRenderer(pixi);
-        this.gameRenderer.gameData = this.gameData;
     }
 
     public run(): any {
@@ -36,10 +37,24 @@ export default class GameClient {
             this.io.emit('init');
             this.io.on('initGameData', (message: string, date: number): void => {
                 system({text: `init start`});
+                this.updater.forceDisConnect = () => { this.io.disconnect(); };
+                this.gameData = new GameData();
+                this.gameLogic.gameData = this.gameData;
+                this.gameRenderer.gameData = this.gameData;
+                
                 const data: any = JSON.parse(message);
                 this.gameData.initGameData(data);
+                this.gameRenderer.clearRenderer();
                 console.log(this.gameData);
                 system({text: `init done`});
+
+                this.keyboard.onKeyDown = (keyCode: number) => {
+                    this.io.emit('keydown', keyCode);
+                }
+
+                this.keyboard.onKeyUp = (keyCode: number) => {
+                    this.io.emit('keyup', keyCode);
+                }
 
                 // TODO 다른 곳으로 뺄 것.
                 this.updater.onUpdate(async (dt: number): Promise<void> => {

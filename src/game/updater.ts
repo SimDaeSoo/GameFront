@@ -6,6 +6,7 @@ export default class Updater {
     private updaterID: any;
     private GAME_UPDATE_MILLISEC: number = 8;
     private AVERAGE_LOOPING: number = 30;
+    public forceDisConnect: any;
 
     public onUpdate(callback: Function): void {
         let lastTime: number = Date.now();
@@ -27,9 +28,12 @@ export default class Updater {
         if (this.time >= 1000 * this.AVERAGE_LOOPING) {
             const ups: number = this.updateCount / this.AVERAGE_LOOPING;
             if (this.updateCount < 1000 / this.GAME_UPDATE_MILLISEC * this.AVERAGE_LOOPING * 0.8) {
-                warn({ text: `${ups.toFixed(2)} UPS (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
+                warn({ text: `update: ${ups.toFixed(2)} ups (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
+                if (this.updateCount < 1000 / this.GAME_UPDATE_MILLISEC * this.AVERAGE_LOOPING * 0.2) { 
+                    this.forceDisConnect?this.forceDisConnect():null;
+                }
             } else {
-                system({ text: `${ups.toFixed(2)} UPS (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
+                system({ text: `update: ${ups.toFixed(2)} ups (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
             }
 
             this.time = this.updateCount = 0;

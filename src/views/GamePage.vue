@@ -18,7 +18,7 @@ export default class GamePage extends Vue {
 
   mounted() {
     this.client = new GameClient();
-    this.client.initRenderer(this.$pixi);
+    this.client.setRenderer(this.$pixi);
     this.client.run();
 
     (this.$refs.GamePage as HTMLElement).appendChild(this.client.gameRenderer.view);
