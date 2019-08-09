@@ -1,5 +1,5 @@
 <template>
-  <div class="GamePage">
+  <div class="GamePage" ref="GamePage">
   </div>
 </template>
 
@@ -21,15 +21,15 @@ export default class GamePage extends Vue {
     this.client.initRenderer(this.$pixi);
     this.client.run();
 
-    document.body.appendChild(this.client.gameRenderer.view);
+    (this.$refs.GamePage as HTMLElement).appendChild(this.client.gameRenderer.view);
   }
 }
 </script>
 
 <style scoped>
-.SpritePreviewPage {
+.GamePage {
   width: 100%;
   height: 100%;
-  display: flex;
+  text-align: center;
 }
 </style>

@@ -26,7 +26,7 @@ const app = express();
 
 app.use('/dist', express.static(resolve('./dist')));
 app.use('/static', express.static(resolve('./static')));
-// app.use('/assets', express.static(resolve('../src/assets')));
+app.use('/assets', express.static(resolve('../src/assets')));
 
 
 // 에바야.. TODO : 서버를 구성해 본적이 없으니.. 이런식으로 밖에 구성을 못하는 모습을 보니.. 한숨밖에 안나온다.. 새로 잘 짤것.. 리팩토링좀 하고.. 잘 짜여진 양식좀 볼것..

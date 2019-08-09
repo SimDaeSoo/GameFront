@@ -1,84 +1,99 @@
 export default class GameData {
-    public data: { [id:string]: any };
-    public beGenerates: Array<string>;
-    public beDeletes: Array<string>;
-    public dirties: Array<string>;
+    public worldProperties: any;
+    public data: {[id:string]: any};
+    public beGenerates: {[id:string]: any};
+    public beDeletes: {[id:string]: any};
+    public dirties: {[id:string]: any};
 
     constructor() {
-        this.data = {};
-        this.beGenerates = [];
-        this.beDeletes = [];
-        this.dirties = [];
+        this.worldProperties = {
+            width: 0,
+            height: 0
+        };
+        this.data = {
+            tiles: {},
+            objects: {},
+            characters: {}
+        };
+        this.beGenerates = {
+            tiles: [],
+            objects: [],
+            characters: []
+        };
+        this.beDeletes = {
+            tiles: [],
+            objects: [],
+            characters: []
+        };
+        this.dirties = {
+            tiles: [],
+            objects: [],
+            characters: []
+        };
     }
 
     public setData(id: string, data: any): void {
-        this.data[id] = data;
-        this.dirty(id);
-        console.log(`setData: ${this}`);
+        this.data[data.objectType][id] = data;
+        this.dirty(id, data.objectType);
     }
 
-    public deleteData(id: string): void {
-        delete this.data[id];
+    public deleteData(id: string, type: string): void {
+        delete this.data[type][id];
 
-        if (this.beDeletes.indexOf(id) < 0) {
-            this.beDeletes.push(id);
+        if (this.beDeletes[type].indexOf(id) < 0) {
+            this.beDeletes[type].push(id);
         }
-        console.log(`deleteData: ${this}`);
     }
 
     public insertData(id: string, data: any): void {
-        this.data[id] = data;
+        this.data[data.objectType][id] = data;
 
-        if (this.beGenerates.indexOf(id) < 0) {
-            this.beGenerates.push(id);
+        if (this.beGenerates[data.objectType].indexOf(id) < 0) {
+            this.beGenerates[data.objectType].push(id);
         }
-        console.log(`insertData: ${this}`);
     }
 
-    public initGameData(data: { [id: string]: any }): void {
+    public initGameData(data: any): void {
         this.data = data;
 
-        for (let id in this.data) {
-            if (id && this.beGenerates.indexOf(id) < 0) {
-                this.beGenerates.push(id);
+        for (let type in this.data) {
+            for (let id in this.data[type]) {
+                if (id && this.beGenerates[type].indexOf(id) < 0) {
+                    this.beGenerates[type].push(id);
+                }
             }
         }
-        console.log(`initGameData: ${this}`);
     }
 
-    public doneGenerate(id: string): void {
-        const index: number = this.beGenerates.indexOf(id);
+    public doneGenerate(id: string, type: string): void {
+        const index: number = this.beGenerates[type].indexOf(id);
         
         if (index >= 0) {
-            this.beGenerates.splice(index, 1);
+            this.beGenerates[type].splice(index, 1);
         }
-        console.log(`doneGenerate: ${this}`);
     }
 
-    public doneDelete(id: string): void {
-        const index: number = this.beDeletes.indexOf(id);
+    public doneDelete(id: string, type: string): void {
+        const index: number = this.beDeletes[type].indexOf(id);
         
         if (index >= 0) {
-            this.beDeletes.splice(index, 1);
+            this.beDeletes[type].splice(index, 1);
         }
-        console.log(`doneDelete: ${this}`);
     }
 
-    public dirty(id: string): void {
-        const index: number = this.dirties.indexOf(id);
+    public dirty(id: string, type: string): void {
+        const index: number = this.dirties[type].indexOf(id);
         
         if (index < 0) {
-            this.dirties.push(id);
+            this.dirties[type].push(id);
         }
-        console.log(`dirty: ${this}`);
     }
 
-    public clean(id: string): void {
-        const index: number = this.dirties.indexOf(id);
+    public clean(id: string, type: string): void {
+        const index: number = this.dirties[type].indexOf(id);
         
         if (index >= 0) {
-            this.dirties.splice(index, 1);
+            this.dirties[type].splice(index, 1);
         }
-        console.log(`clean: ${this}`);
     }
 }

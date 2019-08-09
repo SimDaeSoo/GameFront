@@ -19,6 +19,7 @@ var renderer = createRenderer(bundle, {
 var app = express();
 app.use('/dist', express.static(resolve('./dist')));
 app.use('/static', express.static(resolve('./static')));
+app.use('/assets', express.static(resolve('../src/assets')));
 app.get('*', render);
 function render(req, res) {
     res.setHeader("Content-Type", "text/html");

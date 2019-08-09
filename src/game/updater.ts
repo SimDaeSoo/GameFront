@@ -1,7 +1,7 @@
 import { warn, system } from "../utils/utils";
 
 export default class Updater {
-    private avgUpdate: number = 0;
+    private time: number = 0;
     private updateCount: number = 0;
     private updaterID: any;
     private GAME_UPDATE_MILLISEC: number = 8;
@@ -20,11 +20,11 @@ export default class Updater {
     }
 
     private performanceCheck(dt: number): void {
-        this.avgUpdate += dt;
+        this.time += dt;
         this.updateCount ++;
 
         // 125번 Update가 Maximum 성능이 20% 이상 다운되었을 경우 Warning Log띄우기.
-        if (this.avgUpdate >= 1000 * this.AVERAGE_LOOPING) {
+        if (this.time >= 1000 * this.AVERAGE_LOOPING) {
             const ups: number = this.updateCount / this.AVERAGE_LOOPING;
             if (this.updateCount < 1000 / this.GAME_UPDATE_MILLISEC * this.AVERAGE_LOOPING * 0.8) {
                 warn({ text: `${ups.toFixed(2)} UPS (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
@@ -32,7 +32,7 @@ export default class Updater {
                 system({ text: `${ups.toFixed(2)} UPS (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
             }
 
-            this.avgUpdate = this.updateCount = 0;
+            this.time = this.updateCount = 0;
         }
     }
 
