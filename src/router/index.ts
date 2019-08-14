@@ -1,13 +1,11 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from 'vue'
+import Router from 'vue-router'
 
-Vue.use(VueRouter);
+Vue.use(Router);
 
-export function createRouter() {
-    return new VueRouter({
-        mode: 'history',
-        routes: [
-            { path: '', name: 'GamePage', component: () => import('../views/GamePage.vue') }
-        ]
-    });
-}
+export const router: Router = new Router({
+    mode: 'history',
+    routes: [
+        { path: '/', component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue')}
+    ]
+});

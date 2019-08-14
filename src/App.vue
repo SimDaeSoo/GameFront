@@ -1,17 +1,15 @@
-<template lang="html">
-    <router-view id="app"></router-view>
+<template>
+    <div id="app">
+        <router-view></router-view>
+    </div>
 </template>
 
-<script lang='ts'>
-import { Component, Vue, Watch } from 'vue-property-decorator';
+<script lang = 'ts'>
+import { Vue, Component, Prop } from "vue-property-decorator"
 
-@Component
 export default class App extends Vue {
-  created() {
-    // ..
-  }
-  mounted() {
-    // ..
-  }
-}
+};
 </script>
+
+<style lang="scss">
+</style>

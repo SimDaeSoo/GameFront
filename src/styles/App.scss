@@ -1,0 +1,8 @@
+$display-default:block;
+$color-point:#080;
+.lnk{
+    display:$display-default;
+    position:absolute;
+    left:5px;
+    color:$color-point;
+}

@@ -26,19 +26,6 @@ BgCyan = "\x1b[46m"
 BgWhite = "\x1b[47m"
 */
 
-export function gameLog(data: { text: string, ping?: number }) {
-    if (data.ping) {
-        if (data.ping > 100) {
-            console.log('[\x1b[33m%s\x1b[0m] %s \x1b[31m(%s ms)\x1b[0m', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text, data.ping);
-        } else if (data.ping > 50) {
-            console.log('[\x1b[33m%s\x1b[0m] %s \x1b[37m(%s ms)\x1b[0m', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text, data.ping);
-        } else {
-            console.log('[\x1b[33m%s\x1b[0m] %s \x1b[32m(%s ms)\x1b[0m', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text, data.ping);
-        }
-    } else {
-        console.log('[\x1b[33m%s\x1b[0m] %s', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text);
-    }
-}
 export function log(data: { text: string, ping?: number }) {
     if (data.ping) {
         if (data.ping > 100) {
@@ -94,7 +81,7 @@ function format(date: Date, format: string) {
     const weekName: Array<string> = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
     let h;
      
-    return format.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1: any) {
+    return format.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1) {
         switch ($1) {
             case "yyyy": return date.getFullYear();
             case "yy": return (date.getFullYear() % 1000).toString().slice(0,2);
