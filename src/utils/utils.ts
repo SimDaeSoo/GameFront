@@ -25,7 +25,27 @@ BgMagenta = "\x1b[45m"
 BgCyan = "\x1b[46m"
 BgWhite = "\x1b[47m"
 */
+export function loadAniTexture(name, count) {
+    const frames = [];  
+    for (let i = 0; i < count; i++) {
+        frames.push(PIXI.Texture.from(name + i + '.png'));
+    }
+    return frames;
+}
 
+export function gameLog(data: { text: string, ping?: number }) {
+    if (data.ping) {
+        if (data.ping > 100) {
+            console.log('[\x1b[33m%s\x1b[0m] %s \x1b[31m(%s ms)\x1b[0m', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text, data.ping);
+        } else if (data.ping > 50) {
+            console.log('[\x1b[33m%s\x1b[0m] %s \x1b[37m(%s ms)\x1b[0m', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text, data.ping);
+        } else {
+            console.log('[\x1b[33m%s\x1b[0m] %s \x1b[32m(%s ms)\x1b[0m', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text, data.ping);
+        }
+    } else {
+        console.log('[\x1b[33m%s\x1b[0m] %s', format(new Date(), 'yyyy년MM월dd일HH:mm:ss'), data.text);
+    }
+}
 export function log(data: { text: string, ping?: number }) {
     if (data.ping) {
         if (data.ping > 100) {
@@ -77,11 +97,35 @@ export function normalizePort(val: number | string): number | string | boolean {
     }
 }
 
+export function isNested(a: { min: number, max: number }, b: { min: number, max: number }) {
+    if (a.min <= b.max && a.max >= b.min) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function isBounded(a: { min: number, max: number }, b: { min: number, max: number }) {
+    if (a.min <= b.min && a.max >= b.max) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function max(a: number, b: number): number {
+    return a>b?a:b;
+}
+
+export function min(a: number, b: number): number {
+    return a<b?a:b;
+}
+
 function format(date: Date, format: string) {
     const weekName: Array<string> = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
     let h;
      
-    return format.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1) {
+    return format.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1: any) {
         switch ($1) {
             case "yyyy": return date.getFullYear();
             case "yy": return (date.getFullYear() % 1000).toString().slice(0,2);

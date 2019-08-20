@@ -53,7 +53,11 @@ const webpackConfig = {
         ])
     ],
     resolve: {
-        extensions: ['.ts', '.js', '.json']
+        extensions: ['.ts', '.js', '.json'],
+        alias: {
+            assets: path.resolve('src/assets/'),
+            json: path.resolve('src/json/')
+        }
     }
 };
 

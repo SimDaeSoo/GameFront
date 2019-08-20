@@ -14,63 +14,63 @@ export default class GameClient {
     public gameRenderer: GameRenderer;
     public updater: Updater;
     public keyboard: Keyboard;
+    public isInit: boolean;
 
     constructor() {
         this.keyboard = new Keyboard();
         this.gameLogic = new GameLogic();
+        this.gameRenderer = new GameRenderer();
         this.updater = new Updater();
+        this.isInit = false;
         this.gameData;
     }
 
-    public setRenderer(pixi: any): void {
-        this.gameRenderer = new GameRenderer(pixi);
-    }
-
     public run(): any {
-        let isInit: boolean = false;
         this.io = io.connect('http://localhost:3020');
 
-        this.io.on('connect', (socket: any): void => {
+        this.io.on('connect', (): void => {
             system({text: 'connect success!'});
             system({text: `socket id : ${this.io.id}`});
 
             this.io.emit('init');
-            this.io.on('initGameData', (message: string, date: number): void => {
-                system({text: `init start`});
-                this.updater.forceDisConnect = () => { this.io.disconnect(); };
-                this.gameData = new GameData();
-                this.gameLogic.gameData = this.gameData;
-                this.gameRenderer.gameData = this.gameData;
-                
-                const data: any = JSON.parse(message);
-                this.gameData.initGameData(data);
-                this.gameRenderer.clearRenderer();
-                console.log(this.gameData);
-                system({text: `init done`});
-
-                this.keyboard.onKeyDown = (keyCode: number) => {
-                    this.io.emit('keydown', keyCode);
-                }
-
-                this.keyboard.onKeyUp = (keyCode: number) => {
-                    this.io.emit('keyup', keyCode);
-                }
-
-                // TODO 다른 곳으로 뺄 것.
-                this.updater.onUpdate(async (dt: number): Promise<void> => {
-                    await this.gameLogic.update(dt);
-                    await this.gameRenderer.update(dt);
-                });
-                this.gameRenderer.start();
-                isInit = true;
-            });
-
-            this.io.on('broadcast', (message: string, date: number): void => {
-                if (isInit) {
-                    const command: any = JSON.parse(message);
-                    this.gameLogic.runCommand(command, date);
-                }
-            });
+            this.io.on('initGameData', (message: string, date: number): void => { this.initGameData(message, date); });
+            this.io.on('broadcast', (message: string, date: number): void => { this.broadcast(message, date); });
         });
+    }
+
+    public broadcast(message: string, date: number): void {
+        if (this.isInit) {
+            const command: any = JSON.parse(message);
+            this.gameLogic.runCommand(command, date);
+        }
+    }
+
+    public initGameData(message: string, date: number): void {
+        system({text: `init start`});
+        this.updater.forceDisConnect = () => { this.io.disconnect(); };
+        this.gameData = new GameData();
+        this.gameLogic.gameData = this.gameData;
+        this.gameRenderer.gameData = this.gameData;
+        
+        const data: any = JSON.parse(message);
+        this.gameData.initGameData(data);
+        this.gameRenderer.clearRenderer();
+        system({text: `init done`});
+
+        this.keyboard.onKeyDown = (keyCode: number) => {
+            this.io.emit('keydown', keyCode);
+        }
+
+        this.keyboard.onKeyUp = (keyCode: number) => {
+            this.io.emit('keyup', keyCode);
+        }
+
+        // TODO 다른 곳으로 뺄 것.
+        this.updater.onUpdate(async (dt: number): Promise<void> => {
+            await this.gameLogic.update(dt);
+            await this.gameRenderer.update(dt);
+        });
+        this.gameRenderer.start();
+        this.isInit = true;
     }
 }

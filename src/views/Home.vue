@@ -1,30 +1,47 @@
 <template>
-  <div class="GamePage" ref="GamePage">
+  <div class="Home" ref="Home">
   </div>
 </template>
 
 <script lang = 'ts'>
 import { Vue, Component, Prop } from "vue-property-decorator";
 import GameClient from '../game/gameClient';
-import GameRenderer from '../game/gameRenderer';
+import Loader from '../game/loader';
 
 @Component
 export default class Home extends Vue {
   private client: GameClient;
-  private gameRenderer: GameRenderer;
+  private loader :Loader;
 
   created() {
   }
 
   mounted() {
-    this.client = new GameClient();
-    this.client.setRenderer(PIXI);
-    this.client.run();
+    this.loader = new Loader;
+    this.$preload();
 
-    (this.$refs.GamePage as HTMLElement).appendChild(this.client.gameRenderer.view);
+    this.loader.load(() =>{
+      this.client = new GameClient();
+      this.client.run();
+
+      (this.$refs.Home as HTMLElement).appendChild(this.client.gameRenderer.view);
+    });
+  }
+
+  async $preload() {
+    const preloads = require('../json/preloads.json');
+
+    for(const r of preloads) {
+      this.loader.add(...r);
+    }
+
+    await this.loader.asyncLoad();
   }
 };
 </script>
 
 <style>
+.Home {
+  text-align: center;
+}
 </style>

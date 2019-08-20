@@ -2,7 +2,6 @@ import GameData from "./gameData";
 import { system } from "../utils/utils";
 
 export default class GameRenderer {
-    private pixi: any;
     private app: PIXI.Application;
     public gameData: GameData;
     private time: number = 0;
@@ -10,9 +9,8 @@ export default class GameRenderer {
     private AVERAGE_LOOPING: number = 30;
     private objectDict: any = { tiles: {}, characters: {}, objects: {}};
 
-    constructor(pixi: any) {
-        this.pixi = pixi;
-        this.app = new pixi.Application({ width: 1400, height: 800, autoStart: false });
+    constructor() {
+        this.app = new PIXI.Application({ width: 1050, height: 600, autoStart: false });
     }
 
     public async update(dt: number): Promise<void> {
@@ -23,44 +21,41 @@ export default class GameRenderer {
 
     private async objectUpdate(): Promise<void> {
         for (let type in this.gameData.dirties) {
-            if (this.gameData.dirties[type].length > 0) {
-                this.gameData.dirties[type].forEach((id: string) => {
-                    if (this.objectDict[type][id]) {
-                        this.objectDict[type][id].x = this.gameData.data[type][id].position.x;
-                        this.objectDict[type][id].y = this.gameData.data[type][id].position.y;
-                        this.gameData.clean(id, type);
-                    }
-                });
-            }
+            this.gameData.dirties[type].forEach((id: string) => {
+                const obj = this.objectDict[type][id];
+                const data = this.gameData.data[type][id].position;
+
+                if (obj && data && (Math.round(obj.x) !== Math.round(data.x) || Math.round(obj.y) !== Math.round(data.y))) {
+                    obj.x = data.x;
+                    obj.y = data.y;
+                    this.gameData.clean(id, type);
+                }
+            });
         }
     }
 
     private async objectDelete(): Promise<void> {
         for (let type in this.gameData.beDeletes) {
-            if (this.gameData.beDeletes[type].length > 0) {
-                this.gameData.beDeletes[type].forEach((id: string) => {
-                    this.app.stage.removeChild(this.objectDict[type][id]);
-                    delete this.objectDict[type][id];
-                    this.gameData.doneDelete(id, type);
-                });
-            }
+            this.gameData.beDeletes[type].forEach((id: string) => {
+                this.app.stage.removeChild(this.objectDict[type][id]);
+                delete this.objectDict[type][id];
+                this.gameData.doneDelete(id, type);
+            });
         }
     }
 
     private async objectGenerate(): Promise<void> {
         for (let type in this.gameData.beGenerates) {
-            if (this.gameData.beGenerates[type].length > 0) {
-                this.gameData.beGenerates[type].forEach((id: string) => {
-                    // 임시 Tile Map TODO: 제거.
-                    const newTile = this.pixi.Sprite.from('../assets/tile.png');
-                    newTile.x = this.gameData.data[type][id].position.x;
-                    newTile.y = this.gameData.data[type][id].position.y;
-                    this.app.stage.addChild(newTile);
-                    
-                    this.objectDict[type][id] = newTile;
-                    this.gameData.doneGenerate(id, type);
-                });
-            }
+            this.gameData.beGenerates[type].forEach((id: string) => {
+                // 임시 Tile Map TODO: 제거.
+                const newTile = PIXI.Sprite.from('src/assets/tile.png');
+                newTile.x = this.gameData.data[type][id].position.x;
+                newTile.y = this.gameData.data[type][id].position.y;
+                this.app.stage.addChild(newTile);
+                
+                this.objectDict[type][id] = newTile;
+                this.gameData.doneGenerate(id, type);
+            });
         }
     }
 

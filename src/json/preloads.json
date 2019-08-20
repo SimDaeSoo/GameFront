@@ -1,0 +1,7 @@
+[
+    ["tile", "assets/tile.png"],
+    ["assets/Terrain Tileset.json"],
+    ["assets/basic_bow_idle.json"],
+    ["assets/basic_bow_run.json"],
+    ["assets/basic_bow_attack_no_arrow.json"]
+]
