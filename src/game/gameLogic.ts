@@ -29,8 +29,11 @@ export default class GameLogic {
         const result: Array<any> = CollisionEngine.getHitObjects(character, tiles, dt);
 
         if (result.length > 0) {
-            console.log(result[0]);
-            CollisionEngine.applyPhysics(character, result[0]);
+            result.forEach((collisionData) => {
+                CollisionEngine.applyTilePhysics(character, collisionData);
+            });
+        } else {
+            character.forceVector.y = character.forceVector.y === 0?0.0002:character.forceVector.y;
         }
     }
 

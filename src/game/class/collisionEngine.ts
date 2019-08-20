@@ -1,4 +1,28 @@
 export default class CollisionEngine {
+    public static applyTilePhysics(objA: any, collisionResult: any): any {
+        const dt: number = collisionResult.time;
+        const objB: any = collisionResult.object;
+        
+        // xAxis
+        if (collisionResult.direction.left || collisionResult.direction.right) {
+            const vectorA = objA.vector.x + objB.weight * (objB.vector.x - objA.vector.x) / (objA.weight + objB.weight) * 2;
+            objA.position.x += objA.vector.x * dt + (collisionResult.direction.left?0.2:-0.2);
+            objA.vector.x = CollisionEngine.translateTinyValue(vectorA)*0;
+        }
+
+        // yAxis
+        if (collisionResult.direction.up || collisionResult.direction.down) {
+            const vectorA = objA.vector.y + objB.weight * (objB.vector.y - objA.vector.y) / (objA.weight + objB.weight) * 2;
+            objA.position.y += objA.vector.y * dt + (collisionResult.direction.up?0.2:-0.2);
+            objA.vector.y = CollisionEngine.translateTinyValue(vectorA)*0;
+        }
+
+        return {
+            objA: objA,
+            objB: objB
+        };
+    }
+    
     public static applyPhysics(objA: any, collisionResult: any): any {
         const dt: number = collisionResult.time;
         const objB: any = collisionResult.object;
@@ -32,14 +56,15 @@ export default class CollisionEngine {
     public static getHitObjects(objA: any, objects: Array<any>, dt: number): Array<any> {
         let result: Array<any> = [];
         let time: number = Infinity;
+        const tickInterpolation: number = 24;
 
         objects.forEach((objB: any) => {
             const hitTestResult: any = CollisionEngine.hitTest(objA, objB);
 
-            if (hitTestResult.time <= dt && hitTestResult.time >= 0 && time > hitTestResult.time) {
+            if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time > hitTestResult.time) {
                 result = [hitTestResult];
                 time = hitTestResult.time;
-            } else if (hitTestResult.time <= dt && hitTestResult.time >= 0 && time === hitTestResult.time) {
+            } else if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time === hitTestResult.time) {
                 result.push(hitTestResult);
                 time = hitTestResult.time;
             }
