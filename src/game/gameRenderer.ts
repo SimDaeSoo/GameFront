@@ -1,7 +1,8 @@
 import GameData from "./gameData";
 import { system } from "../utils/utils";
+import { EventEmitter } from "events";
 
-export default class GameRenderer {
+export default class GameRenderer extends EventEmitter{
     private app: PIXI.Application;
     public gameData: GameData;
     private time: number = 0;
@@ -10,7 +11,10 @@ export default class GameRenderer {
     private objectDict: any = { tiles: {}, characters: {}, objects: {}};
 
     constructor() {
+        super();
         this.app = new PIXI.Application({ width: 1050, height: 600, autoStart: false });
+        // this.app.stage.scale.x = 0.2;
+        // this.app.stage.scale.y = 0.2;
     }
 
     public async update(dt: number): Promise<void> {
@@ -23,11 +27,11 @@ export default class GameRenderer {
         for (let type in this.gameData.dirties) {
             this.gameData.dirties[type].forEach((id: string) => {
                 const obj = this.objectDict[type][id];
-                const data = this.gameData.data[type][id].position;
+                const data = this.gameData.data[type][id];
 
-                if (obj && data && (Math.round(obj.x) !== Math.round(data.x) || Math.round(obj.y) !== Math.round(data.y))) {
-                    obj.x = data.x;
-                    obj.y = data.y;
+                if (obj && data && (Math.round(obj.x) !== Math.round(data.position.x) || Math.round(obj.y) !== Math.round(data.position.y))) {
+                    obj.x = data.position.x;
+                    obj.y = data.position.y;
                     this.gameData.clean(id, type);
                 }
             });
@@ -53,6 +57,17 @@ export default class GameRenderer {
                 newTile.y = this.gameData.data[type][id].position.y;
                 newTile.scale.x = this.gameData.data[type][id].scale.x;
                 newTile.scale.y = this.gameData.data[type][id].scale.y;
+                newTile.interactive = true;
+                newTile.on('click', ()=>{
+                    const command = {
+                        script: 'deleteCharacter',
+                        data: {
+                            id: id,
+                            objectType: type
+                        }
+                    };
+                    this.emit('broadcast', command)
+                })
                 this.app.stage.addChild(newTile);
                 
                 this.objectDict[type][id] = newTile;

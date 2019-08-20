@@ -40,7 +40,9 @@ export default class GameClient {
 
     public broadcast(message: string, date: number): void {
         if (this.isInit) {
+            console.log('broadcast');
             const command: any = JSON.parse(message);
+            console.log(command);
             this.gameLogic.runCommand(command, date);
         }
     }
@@ -64,6 +66,10 @@ export default class GameClient {
         this.keyboard.onKeyUp = (keyCode: number) => {
             this.io.emit('keyup', keyCode);
         }
+
+        this.gameRenderer.on('broadcast', (data) => {
+            this.io.emit('broadcast', JSON.stringify(data), Date.now());
+        })
 
         // TODO 다른 곳으로 뺄 것.
         this.updater.onUpdate(async (dt: number): Promise<void> => {

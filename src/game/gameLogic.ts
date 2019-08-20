@@ -40,19 +40,15 @@ export default class GameLogic {
     private getTiles(character: any): Array<any> {
         const result: Array<any> = [];
 
-        // const pos = { x: Math.round(character.position.x / 16) - 1, y: Math.round(character.position.y / 16) - 1 };
-        // const size = { x: Math.round(character.size.x / 16 + 0.5) + 2, y: Math.round(character.size.y / 16 + 0.5) + 2 };
+        const pos = { x: Math.round(character.position.x / 24) - 2, y: Math.round(character.position.y / 24) - 2 };
+        const size = { x: Math.round(character.size.x / 24 + 0.5) + 4, y: Math.round(character.size.y / 24 + 0.5) + 4 };
 
-        // for (let i = pos.x; i < pos.x + size.x; i++) {
-        //     for (let j = pos.y; j < pos.y + size.y; j++) {
-        //         if (this.gameData.data['tiles'][i + j * this.gameData.worldProperties.width]) {
-        //             result.push(this.gameData.data['tiles'][i + j * this.gameData.worldProperties.width]);
-        //         }
-        //     }
-        // }
-
-        for (let key in this.gameData.data['tiles']) {
-            result.push(this.gameData.data['tiles'][key]);
+        for (let i = pos.x; i < pos.x + size.x; i++) {
+            for (let j = pos.y; j < pos.y + size.y; j++) {
+                if (this.gameData.data['tiles'][i + j * this.gameData.worldProperties.width]) {
+                    result.push(this.gameData.data['tiles'][i + j * this.gameData.worldProperties.width]);
+                }
+            }
         }
 
         return result;
