@@ -97,30 +97,6 @@ export function normalizePort(val: number | string): number | string | boolean {
     }
 }
 
-export function isNested(a: { min: number, max: number }, b: { min: number, max: number }) {
-    if (a.min <= b.max && a.max >= b.min) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-export function isBounded(a: { min: number, max: number }, b: { min: number, max: number }) {
-    if (a.min <= b.min && a.max >= b.max) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-export function max(a: number, b: number): number {
-    return a>b?a:b;
-}
-
-export function min(a: number, b: number): number {
-    return a<b?a:b;
-}
-
 function format(date: Date, format: string) {
     const weekName: Array<string> = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
     let h;

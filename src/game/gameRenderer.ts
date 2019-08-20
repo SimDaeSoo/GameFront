@@ -51,6 +51,8 @@ export default class GameRenderer {
                 const newTile = PIXI.Sprite.from('src/assets/tile.png');
                 newTile.x = this.gameData.data[type][id].position.x;
                 newTile.y = this.gameData.data[type][id].position.y;
+                newTile.scale.x = this.gameData.data[type][id].scale.x;
+                newTile.scale.y = this.gameData.data[type][id].scale.y;
                 this.app.stage.addChild(newTile);
                 
                 this.objectDict[type][id] = newTile;
