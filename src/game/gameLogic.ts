@@ -59,8 +59,8 @@ export default class GameLogic {
         for (let type in this.gameData.data) {
             for (let id in this.gameData.data[type]) {
                 if (this.gameData.data[type][id].forceVector.x !== 0 || this.gameData.data[type][id].forceVector.y !== 0) {
-                    this.gameData.data[type][id].vector.x += dt * this.gameData.data[type][id].forceVector.x;
-                    this.gameData.data[type][id].vector.y += dt * this.gameData.data[type][id].forceVector.y;
+                    this.gameData.data[type][id].vector.x += dt * this.gameData.data[type][id].forceVector.x / this.gameData.data[type][id].weight;
+                    this.gameData.data[type][id].vector.y += dt * this.gameData.data[type][id].forceVector.y / this.gameData.data[type][id].weight;
                     this.gameData.dirty(id, type);
                 }
             }

@@ -1,9 +1,11 @@
 import GameData from "./gameData";
 import { system } from "../utils/utils";
 import { EventEmitter } from "events";
+import Camera from "./class/camera";
 
 export default class GameRenderer extends EventEmitter{
     private app: PIXI.Application;
+    public camera: Camera;
     public gameData: GameData;
     private time: number = 0;
     private renderCount: number = 0;
@@ -12,14 +14,18 @@ export default class GameRenderer extends EventEmitter{
 
     constructor() {
         super();
+        const SCREEN_WIDTH: number = 1050;
+        const SCREEN_HEIGHT: number = 600;
+
         this.app = new PIXI.Application({
-            width: 1050,
-            height: 600,
+            width: SCREEN_WIDTH,
+            height: SCREEN_HEIGHT,
             backgroundColor: 0x71B3FF,
             autoStart: false
         });
-        // this.app.stage.scale.x = 0.2;
-        // this.app.stage.scale.y = 0.2;
+        this.camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.camera.setStage(this.app.stage);
+        this.camera.setZoom(1);
     }
 
     public async update(dt: number): Promise<void> {
@@ -45,7 +51,7 @@ export default class GameRenderer extends EventEmitter{
 
     private async objectDelete(): Promise<void> {
         for (let type in this.gameData.beDeletes) {
-            this.gameData.beDeletes[type].forEach((id: string) => {
+            this.gameData.beDeletes[type].forEach((id: string): void => {
                 this.app.stage.removeChild(this.objectDict[type][id]);
                 delete this.objectDict[type][id];
                 this.gameData.doneDelete(id, type);
@@ -55,7 +61,7 @@ export default class GameRenderer extends EventEmitter{
 
     private async objectGenerate(): Promise<void> {
         for (let type in this.gameData.beGenerates) {
-            this.gameData.beGenerates[type].forEach((id: string) => {
+            this.gameData.beGenerates[type].forEach((id: string): void => {
                 // 임시 Tile Map TODO: 제거.
                 let fileName = '';
                 if (this.gameData.data[type][id].tileNumber !== undefined) {
@@ -69,15 +75,25 @@ export default class GameRenderer extends EventEmitter{
                 newTile.scale.x = this.gameData.data[type][id].scale.x;
                 newTile.scale.y = this.gameData.data[type][id].scale.y;
                 newTile.interactive = true;
-                newTile.on('click', ()=>{
-                    const command = {
-                        script: 'deleteCharacter',
-                        data: {
-                            id: id,
-                            objectType: type
-                        }
-                    };
-                    this.emit('broadcast', command)
+                newTile.on('click', (): void => {
+                    this.camera.setObject(this.gameData.data[type][id]);
+                    if (this.camera.targetZoom < 0.5) {
+                        this.camera.setZoom(0.5);
+                    } else if(this.camera.targetZoom < 1) {
+                        this.camera.setZoom(1);
+                    } else if(this.camera.targetZoom < 2) {
+                        this.camera.setZoom(2);
+                    } else {
+                        this.camera.setZoom(0.2);
+                    }
+                    // const command = {
+                    //     script: 'deleteCharacter',
+                    //     data: {
+                    //         id: id,
+                    //         objectType: type
+                    //     }
+                    // };
+                    // this.emit('broadcast', command)
                 })
                 this.app.stage.addChild(newTile);
                 
@@ -98,7 +114,7 @@ export default class GameRenderer extends EventEmitter{
     }
 
     public start() {
-        window.requestAnimationFrame((now: number) => {
+        window.requestAnimationFrame((now: number): void => {
             this.render(now, 0);
         });
     }
@@ -106,8 +122,9 @@ export default class GameRenderer extends EventEmitter{
     public render(t_1: number, t_2: number): void {
         const dt: number = t_1 - t_2;
         this.checkRenderingPerformance(dt);
+        this.camera.update();
         this.app.render();
-        window.requestAnimationFrame((now: number) => {
+        window.requestAnimationFrame((now: number): void => {
             this.render(now, t_1);
         });
     }

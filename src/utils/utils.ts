@@ -1,3 +1,5 @@
+import { TILE_SIZE } from "../game/define";
+
 /*
 Reset = "\x1b[0m"
 Bright = "\x1b[1m"
@@ -117,3 +119,27 @@ function format(date: Date, format: string) {
         }
     });
 };
+
+export function changeTileNumber(map: any, key: string, width: number): void {
+    const x = map[key].position.x / TILE_SIZE.WIDTH;
+    const y = map[key].position.y / TILE_SIZE.HEIGHT;
+    if ((map[(x-1)+y*width] && x > 0) && (map[(x+1)+y*width] && x < width - 1)) {
+        map[key].tileNumber = 1;
+    } else if (map[(x-1)+y*width] && x > 0) {
+        map[key].tileNumber = 2;
+    } else if (map[(x+1)+y*width] && x < width - 1) {
+        map[key].tileNumber = 0;
+    } else {
+        map[key].tileNumber = 3;
+    }
+    
+    if (map[x+(y-1)*width] && map[x+(y+1)*width]) {
+        map[key].tileNumber += 4;
+    } else if (map[x+(y-1)*width]) {
+        map[key].tileNumber += 8;
+    } else if (map[x+(y+1)*width]) {
+        map[key].tileNumber += 0;
+    } else {
+        map[key].tileNumber += 12;
+    }
+}
