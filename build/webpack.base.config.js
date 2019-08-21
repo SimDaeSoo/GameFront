@@ -42,7 +42,7 @@ const webpackConfig = {
         }),
         new VueLoaderPlugin(),
         new webpack.ProvidePlugin({
-          PIXI: 'pixi.js',
+            PIXI: ['pixi.js']
         }),
         new CopyWebpackPlugin([
           {
