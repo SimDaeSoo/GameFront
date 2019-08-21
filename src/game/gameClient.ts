@@ -40,9 +40,7 @@ export default class GameClient {
 
     public broadcast(message: string, date: number): void {
         if (this.isInit) {
-            console.log('broadcast');
             const command: any = JSON.parse(message);
-            console.log(command);
             this.gameLogic.runCommand(command, date);
         }
     }

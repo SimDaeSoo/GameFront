@@ -1,5 +1,6 @@
 import GameData from "./gameData";
 import CollisionEngine from './class/collisionEngine';
+import { TILE_SIZE } from "./define";
 
 export default class GameLogic {
     public gameData: GameData;
@@ -40,8 +41,8 @@ export default class GameLogic {
     private getTiles(character: any): Array<any> {
         const result: Array<any> = [];
 
-        const pos = { x: Math.round(character.position.x / 24) - 2, y: Math.round(character.position.y / 24) - 2 };
-        const size = { x: Math.round(character.size.x / 24 + 0.5) + 4, y: Math.round(character.size.y / 24 + 0.5) + 4 };
+        const pos = { x: Math.round(character.position.x / TILE_SIZE.WIDTH) - 2, y: Math.round(character.position.y / TILE_SIZE.HEIGHT) - 2 };
+        const size = { x: Math.round(character.size.x / TILE_SIZE.WIDTH + 0.5) + 4, y: Math.round(character.size.y / TILE_SIZE.HEIGHT + 0.5) + 4 };
 
         for (let i = pos.x; i < pos.x + size.x; i++) {
             for (let j = pos.y; j < pos.y + size.y; j++) {

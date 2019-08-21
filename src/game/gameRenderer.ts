@@ -12,7 +12,12 @@ export default class GameRenderer extends EventEmitter{
 
     constructor() {
         super();
-        this.app = new PIXI.Application({ width: 1050, height: 600, autoStart: false });
+        this.app = new PIXI.Application({
+            width: 1050,
+            height: 600,
+            backgroundColor: 0x71B3FF,
+            autoStart: false
+        });
         // this.app.stage.scale.x = 0.2;
         // this.app.stage.scale.y = 0.2;
     }
@@ -30,8 +35,8 @@ export default class GameRenderer extends EventEmitter{
                 const data = this.gameData.data[type][id];
 
                 if (obj && data && (Math.round(obj.x) !== Math.round(data.position.x) || Math.round(obj.y) !== Math.round(data.position.y))) {
-                    obj.x = data.position.x;
-                    obj.y = data.position.y;
+                    obj.x = Math.round(data.position.x);
+                    obj.y = Math.round(data.position.y);
                     this.gameData.clean(id, type);
                 }
             });
@@ -52,7 +57,13 @@ export default class GameRenderer extends EventEmitter{
         for (let type in this.gameData.beGenerates) {
             this.gameData.beGenerates[type].forEach((id: string) => {
                 // 임시 Tile Map TODO: 제거.
-                const newTile = PIXI.Sprite.from('src/assets/tile.png');
+                let fileName = '';
+                if (this.gameData.data[type][id].tileNumber !== undefined) {
+                    fileName = `Terrain Tileset${this.gameData.data[type][id].tileNumber}.png`;
+                } else {
+                    fileName = 'src/assets/hitBox.png';
+                }
+                const newTile = PIXI.Sprite.from(fileName);
                 newTile.x = this.gameData.data[type][id].position.x;
                 newTile.y = this.gameData.data[type][id].position.y;
                 newTile.scale.x = this.gameData.data[type][id].scale.x;
