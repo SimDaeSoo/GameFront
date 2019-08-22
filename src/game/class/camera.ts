@@ -1,4 +1,7 @@
+import { TILE_SIZE } from "../define";
+
 export default class Camera {
+    private renderer: any;
     private screenWidth: number;
     private screenHeight: number;
     private targetVibration: number = 0;
@@ -16,12 +19,17 @@ export default class Camera {
     }
 
     public update(): void {
-        const COEIFFICIENT = 0.05;
+        const FOLLOW_COEIFFICIENT = 0.06;
+        const ZOOM_COEIFFICIENT = 0.05;
         this.clearVibration();
-        this.updateFollowZoom(COEIFFICIENT);
-        this.updateFollowObj(COEIFFICIENT);
+        this.updateFollowObj(FOLLOW_COEIFFICIENT);
+        this.updateFollowZoom(ZOOM_COEIFFICIENT);
         this.applyVibration();
         this.updateStage();
+    }
+
+    public setRenderer(renderer: any): void {
+        this.renderer = renderer;
     }
 
     public setVibration(strength: number): void {
@@ -37,7 +45,11 @@ export default class Camera {
     }
 
     public setZoom(value): void {
-        this.targetZoom = value;
+        if (this.stage.width !== 0 && value < this.screenWidth / (this.stage.width / this.stage.scale.x)) {
+            this.targetZoom = this.screenWidth / (this.stage.width / this.stage.scale.x);
+        } else {
+            this.targetZoom = value;
+        }
     }
 
     private clearVibration(): void {
@@ -50,9 +62,20 @@ export default class Camera {
 
     private updateStage(): void {
         if (this.stage === undefined) return;
-
+        const data: any = this.renderer.gameData;
         this.stage.scale.x = this.currentZoom;
         this.stage.scale.y = this.currentZoom;
+
+        if (this.position.x >= -1 * this.currentZoom) {
+            this.position.x = 0;
+        } else if (data && data.worldProperties.width > 0 && this.position.x <= -(data.worldProperties.width * TILE_SIZE.WIDTH * this.currentZoom - this.screenWidth) + 1 * this.currentZoom) {
+            this.position.x = -(data.worldProperties.width * TILE_SIZE.WIDTH * this.currentZoom - this.screenWidth);
+        }
+
+        if (data && data.worldProperties.height > 0 && this.position.y <= -((data.worldProperties.height) * TILE_SIZE.HEIGHT * this.currentZoom - this.screenHeight) + 1 * this.currentZoom) {
+            this.position.y = -((data.worldProperties.height) * TILE_SIZE.HEIGHT * this.currentZoom - this.screenHeight);
+        }
+        
         this.stage.position.x = Math.round(this.position.x);
         this.stage.position.y = Math.round(this.position.y);
     }
@@ -62,10 +85,6 @@ export default class Camera {
 
         this.position.x += ((-this.obj.position.x * this.currentZoom + this.screenWidth / 2) - this.position.x) * coeifficient;
         this.position.y += ((-this.obj.position.y * this.currentZoom + this.screenHeight / 2) - this.position.y) * coeifficient;
-
-        // if (this.position.x > 0) {
-        //     this.position.x = 0;
-        // }
     }
 
     private updateFollowZoom(coeifficient: number): void {

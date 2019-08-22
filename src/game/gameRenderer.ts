@@ -4,22 +4,31 @@ import { EventEmitter } from "events";
 import Camera from "./class/camera";
 import Display from 'pixi-layers';
 import { TILE_SIZE } from "./define";
+import RayCaster from './class/rayCaster';
 
 export default class GameRenderer extends EventEmitter{
+    // Application
     private app: PIXI.Application;
+    private SCREEN_WIDTH: number = 1050;
+    private SCREEN_HEIGHT: number = 600;
+    public camera: Camera;
+    public mainContainer: any;
+    public mapContainer: any;
 
+    // Lighting
     private display: any = Display;
     private lighting: PIXI.display.Layer;
     private lightbulb: PIXI.Graphics;
-    public container: any;
-    public camera: Camera;
+    private rayCaster: RayCaster;
+    
+    // GameData
     public gameData: GameData;
+    private objectDict: any = { tiles: {}, characters: {}, objects: {}};
+
+    // Rendering Performance
     private time: number = 0;
     private renderCount: number = 0;
     private AVERAGE_LOOPING: number = 30;
-    private objectDict: any = { tiles: {}, characters: {}, objects: {}};
-    private SCREEN_WIDTH: number = 1050;
-    private SCREEN_HEIGHT: number = 600;
 
     constructor() {
         super();
@@ -31,18 +40,19 @@ export default class GameRenderer extends EventEmitter{
             autoStart: false,
         });
         this.app.stage = new PIXI.display.Stage();
-        this.container = new PIXI.Container();
-        this.app.stage.addChild(this.container);
+        this.mainContainer = new PIXI.Container();
+        this.app.stage.addChild(this.mainContainer);
 
         this.camera = new Camera(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
-        this.camera.setStage(this.container);
+        this.camera.setStage(this.mainContainer);
         this.camera.setZoom(1);
+        this.camera.setRenderer(this);
 
         // ----------------------------- Lightings
         this.lighting = new PIXI.display.Layer();
         this.lighting.on('display', (element) => { element.blendMode = PIXI.BLEND_MODES.ADD; });
         this.lighting.useRenderTexture = true;
-        this.lighting.clearColor = [0.03, 0.03, 0.03, 1];
+        this.lighting.clearColor = [0.12, 0.12, 0.12, 1];
         this.app.stage.addChild(this.lighting);
 
         const lightingSprite: PIXI.Sprite = new PIXI.Sprite(this.lighting.getRenderTexture());
@@ -55,6 +65,9 @@ export default class GameRenderer extends EventEmitter{
         this.lightbulb.drawRect(0, 0, this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
         this.lightbulb.endFill();
         this.app.stage.addChild(this.lightbulb);
+
+        this.rayCaster = new RayCaster();
+        this.rayCaster.setLightingLayer(this.lighting);
         // ----------------------------- Lightings
     }
 
@@ -63,12 +76,32 @@ export default class GameRenderer extends EventEmitter{
         await this.objectDelete();
         await this.objectUpdate();
         await this.setLighting();
+        this.rayCaster.update();
+    }
+
+    public initWorld(): void {
+        const worldSize: any = {
+            width: this.gameData.worldProperties.width * TILE_SIZE.WIDTH,
+            height: (this.gameData.worldProperties.height + 17) * TILE_SIZE.HEIGHT
+        };
+
+        this.objectGenerate();
+        this.rayCaster.setObjects(this.gameData.data.tiles);
+        this.rayCaster.setPosition({ x: worldSize.width / 2, y: 0 });
+        this.rayCaster.initLay();
+        this.rayCaster.makeLay();
+        this.mainContainer.addChild(this.rayCaster.rayContainer);
     }
 
     private async setLighting(): Promise<void> {
         if (this.gameData.worldProperties.height === 0) return;
-        const depth = ((this.camera.position.y - this.SCREEN_HEIGHT / 2) / this.camera.currentZoom + this.SCREEN_HEIGHT / 2) / ((this.gameData.worldProperties.height) * -TILE_SIZE.HEIGHT); 
-        this.lightbulb.alpha = 1 - (depth * 1.5);
+        let depth = this.camera.position.y + (this.gameData.worldProperties.height * TILE_SIZE.HEIGHT * this.camera.currentZoom) - this.SCREEN_HEIGHT;
+        depth /= (this.gameData.worldProperties.height - 17) * TILE_SIZE.HEIGHT;
+        depth = (depth * 2.5)<0?0:(depth * 2.5);
+        if (this.camera.currentZoom < 0.9) {
+            depth = depth < 0.4?0.4:depth;
+        }
+        this.lightbulb.alpha = depth>=0.87?0.87:depth;
     }
 
     private async objectUpdate(): Promise<void> {
@@ -97,8 +130,12 @@ export default class GameRenderer extends EventEmitter{
     }
 
     private async objectGenerate(): Promise<void> {
+        let count: number = 0;
         for (let type in this.gameData.beGenerates) {
-            this.gameData.beGenerates[type].forEach((id: string): void => {
+            if (this.gameData.beGenerates[type].length > 0 && type === 'tils') this.mapContainer.cacheAsBitMap = false;
+
+            this.gameData.beGenerates[type].every((id: string): any => {
+                count++;
                 // 임시 Tile Map TODO: 제거.
                 let fileName = '';
                 if (this.gameData.data[type][id].tileNumber !== undefined) {
@@ -116,24 +153,30 @@ export default class GameRenderer extends EventEmitter{
                 newTile.scale.y = this.gameData.data[type][id].scale.y;
                 container.addChild(newTile);
 
-                this.container.addChild(container);
+                if (type === 'tiles') {
+                    this.mapContainer.addChild(container);
+                } else {
+                    this.mainContainer.addChild(container);
+                }
                 this.objectDict[type][id] = container;
                 this.gameData.doneGenerate(id, type);
 
                 // 임시 Test Event ------------------------------------------------------------
                 container.on('click', (): void => {
                     this.camera.setObject(this.gameData.data[type][id]);
-                    if (this.camera.targetZoom < 0.5) {
-                        this.camera.setZoom(0.5);
-                    } else if(this.camera.targetZoom < 1) {
+                    if(this.camera.targetZoom < 1) {
                         this.camera.setZoom(1);
-                    } else if(this.camera.targetZoom < 2) {
-                        this.camera.setZoom(2);
                     } else {
                         this.camera.setZoom(0.2);
                     }
                 });
+
+                if (count > 150) {
+                    return false;
+                }
             });
+            
+            if (!this.mapContainer.cacheAsBitMap) this.mapContainer.cacheAsBitMap = true;
         }
     }
 
@@ -142,9 +185,12 @@ export default class GameRenderer extends EventEmitter{
     }
 
     public clearRenderer(): void {
-        for (var i = this.app.stage.children.length - 1; i >= 0; i--) {
-            this.container.removeChild(this.app.stage.children[i]);
+        for (var i = this.mainContainer.children.length - 1; i >= 0; i--) {
+            this.mainContainer.removeChild(this.mainContainer.children[i]);
         };
+
+        this.mapContainer = new PIXI.Container();
+        this.mainContainer.addChild(this.mapContainer);
     }
 
     public start() {
@@ -153,11 +199,11 @@ export default class GameRenderer extends EventEmitter{
         });
     }
     
-    public render(t_1: number, t_2: number): void {
+    public async render(t_1: number, t_2: number): Promise<void> {
         const dt: number = t_1 - t_2;
         this.checkRenderingPerformance(dt);
-        this.camera.update();
-        this.app.render();
+        await this.camera.update();
+        await this.app.render();
         window.requestAnimationFrame((now: number): void => {
             this.render(now, t_1);
         });

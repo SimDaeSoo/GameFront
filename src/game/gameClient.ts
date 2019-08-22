@@ -23,6 +23,10 @@ export default class GameClient {
         this.updater = new Updater();
         this.isInit = false;
         this.gameData;
+
+        this.gameLogic.on('setWorldProperties', () => {
+            this.gameRenderer.initWorld();
+        });
     }
 
     public run(): any {

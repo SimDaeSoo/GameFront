@@ -1,18 +1,17 @@
 import CollisionEngine from './collisionEngine';
 
-export default class LayCaster {
+export default class RayCaster {
     public dirties: Array<any> = [];
     private objs: any;
     private lighting: any;
     private position: any;
     private triangles: any = {};
-    private layContainer: PIXI.Container;
-    private layPolygon: any = {};
-    private LAY_DENSITY: number = 1;
+    public rayContainer: PIXI.Container;
+    private rayPolygon: any;
+    private LAY_DENSITY: number = 0.08;
     
     constructor() {
-        this.layContainer = new PIXI.Container();
-        this.layContainer.cacheAsBitmap = true;
+        this.rayContainer = new PIXI.Container();
     }
 
     public update() {
@@ -20,6 +19,7 @@ export default class LayCaster {
             this.dirties.forEach((dirty) => {
                 this.clean(dirty);
             });
+
             this.makeLay();
         }
     }
@@ -28,8 +28,11 @@ export default class LayCaster {
         this.position = position;
     }
 
-    public setObjects(objs: Array<any>): void {
-        this.objs = objs;
+    public setObjects(objs: any): void {
+        this.objs = [];
+        for (let key in objs) {
+            this.objs.push(objs[key]);
+        }
     }
 
     public setLightingLayer(lighting: any): void {
@@ -37,8 +40,8 @@ export default class LayCaster {
     }
 
     public makeLay(): void {
-        if (this.layPolygon) {
-            this.layContainer.removeChild(this.layPolygon);
+        if (this.rayPolygon) {
+            this.rayContainer.removeChild(this.rayPolygon);
         }
 
         const points: Array<any> = [new PIXI.Point(this.position.x, this.position.y)];
@@ -46,17 +49,16 @@ export default class LayCaster {
             points.push(new PIXI.Point(this.triangles[key].x, this.triangles[key].y));
         }
 
-        this.layPolygon = new PIXI.Graphics();
-        this.layPolygon.parentLayer = this.lighting;
-        this.layPolygon.beginFill(0xFFFFFF, 0.5);
-        this.layPolygon.drawPolygon(points);
-        this.layPolygon.endFill();
-        this.layPolygon.cacheAsBitmap = true;
-        this.layContainer.addChild(this.layPolygon);
+        this.rayPolygon = new PIXI.Graphics();
+        this.rayPolygon.parentLayer = this.lighting;
+        this.rayPolygon.beginFill(0xFFFFFF, 0.2);
+        this.rayPolygon.drawPolygon(points);
+        this.rayPolygon.endFill();
+        this.rayContainer.addChild(this.rayPolygon);
     }
 
     public initLay(): void {
-        const lay: any = {
+        const ray: any = {
             position: this.position,
             size: { x: 0.1, y: 0.1 },
             vector: {
@@ -66,33 +68,31 @@ export default class LayCaster {
         };
 
         for (let i=0; i<=180; i += this.LAY_DENSITY) {
-            lay.vector.x = Math.cos(i * Math.PI / 180);
-            lay.vector.y = Math.sin(i * Math.PI / 180);
-            const hitObjects: Array<any> = CollisionEngine.getHitObjects(lay, this.objs, Number.MAX_SAFE_INTEGER);
+            ray.vector.x = Math.cos(i * Math.PI / 180);
+            ray.vector.y = Math.sin(i * Math.PI / 180);
+            const hitObjects: Array<any> = CollisionEngine.getHitObjects(ray, this.objs, Number.MAX_SAFE_INTEGER);
 
             if (hitObjects.length > 0) {
                 this.triangles[i.toString()] = {
-                    x: this.position.x + (lay.vector.x * (hitObjects[0].time + 1)),
-                    y: this.position.y + (lay.vector.y * (hitObjects[0].time + 1))
+                    x: this.position.x + (ray.vector.x * (hitObjects[0].time + 5)),
+                    y: this.position.y + (ray.vector.y * (hitObjects[0].time + 5))
                 };
                 this.dirty(i.toString());
             }
         }
-
-        console.log(this.triangles);
     }
 
     // 타일 박살났을 때 호출해서 Lay 다시 계산한다.
     public refreshLay(deletedObject: any): void {
         const reCalculateds: Array<any> = [];
 
-        // 변경 된 lay 찾는다.
+        // 변경 된 ray 찾는다.
         for (let i=0; i<=180; i += this.LAY_DENSITY) {
-            const lay: any = this.triangles[i.toString()];
+            const ray: any = this.triangles[i.toString()];
             const x: any = { min: deletedObject.position.x, max: deletedObject.position.x + deletedObject.size.x };
             const y: any = { min: deletedObject.position.y, max: deletedObject.position.y + deletedObject.size.y };
 
-            if (lay.x <= x.max && lay.x >= x.min && lay.y <= y.max && lay.y >= y.min) {
+            if (ray.x <= x.max && ray.x >= x.min && ray.y <= y.max && ray.y >= y.min) {
                 reCalculateds.push(i);
             }
         }
@@ -107,17 +107,17 @@ export default class LayCaster {
         };
 
         // Lay 재 계산.
-        reCalculateds.forEach((lay): void => {
-            reCalculedLay.vector.x = Math.cos(lay * Math.PI / 180);
-            reCalculedLay.vector.y = Math.sin(lay * Math.PI / 180);
+        reCalculateds.forEach((ray): void => {
+            reCalculedLay.vector.x = Math.cos(ray * Math.PI / 180);
+            reCalculedLay.vector.y = Math.sin(ray * Math.PI / 180);
             const hitObjects: Array<any> = CollisionEngine.getHitObjects(reCalculedLay, this.objs, Number.MAX_SAFE_INTEGER);
 
             if (hitObjects.length > 0) {
-                this.triangles[lay.toString()] = {
+                this.triangles[ray.toString()] = {
                     x: this.position.x + (reCalculedLay.vector.x * (hitObjects[0].time + 1)),
                     y: this.position.y + (reCalculedLay.vector.y * (hitObjects[0].time + 1))
                 };
-                this.dirty(lay.toString());
+                this.dirty(ray.toString());
             }
         });
     }

@@ -15,7 +15,7 @@ export default class CollisionEngine {
             const vectorA = objA.vector.y + objB.weight * (objB.vector.y - objA.vector.y) / (objA.weight + objB.weight) * 2;
             objA.position.y += objA.vector.y * dt + (collisionResult.direction.up?0.15:-0.15);
             objA.vector.y = CollisionEngine.translateTinyValue(vectorA)*0;
-            objA.land = true;
+            objA.land = collisionResult.direction.down;
         }
 
         return {
