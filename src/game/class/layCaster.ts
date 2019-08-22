@@ -1,13 +1,27 @@
 import CollisionEngine from './collisionEngine';
 
 export default class LayCaster {
+    public dirties: Array<any> = [];
+    private objs: any;
+    private lighting: any;
     private position: any;
     private triangles: any = {};
-    private objs: any;
+    private layContainer: PIXI.Container;
+    private layPolygon: any = {};
     private LAY_DENSITY: number = 1;
-    public dirties: Array<any> = [];
+    
+    constructor() {
+        this.layContainer = new PIXI.Container();
+        this.layContainer.cacheAsBitmap = true;
+    }
 
     public update() {
+        if (this.dirties.length > 0) {
+            this.dirties.forEach((dirty) => {
+                this.clean(dirty);
+            });
+            this.makeLay();
+        }
     }
 
     public setPosition(position: any): void {
@@ -16,6 +30,29 @@ export default class LayCaster {
 
     public setObjects(objs: Array<any>): void {
         this.objs = objs;
+    }
+
+    public setLightingLayer(lighting: any): void {
+        this.lighting = lighting;
+    }
+
+    public makeLay(): void {
+        if (this.layPolygon) {
+            this.layContainer.removeChild(this.layPolygon);
+        }
+
+        const points: Array<any> = [new PIXI.Point(this.position.x, this.position.y)];
+        for (let key in this.triangles) {
+            points.push(new PIXI.Point(this.triangles[key].x, this.triangles[key].y));
+        }
+
+        this.layPolygon = new PIXI.Graphics();
+        this.layPolygon.parentLayer = this.lighting;
+        this.layPolygon.beginFill(0xFFFFFF, 0.5);
+        this.layPolygon.drawPolygon(points);
+        this.layPolygon.endFill();
+        this.layPolygon.cacheAsBitmap = true;
+        this.layContainer.addChild(this.layPolygon);
     }
 
     public initLay(): void {
