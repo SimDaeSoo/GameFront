@@ -87,7 +87,7 @@ export default class GameRenderer extends EventEmitter{
 
         this.objectGenerate();
         this.rayCaster.setObjects(this.gameData.data.tiles);
-        this.rayCaster.setPosition({ x: worldSize.width / 2, y: 0 });
+        this.rayCaster.setPosition({ x: worldSize.width / 2, y: -600 });
         this.rayCaster.initLay();
         this.rayCaster.makeLay();
         this.mainContainer.addChild(this.rayCaster.rayContainer);

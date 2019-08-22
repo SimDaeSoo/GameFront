@@ -45,8 +45,8 @@ export default class Camera {
     }
 
     public setZoom(value): void {
-        if (this.stage.width !== 0 && value < this.screenWidth / (this.stage.width / this.stage.scale.x)) {
-            this.targetZoom = this.screenWidth / (this.stage.width / this.stage.scale.x);
+        if (this.stage.width !== 0 && value < this.screenWidth / (this.stage.width / this.stage.scale.x) * 1.01) {
+            this.targetZoom = this.screenWidth / (this.stage.width / this.stage.scale.x) * 1.01;
         } else {
             this.targetZoom = value;
         }
