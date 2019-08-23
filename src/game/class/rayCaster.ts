@@ -70,6 +70,7 @@ export default class RayCaster {
     public makeRay(): void {
         if (this.rayPolygon) {
             this.rayContainer.removeChild(this.rayPolygon);
+            this.rayPolygon.destroy(true);
         }
 
         const points: Array<any> = this.getPolygonPath();
