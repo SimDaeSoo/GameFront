@@ -172,14 +172,14 @@ export default class GameRenderer extends EventEmitter {
                     } else {
                         this.camera.setZoom(0.2);
                     }
-                    const command = {
-                        script: 'deleteCharacter',
-                        data: {
-                            id: id,
-                            objectType: type
-                        }
-                    };
-                    this.emit('broadcast', command)
+                    // const command = {
+                    //     script: 'deleteCharacter',
+                    //     data: {
+                    //         id: id,
+                    //         objectType: type
+                    //     }
+                    // };
+                    // this.emit('broadcast', command)
                 });
 
                 if (count > 150) {

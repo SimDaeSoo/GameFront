@@ -88,8 +88,8 @@ export default class Camera {
     private updateFollowObj(coeifficient: number): void {
         if (this.obj === undefined) return;
 
-        this.position.x += ((-this.obj.position.x * this.currentZoom + this.screenWidth / 2) - this.position.x) * coeifficient;
-        this.position.y += ((-this.obj.position.y * this.currentZoom + this.screenHeight / 2) - this.position.y) * coeifficient;
+        this.position.x += (((-this.obj.position.x - this.obj.size.x / 2) * this.currentZoom + this.screenWidth / 2) - this.position.x) * coeifficient;
+        this.position.y += (((-this.obj.position.y - this.obj.size.y / 2 + 100) * this.currentZoom + this.screenHeight / 2) - this.position.y) * coeifficient;
     }
 
     private updateFollowZoom(coeifficient: number): void {
