@@ -19,9 +19,9 @@ export default class Camera {
         this.screenHeight = height;
     }
 
-    public update(): void {
-        const FOLLOW_COEIFFICIENT = 0.06;
-        const ZOOM_COEIFFICIENT = 0.05;
+    public update(dt: number): void {
+        const FOLLOW_COEIFFICIENT = 1.004 ** dt - 1;
+        const ZOOM_COEIFFICIENT = 1.003 ** dt - 1;
         this.clearVibration();
         this.updateFollowObj(FOLLOW_COEIFFICIENT);
         this.updateFollowZoom(ZOOM_COEIFFICIENT);
@@ -52,7 +52,7 @@ export default class Camera {
     public setZoom(value): void {
         if (this.size.width !== 0 && value < this.screenWidth / (this.size.width / this.stage.scale.x) * 1.01) {
             this.targetZoom = this.screenWidth / (this.size.width / this.stage.scale.x) * 1.01;
-        } else {
+        } else if (this.size.width !== 0) {
             this.targetZoom = value;
         }
     }
@@ -88,8 +88,13 @@ export default class Camera {
     private updateFollowObj(coeifficient: number): void {
         if (this.obj === undefined) return;
 
-        this.position.x += (((-this.obj.position.x - this.obj.size.x / 2) * this.currentZoom + this.screenWidth / 2) - this.position.x) * coeifficient;
-        this.position.y += (((-this.obj.position.y - this.obj.size.y / 2 + 100) * this.currentZoom + this.screenHeight / 2) - this.position.y) * coeifficient;
+        const targetPosition: any = {
+            x: ((-this.obj.position.x - this.obj.size.x / 2) * this.currentZoom + this.screenWidth / 2),
+            y: ((-this.obj.position.y - this.obj.size.y / 2 + 100) * this.currentZoom + this.screenHeight / 2)
+        };
+
+        this.position.x += (targetPosition.x - this.position.x) * coeifficient;
+        this.position.y += (targetPosition.y - this.position.y) * coeifficient;
     }
 
     private updateFollowZoom(coeifficient: number): void {

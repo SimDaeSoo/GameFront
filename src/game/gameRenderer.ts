@@ -76,6 +76,7 @@ export default class GameRenderer extends EventEmitter {
         await this.objectDelete();
         await this.objectUpdate();
         await this.setLighting();
+        await this.camera.update(dt);
         this.rayCaster.update();
     }
 
@@ -167,11 +168,6 @@ export default class GameRenderer extends EventEmitter {
                 // 임시 Test Event ------------------------------------------------------------
                 container.on('click', (): void => {
                     this.camera.setObject(this.gameData.data[type][id]);
-                    if(this.camera.targetZoom < 1) {
-                        this.camera.setZoom(1);
-                    } else {
-                        this.camera.setZoom(0.2);
-                    }
                     // const command = {
                     //     script: 'deleteCharacter',
                     //     data: {
@@ -213,7 +209,6 @@ export default class GameRenderer extends EventEmitter {
     public async render(t_1: number, t_2: number): Promise<void> {
         const dt: number = t_1 - t_2;
         this.checkRenderingPerformance(dt);
-        await this.camera.update();
         await this.app.render();
         window.requestAnimationFrame((now: number): void => {
             this.render(now, t_1);

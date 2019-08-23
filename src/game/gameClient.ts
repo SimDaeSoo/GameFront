@@ -62,6 +62,13 @@ export default class GameClient {
         system({text: `init done`});
 
         this.keyboard.onKeyDown = (keyCode: number) => {
+            if (keyCode === 77) {
+                if(this.gameRenderer.camera.targetZoom < 1) {
+                    this.gameRenderer.camera.setZoom(1);
+                } else {
+                    this.gameRenderer.camera.setZoom(0.2);
+                }
+            }
             this.io.emit('keydown', keyCode);
         }
 
