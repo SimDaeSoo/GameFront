@@ -5,13 +5,14 @@ import { EventEmitter } from "events";
 
 export default class GameLogic extends EventEmitter {
     public gameData: GameData;
-    
+
     /* ----------------------- Logic ----------------------- */
 
     public async update(dt: number): Promise<void> {
         this.collision(dt);
         this.applyVector(dt);
         this.applyForceVector(dt);
+        this.interpolationCharacterPosition(dt);
     }
 
     private collision(dt: number): void {
@@ -83,6 +84,18 @@ export default class GameLogic extends EventEmitter {
     public setWorldProperties(worldProperties: any): void {
         this.gameData.worldProperties = worldProperties;
         this.emit('setWorldProperties');
+    }
+
+    private interpolationCharacterPosition(dt: number): void {
+        for (let id in this.gameData.data['characters']) {
+            const character: any = this.gameData.data['characters'][id];
+            
+            if (character.position.x < 0) {
+                character.position.x = 0;
+            } else if (character.position.x + character.size.x > this.gameData.worldProperties.width * TILE_SIZE.WIDTH) {
+                character.position.x = this.gameData.worldProperties.width * TILE_SIZE.WIDTH - character.size.x;
+            }
+        }
     }
 
     /* ----------------------- Command ----------------------- */

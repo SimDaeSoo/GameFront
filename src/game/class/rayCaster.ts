@@ -1,53 +1,78 @@
 import CollisionEngine from './collisionEngine';
+import { TILE_SIZE } from '../define';
 
 export default class RayCaster {
     public dirties: Array<any> = [];
-    private objs: any;
+    private realObjs: any;
     private lighting: any;
     private position: any;
+    private size: any;
     private triangles: any = {};
     public rayContainer: PIXI.Container;
     private rayPolygon: any;
-    private LAY_DENSITY: number = 0.08;
+    private RAY_DENSITY: number = 0.08;
     
     constructor() {
         this.rayContainer = new PIXI.Container();
     }
 
     public update() {
-        if (this.dirties.length > 0) {
-            this.dirties.forEach((dirty) => {
-                this.clean(dirty);
-            });
-
-            this.makeLay();
-        }
+        this.changeDetect();
+        this.makeRay();
     }
 
     public setPosition(position: any): void {
         this.position = position;
     }
 
+    public setSize(size: any): void {
+        this.size = size;
+    }
+
     public setObjects(objs: any): void {
-        this.objs = [];
-        for (let key in objs) {
-            this.objs.push(objs[key]);
+        this.realObjs = objs;
+    }
+
+    public get objs(): Array<any> {
+        const objs: Array<any> = [];
+        for (let key in this.realObjs) {
+            objs.push(this.realObjs[key]);
         }
+        return objs;
     }
 
     public setLightingLayer(lighting: any): void {
         this.lighting = lighting;
     }
 
-    public makeLay(): void {
+    public initRay(): void {
+        const ray: any = {
+            position: this.position,
+            size: { x: 0.1, y: 0.1 },
+            vector: { x: 0, y: 0 }
+        };
+
+        for (let i=0; i<=180; i += this.RAY_DENSITY) {
+            ray.vector.x = Math.cos(i * Math.PI / 180);
+            ray.vector.y = Math.sin(i * Math.PI / 180);
+            const hitObjects: Array<any> = CollisionEngine.getHitObjects(ray, this.objs, Number.MAX_SAFE_INTEGER);
+
+            if (hitObjects.length > 0) {
+                this.triangles[i.toFixed(2)] = {
+                    x: this.position.x + (ray.vector.x * (hitObjects[0].time + 5)),
+                    y: this.position.y + (ray.vector.y * (hitObjects[0].time + 5)),
+                    name: Math.round(hitObjects[0].object.position.x / TILE_SIZE.WIDTH) + Math.round(hitObjects[0].object.position.y / TILE_SIZE.HEIGHT * this.size.width / TILE_SIZE.WIDTH)
+                };
+            }
+        }
+    }
+
+    public makeRay(): void {
         if (this.rayPolygon) {
             this.rayContainer.removeChild(this.rayPolygon);
         }
 
-        const points: Array<any> = [new PIXI.Point(this.position.x, this.position.y)];
-        for (let key in this.triangles) {
-            points.push(new PIXI.Point(this.triangles[key].x, this.triangles[key].y));
-        }
+        const points: Array<any> = this.getPolygonPath();
 
         this.rayPolygon = new PIXI.Graphics();
         this.rayPolygon.parentLayer = this.lighting;
@@ -57,82 +82,86 @@ export default class RayCaster {
         this.rayContainer.addChild(this.rayPolygon);
     }
 
-    public initLay(): void {
+    private getPolygonPath(): Array<any> {
+        const points: Array<any> = [];
+        let min: number = Number.MAX_VALUE;
+        let max: number = Number.MIN_VALUE;
+
+        for (let key in this.triangles) {
+            if (min > Number(key)) min = Number(key);
+            if (max < Number(key)) max = Number(key);
+
+            points.push(new PIXI.Point(this.triangles[key].x, this.triangles[key].y));
+        }
+
+        const boundaryAngle: any = {
+            min: { x: this.size.width  / 2 + (this.position.y - this.size.height) / Math.tan((min - this.RAY_DENSITY) * Math.PI / 180), y: this.size.height },
+            max: { x: this.size.width  / 2 + (this.position.y - this.size.height) / Math.tan((max + this.RAY_DENSITY) * Math.PI / 180), y: this.size.height }
+        };
+        
+        this.makeBoundary(boundaryAngle);
+
+        const startPoint: Array<any> = [
+            new PIXI.Point(boundaryAngle.min.x, boundaryAngle.min.y),
+            new PIXI.Point(0, 0),
+            new PIXI.Point(this.position.x, this.position.y),
+            new PIXI.Point(this.size.width, 0),
+            new PIXI.Point(boundaryAngle.max.x, boundaryAngle.max.y)
+        ];
+
+        return startPoint.concat(points);
+    }
+
+    private makeBoundary(boundaryAngle: any): void {
+        this.realObjs['boundary'] = {
+            class: 'dirt',
+            objectType: 'tiles',
+            health: Number.MAX_VALUE,
+            maxHealth: Number.MAX_VALUE,
+            movableRate: 0,
+            tileNumber: 0,
+            weight: 10000000000000000000,
+            scale: { x: 0, y: 0 },
+            position: { x: -Number.MAX_VALUE / 2, y: this.size.height },
+            size: { x: Number.MAX_VALUE, y: 1 },
+            vector: { x: 0, y: 0 },
+            forceVector: { x: 0, y: 0 },
+            flip: { x: false, y: false },
+            rotation: 0,
+            rotationVector: 0
+        };
+    }
+    
+    private changeDetect(): void {
+        for (let key in this.triangles) {
+            if (this.realObjs[this.triangles[key].name] === undefined) {
+                this.resolution(key);
+            }
+        }
+    }
+
+    private resolution(key: any): void {
         const ray: any = {
             position: this.position,
             size: { x: 0.1, y: 0.1 },
-            vector: {
-                x: 0,
-                y: 0
-            }
+            vector: { x: 0, y: 0 }
         };
+        ray.vector.x = Math.cos(Number(key) * Math.PI / 180);
+        ray.vector.y = Math.sin(Number(key) * Math.PI / 180);
+        const hitObjects: Array<any> = CollisionEngine.getHitObjects(ray, this.objs, Number.MAX_SAFE_INTEGER);
 
-        for (let i=0; i<=180; i += this.LAY_DENSITY) {
-            ray.vector.x = Math.cos(i * Math.PI / 180);
-            ray.vector.y = Math.sin(i * Math.PI / 180);
-            const hitObjects: Array<any> = CollisionEngine.getHitObjects(ray, this.objs, Number.MAX_SAFE_INTEGER);
+        if (hitObjects.length > 0) {
+            this.triangles[key] = {
+                x: this.position.x + (ray.vector.x * (hitObjects[0].time + 5)),
+                y: this.position.y + (ray.vector.y * (hitObjects[0].time + 5)),
+                name: Math.round(hitObjects[0].object.position.x / TILE_SIZE.WIDTH) + Math.round(hitObjects[0].object.position.y / TILE_SIZE.HEIGHT * this.size.width / TILE_SIZE.WIDTH)
+            };
 
-            if (hitObjects.length > 0) {
-                this.triangles[i.toString()] = {
-                    x: this.position.x + (ray.vector.x * (hitObjects[0].time + 5)),
-                    y: this.position.y + (ray.vector.y * (hitObjects[0].time + 5))
-                };
-                this.dirty(i.toString());
+            if (hitObjects[0].object.size.x >= TILE_SIZE.WIDTH * this.size.width / 2) {
+                this.triangles[key].name = 'boundary'
             }
-        }
-    }
-
-    // 타일 박살났을 때 호출해서 Lay 다시 계산한다.
-    public refreshLay(deletedObject: any): void {
-        const reCalculateds: Array<any> = [];
-
-        // 변경 된 ray 찾는다.
-        for (let i=0; i<=180; i += this.LAY_DENSITY) {
-            const ray: any = this.triangles[i.toString()];
-            const x: any = { min: deletedObject.position.x, max: deletedObject.position.x + deletedObject.size.x };
-            const y: any = { min: deletedObject.position.y, max: deletedObject.position.y + deletedObject.size.y };
-
-            if (ray.x <= x.max && ray.x >= x.min && ray.y <= y.max && ray.y >= y.min) {
-                reCalculateds.push(i);
-            }
-        }
-
-        const reCalculedLay: any = {
-            position: this.position,
-            size: { x: 0.1, y: 0.1 },
-            vector: {
-                x: 0,
-                y: 0
-            }
-        };
-
-        // Lay 재 계산.
-        reCalculateds.forEach((ray): void => {
-            reCalculedLay.vector.x = Math.cos(ray * Math.PI / 180);
-            reCalculedLay.vector.y = Math.sin(ray * Math.PI / 180);
-            const hitObjects: Array<any> = CollisionEngine.getHitObjects(reCalculedLay, this.objs, Number.MAX_SAFE_INTEGER);
-
-            if (hitObjects.length > 0) {
-                this.triangles[ray.toString()] = {
-                    x: this.position.x + (reCalculedLay.vector.x * (hitObjects[0].time + 1)),
-                    y: this.position.y + (reCalculedLay.vector.y * (hitObjects[0].time + 1))
-                };
-                this.dirty(ray.toString());
-            }
-        });
-    }
-
-    private clean(key: string): void {
-        const index: number = this.dirties.indexOf(key);
-
-        if (index >= 0) {
-            this.dirties.splice(index, 1);
-        }
-    }
-
-    private dirty(key: string): void {
-        if (this.dirties.indexOf(key) < 0) {
-            this.dirties.push(key);
+        } else {
+            delete this.triangles[key];
         }
     }
 }

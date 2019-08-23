@@ -9,6 +9,7 @@ export default class Camera {
     public targetZoom: number = 1;
     public currentZoom: number = 1;
     public position: any = { x: 0, y: 0 };
+    private size: any = { width: 0, height: 0 };
     private obj: any = undefined;
     private stage: any = undefined;
 
@@ -28,6 +29,10 @@ export default class Camera {
         this.updateStage();
     }
 
+    public setSize(size: any): void {
+        this.size = size;
+    }
+
     public setRenderer(renderer: any): void {
         this.renderer = renderer;
     }
@@ -45,8 +50,8 @@ export default class Camera {
     }
 
     public setZoom(value): void {
-        if (this.stage.width !== 0 && value < this.screenWidth / (this.stage.width / this.stage.scale.x) * 1.01) {
-            this.targetZoom = this.screenWidth / (this.stage.width / this.stage.scale.x) * 1.01;
+        if (this.size.width !== 0 && value < this.screenWidth / (this.size.width / this.stage.scale.x) * 1.01) {
+            this.targetZoom = this.screenWidth / (this.size.width / this.stage.scale.x) * 1.01;
         } else {
             this.targetZoom = value;
         }

@@ -6,7 +6,7 @@ import Display from 'pixi-layers';
 import { TILE_SIZE } from "./define";
 import RayCaster from './class/rayCaster';
 
-export default class GameRenderer extends EventEmitter{
+export default class GameRenderer extends EventEmitter {
     // Application
     private app: PIXI.Application;
     private SCREEN_WIDTH: number = 1050;
@@ -86,10 +86,11 @@ export default class GameRenderer extends EventEmitter{
         };
 
         this.objectGenerate();
+        this.camera.setSize(worldSize);
         this.rayCaster.setObjects(this.gameData.data.tiles);
         this.rayCaster.setPosition({ x: worldSize.width / 2, y: -600 });
-        this.rayCaster.initLay();
-        this.rayCaster.makeLay();
+        this.rayCaster.setSize(worldSize);
+        this.rayCaster.initRay();
         this.mainContainer.addChild(this.rayCaster.rayContainer);
     }
 
@@ -121,11 +122,13 @@ export default class GameRenderer extends EventEmitter{
 
     private async objectDelete(): Promise<void> {
         for (let type in this.gameData.beDeletes) {
+            if (this.gameData.beDeletes[type].length > 0 && type === 'tils') this.mapContainer.cacheAsBitMap = false;
             this.gameData.beDeletes[type].forEach((id: string): void => {
-                this.app.stage.removeChild(this.objectDict[type][id]);
+                this.objectDict[type][id].parent.removeChild(this.objectDict[type][id]);
                 delete this.objectDict[type][id];
                 this.gameData.doneDelete(id, type);
             });
+            if (!this.mapContainer.cacheAsBitMap) this.mapContainer.cacheAsBitMap = true;
         }
     }
 
@@ -169,6 +172,14 @@ export default class GameRenderer extends EventEmitter{
                     } else {
                         this.camera.setZoom(0.2);
                     }
+                    const command = {
+                        script: 'deleteCharacter',
+                        data: {
+                            id: id,
+                            objectType: type
+                        }
+                    };
+                    this.emit('broadcast', command)
                 });
 
                 if (count > 150) {
