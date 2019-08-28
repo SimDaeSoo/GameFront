@@ -8,12 +8,14 @@ export default class BaseObject extends PIXI.Container {
     private strength: number = 0;
     private duration: number = 0;
     private vibrateFlag: boolean = true;
+    private size: any = { x: 0, y: 0 };
 
     constructor(options: any) {
         super();
         this.interactive = true;
         this.setPosition(options.position);
         this.setScale(options.scale);
+        this.setSize(options.size);
         this.addChild(this.container);
         this.addChild(this.uiContainer);
 
@@ -59,6 +61,12 @@ export default class BaseObject extends PIXI.Container {
         if (!position) return;
         this.position.x = position.x;
         this.position.y = position.y;
+    }
+
+    public setSize(size: any): void {
+        if (!size) return;
+        this.size.x = size.x;
+        this.size.y = size.y;
     }
 
     public setScale(scale: any): void {

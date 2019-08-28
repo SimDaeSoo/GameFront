@@ -66,7 +66,7 @@ export default class GameClient {
                 if(this.gameRenderer.camera.targetZoom < 1) {
                     this.gameRenderer.camera.setZoom(1);
                 } else {
-                    this.gameRenderer.camera.setZoom(0.2);
+                    this.gameRenderer.camera.setZoom(0.5);
                 }
             }
             this.io.emit('keydown', keyCode);

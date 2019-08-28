@@ -42,7 +42,7 @@ export default class GameRenderer extends EventEmitter {
         this.app = new PIXI.Application({
             width: this.SCREEN_WIDTH,
             height: this.SCREEN_HEIGHT,
-            backgroundColor: 0x5193CF,
+            backgroundColor: 0x7296D5,
             autoStart: false,
         });
         this.app.stage = new PIXI.display.Stage();
@@ -128,6 +128,11 @@ export default class GameRenderer extends EventEmitter {
     }
 
     private async objectUpdate(dt: number): Promise<void> {
+        const boundary: any = {
+            min: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) - this.SCREEN_WIDTH,
+            max: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) + this.SCREEN_WIDTH
+        }
+
         for (let type in this.gameData.dirties) {
             this.gameData.dirties[type].forEach((id: string) => {
                 const obj = this.objectDict[type][id];
@@ -140,10 +145,11 @@ export default class GameRenderer extends EventEmitter {
                 }
             });
         }
-
-        for (let key in this.objectDict) {
-            for (let id in this.objectDict[key]) {
-                this.objectDict[key][id]._update(dt);
+        for (let type in this.objectDict) {
+            for (let id in this.objectDict[type]) {
+                const centerX: number = this.objectDict[type][id].position.x + this.objectDict[type][id].size.x / 2;
+                this.objectDict[type][id].visible = centerX < boundary.max && centerX > boundary.min;
+                this.objectDict[type][id]._update(dt);
             }
         }
     }
@@ -151,8 +157,10 @@ export default class GameRenderer extends EventEmitter {
     private async objectDelete(): Promise<void> {
         for (let type in this.gameData.beDeletes) {
             this.gameData.beDeletes[type].forEach((id: string): void => {
-                this.objectDict[type][id].delete();
-                delete this.objectDict[type][id];
+                if (this.objectDict[type][id]) {
+                    this.objectDict[type][id].delete();
+                    delete this.objectDict[type][id];
+                }
                 this.gameData.doneDelete(id, type);
 
                 if (type === 'tiles') {
@@ -166,6 +174,8 @@ export default class GameRenderer extends EventEmitter {
         let count: number = 0;
         for (let type in this.gameData.beGenerates) {
             this.gameData.beGenerates[type].every((id: string): any => {
+                if (this.objectDict[type][id]) return true;
+
                 const object = ObjectFactory.create(this.gameData.data[type][id]);
 
                 if (type === 'tiles') {
