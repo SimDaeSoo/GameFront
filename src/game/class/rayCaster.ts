@@ -10,7 +10,7 @@ export default class RayCaster {
     private triangles: any = {};
     public rayContainer: PIXI.Container;
     private rayPolygon: any;
-    private RAY_DENSITY: number = 0.08;
+    private RAY_DENSITY: number = 0.1;
     
     constructor() {
         this.rayContainer = new PIXI.Container();
@@ -61,10 +61,12 @@ export default class RayCaster {
                 this.triangles[i.toFixed(2)] = {
                     x: this.position.x + (ray.vector.x * (hitObjects[0].time + 5)),
                     y: this.position.y + (ray.vector.y * (hitObjects[0].time + 5)),
-                    name: Math.round(hitObjects[0].object.position.x / TILE_SIZE.WIDTH) + Math.round(hitObjects[0].object.position.y / TILE_SIZE.HEIGHT * this.size.width / TILE_SIZE.WIDTH)
+                    name: Math.round(hitObjects[0].object.position.x / TILE_SIZE.WIDTH) % this.size.width + Math.round(hitObjects[0].object.position.y / TILE_SIZE.HEIGHT * this.size.width / TILE_SIZE.WIDTH)
                 };
             }
         }
+        
+        this.makeBoundary();
     }
 
     public makeRay(): void {
@@ -77,7 +79,7 @@ export default class RayCaster {
 
         this.rayPolygon = new PIXI.Graphics();
         this.rayPolygon.parentLayer = this.lighting;
-        this.rayPolygon.beginFill(0xFFFFFF, 0.2);
+        this.rayPolygon.beginFill(0xFFFFFF, 1);
         this.rayPolygon.drawPolygon(points);
         this.rayPolygon.endFill();
         this.rayContainer.addChild(this.rayPolygon);
@@ -99,8 +101,6 @@ export default class RayCaster {
             min: { x: this.size.width  / 2 + (this.position.y - this.size.height) / Math.tan((min - this.RAY_DENSITY) * Math.PI / 180), y: this.size.height },
             max: { x: this.size.width  / 2 + (this.position.y - this.size.height) / Math.tan((max + this.RAY_DENSITY) * Math.PI / 180), y: this.size.height }
         };
-        
-        this.makeBoundary(boundaryAngle);
 
         const startPoint: Array<any> = [
             new PIXI.Point(boundaryAngle.min.x, boundaryAngle.min.y),
@@ -113,7 +113,7 @@ export default class RayCaster {
         return startPoint.concat(points);
     }
 
-    private makeBoundary(boundaryAngle: any): void {
+    private makeBoundary(): void {
         this.realObjs['boundary'] = {
             class: 'dirt',
             objectType: 'tiles',
@@ -155,7 +155,7 @@ export default class RayCaster {
             this.triangles[key] = {
                 x: this.position.x + (ray.vector.x * (hitObjects[0].time + 5)),
                 y: this.position.y + (ray.vector.y * (hitObjects[0].time + 5)),
-                name: Math.round(hitObjects[0].object.position.x / TILE_SIZE.WIDTH) + Math.round(hitObjects[0].object.position.y / TILE_SIZE.HEIGHT * this.size.width / TILE_SIZE.WIDTH)
+                name: Math.round(hitObjects[0].object.position.x / TILE_SIZE.WIDTH) % this.size.width + Math.round(hitObjects[0].object.position.y / TILE_SIZE.HEIGHT * this.size.width / TILE_SIZE.WIDTH)
             };
 
             if (hitObjects[0].object.size.x >= TILE_SIZE.WIDTH * this.size.width / 2) {

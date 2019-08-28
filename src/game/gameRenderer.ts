@@ -12,8 +12,9 @@ export default class GameRenderer extends EventEmitter {
     private SCREEN_WIDTH: number = 1050;
     private SCREEN_HEIGHT: number = 600;
     public camera: Camera;
-    public mainContainer: any;
-    public mapContainer: any;
+    public mainContainer: PIXI.Container;
+    public mapContainer: PIXI.Container;
+    public backgroundContainer: PIXI.Container;
 
     // Lighting
     private display: any = Display;
@@ -36,7 +37,7 @@ export default class GameRenderer extends EventEmitter {
         this.app = new PIXI.Application({
             width: this.SCREEN_WIDTH,
             height: this.SCREEN_HEIGHT,
-            backgroundColor: 0x71B3FF,
+            backgroundColor: 0x5193DF,
             autoStart: false,
         });
         this.app.stage = new PIXI.display.Stage();
@@ -50,7 +51,7 @@ export default class GameRenderer extends EventEmitter {
 
         // ----------------------------- Lightings
         this.lighting = new PIXI.display.Layer();
-        this.lighting.on('display', (element) => { element.blendMode = PIXI.BLEND_MODES.ADD; });
+        this.lighting.on('display', (element) => { element.blendMode = PIXI.BLEND_MODES.LIGHTEN; });
         this.lighting.useRenderTexture = true;
         this.lighting.clearColor = [0.12, 0.12, 0.12, 1];
         this.app.stage.addChild(this.lighting);
@@ -69,6 +70,40 @@ export default class GameRenderer extends EventEmitter {
         this.rayCaster = new RayCaster();
         this.rayCaster.setLightingLayer(this.lighting);
         // ----------------------------- Lightings
+    }
+
+    private testFunc(): void {
+        this.backgroundContainer = new PIXI.Container();
+
+        let background: PIXI.Sprite;
+        background = PIXI.Sprite.from('src/assets/background.png');
+        this.backgroundContainer.addChild(background);
+
+        background = PIXI.Sprite.from('src/assets/background.png');
+        background.position.x = 928;
+        this.backgroundContainer.addChild(background);
+
+        background = PIXI.Sprite.from('src/assets/background.png');
+        background.position.x = 928 * 2;
+        this.backgroundContainer.addChild(background);
+
+        // background = PIXI.Sprite.from('src/assets/background.png');
+        // background.position.x = 928 * 3;
+        // this.backgroundContainer.addChild(background);
+
+        // background = PIXI.Sprite.from('src/assets/background.png');
+        // background.position.x = 928 * 4;
+        // this.backgroundContainer.addChild(background);
+
+        let shadow = new PIXI.Graphics();
+        shadow.beginFill(0x0C1122, 1);
+        shadow.drawPolygon([new PIXI.Point(0, 580), new PIXI.Point(0, 1080), new PIXI.Point(4800, 1080), new PIXI.Point(4800, 580)]);
+        shadow.endFill();
+        this.backgroundContainer.addChild(shadow);
+        this.backgroundContainer.position.y = -60;
+        // this.backgroundContainer.cacheAsBitmap = true;
+
+        this.mainContainer.addChild(this.backgroundContainer);
     }
 
     public async update(dt: number): Promise<void> {
@@ -103,7 +138,7 @@ export default class GameRenderer extends EventEmitter {
         if (this.camera.currentZoom < 0.9) {
             depth = depth < 0.4?0.4:depth;
         }
-        this.lightbulb.alpha = depth>=0.87?0.87:depth;
+        this.lightbulb.alpha = depth>=1?1:depth;
     }
 
     private async objectUpdate(): Promise<void> {
@@ -123,21 +158,17 @@ export default class GameRenderer extends EventEmitter {
 
     private async objectDelete(): Promise<void> {
         for (let type in this.gameData.beDeletes) {
-            if (this.gameData.beDeletes[type].length > 0 && type === 'tils') this.mapContainer.cacheAsBitMap = false;
             this.gameData.beDeletes[type].forEach((id: string): void => {
                 this.objectDict[type][id].parent.removeChild(this.objectDict[type][id]);
                 delete this.objectDict[type][id];
                 this.gameData.doneDelete(id, type);
             });
-            if (!this.mapContainer.cacheAsBitMap) this.mapContainer.cacheAsBitMap = true;
         }
     }
 
     private async objectGenerate(): Promise<void> {
         let count: number = 0;
         for (let type in this.gameData.beGenerates) {
-            if (this.gameData.beGenerates[type].length > 0 && type === 'tils') this.mapContainer.cacheAsBitMap = false;
-
             this.gameData.beGenerates[type].every((id: string): any => {
                 count++;
                 // 임시 Tile Map TODO: 제거.
@@ -175,15 +206,13 @@ export default class GameRenderer extends EventEmitter {
                     //         objectType: type
                     //     }
                     // };
-                    // this.emit('broadcast', command)
+                    // this.emit('broadcast', command);
                 });
 
                 if (count > 150) {
                     return false;
                 }
             });
-            
-            if (!this.mapContainer.cacheAsBitMap) this.mapContainer.cacheAsBitMap = true;
         }
     }
 
@@ -196,6 +225,7 @@ export default class GameRenderer extends EventEmitter {
             this.mainContainer.removeChild(this.mainContainer.children[i]);
         };
 
+        this.testFunc();
         this.mapContainer = new PIXI.Container();
         this.mainContainer.addChild(this.mapContainer);
     }

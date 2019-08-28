@@ -2,7 +2,5 @@
     ["tile", "assets/tile.png"],
     ["hitBox", "assets/hitBox.png"],
     ["assets/Terrain Tileset.json"],
-    ["assets/basic_bow_idle.json"],
-    ["assets/basic_bow_run.json"],
-    ["assets/basic_bow_attack_no_arrow.json"]
+    ["background", "assets/background.png"]
 ]
