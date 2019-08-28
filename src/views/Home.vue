@@ -44,4 +44,8 @@ export default class Home extends Vue {
 .Home {
   text-align: center;
 }
+
+canvas {
+  border-style: double;
+}
 </style>

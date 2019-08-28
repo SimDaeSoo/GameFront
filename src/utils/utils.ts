@@ -120,7 +120,7 @@ function format(date: Date, format: string) {
     });
 };
 
-export function changeTileNumber(map: any, key: string, width: number): void {
+export function changeTileNumber(map: any, key: string, width: number): number {
     const x = map[key].position.x / TILE_SIZE.WIDTH;
     const y = map[key].position.y / TILE_SIZE.HEIGHT;
     if ((map[(x-1)+y*width] && x > 0) && (map[(x+1)+y*width] && x < width - 1)) {
@@ -142,4 +142,6 @@ export function changeTileNumber(map: any, key: string, width: number): void {
     } else {
         map[key].tileNumber += 12;
     }
+
+    return map[key].tileNumber;
 }

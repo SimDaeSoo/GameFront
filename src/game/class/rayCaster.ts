@@ -10,13 +10,13 @@ export default class RayCaster {
     private triangles: any = {};
     public rayContainer: PIXI.Container;
     private rayPolygon: any;
-    private RAY_DENSITY: number = 0.1;
+    private RAY_DENSITY: number = 0.15;
     
     constructor() {
         this.rayContainer = new PIXI.Container();
     }
 
-    public update() {
+    public update(dt: number) {
         this.changeDetect();
         this.makeRay();
     }

@@ -25,7 +25,7 @@ export default class GameClient {
         this.gameData;
 
         this.gameLogic.on('setWorldProperties', () => {
-            this.gameRenderer.initWorld();
+            this.gameRenderer.init();
         });
     }
 
@@ -55,10 +55,10 @@ export default class GameClient {
         this.gameData = new GameData();
         this.gameLogic.gameData = this.gameData;
         this.gameRenderer.gameData = this.gameData;
+        this.gameRenderer.owner = this.io.id;
         
         const data: any = JSON.parse(message);
         this.gameData.initGameData(data);
-        this.gameRenderer.clearRenderer();
         system({text: `init done`});
 
         this.keyboard.onKeyDown = (keyCode: number) => {

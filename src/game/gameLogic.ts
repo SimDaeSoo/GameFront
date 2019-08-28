@@ -2,6 +2,7 @@ import GameData from "./gameData";
 import CollisionEngine from './class/collisionEngine';
 import { TILE_SIZE } from "./define";
 import { EventEmitter } from "events";
+import { changeTileNumber } from "../utils/utils";
 
 export default class GameLogic extends EventEmitter {
     public gameData: GameData;
@@ -113,7 +114,21 @@ export default class GameLogic extends EventEmitter {
 
     public deleteCharacter(data: any, dt: number): void {
         this.gameData.deleteData(data.id, data.objectType);
+        if (data.objectType === 'tiles') {
+            this.changeTile(data.id);
+        }
         this.emit('deleteCharacter');
+    }
+
+    public changeTile(id: string): void {
+        const width: number = this.gameData.worldProperties.width;
+        const tiles: any = [Number(id)-1,Number(id)+1,Number(id)-width,Number(id)+width];
+
+        tiles.forEach((key: number): void => {
+            if (this.gameData.data['tiles'][key.toString()] !== undefined) {
+                changeTileNumber(this.gameData.data['tiles'], key.toString(), width);
+            }
+        });
     }
 
     public setVector(data: any, dt: number): void {

@@ -5,16 +5,20 @@ import Camera from "./class/camera";
 import Display from 'pixi-layers';
 import { TILE_SIZE } from "./define";
 import RayCaster from './class/rayCaster';
+import Background from "./class/background";
+import Tile from "./class/tile";
+import ObjectFactory from "./class/objectFactory";
 
 export default class GameRenderer extends EventEmitter {
     // Application
     private app: PIXI.Application;
     private SCREEN_WIDTH: number = 1050;
     private SCREEN_HEIGHT: number = 600;
+
     public camera: Camera;
-    public mainContainer: PIXI.Container;
-    public mapContainer: PIXI.Container;
-    public backgroundContainer: PIXI.Container;
+    public stage: PIXI.Container;
+    public map: PIXI.Container;
+    public background: PIXI.Container;
 
     // Lighting
     private display: any = Display;
@@ -23,6 +27,7 @@ export default class GameRenderer extends EventEmitter {
     private rayCaster: RayCaster;
     
     // GameData
+    public owner: string;
     public gameData: GameData;
     private objectDict: any = { tiles: {}, characters: {}, objects: {}};
 
@@ -37,15 +42,15 @@ export default class GameRenderer extends EventEmitter {
         this.app = new PIXI.Application({
             width: this.SCREEN_WIDTH,
             height: this.SCREEN_HEIGHT,
-            backgroundColor: 0x5193DF,
+            backgroundColor: 0x5193CF,
             autoStart: false,
         });
         this.app.stage = new PIXI.display.Stage();
-        this.mainContainer = new PIXI.Container();
-        this.app.stage.addChild(this.mainContainer);
+        this.stage = new PIXI.Container();
+        this.app.stage.addChild(this.stage);
 
         this.camera = new Camera(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
-        this.camera.setStage(this.mainContainer);
+        this.camera.setStage(this.stage);
         this.camera.setZoom(1);
         this.camera.setRenderer(this);
 
@@ -72,54 +77,22 @@ export default class GameRenderer extends EventEmitter {
         // ----------------------------- Lightings
     }
 
-    private testFunc(): void {
-        this.backgroundContainer = new PIXI.Container();
-
-        let background: PIXI.Sprite;
-        background = PIXI.Sprite.from('src/assets/background.png');
-        this.backgroundContainer.addChild(background);
-
-        background = PIXI.Sprite.from('src/assets/background.png');
-        background.position.x = 928;
-        this.backgroundContainer.addChild(background);
-
-        background = PIXI.Sprite.from('src/assets/background.png');
-        background.position.x = 928 * 2;
-        this.backgroundContainer.addChild(background);
-
-        // background = PIXI.Sprite.from('src/assets/background.png');
-        // background.position.x = 928 * 3;
-        // this.backgroundContainer.addChild(background);
-
-        // background = PIXI.Sprite.from('src/assets/background.png');
-        // background.position.x = 928 * 4;
-        // this.backgroundContainer.addChild(background);
-
-        let shadow = new PIXI.Graphics();
-        shadow.beginFill(0x0C1122, 1);
-        shadow.drawPolygon([new PIXI.Point(0, 580), new PIXI.Point(0, 1080), new PIXI.Point(4800, 1080), new PIXI.Point(4800, 580)]);
-        shadow.endFill();
-        this.backgroundContainer.addChild(shadow);
-        this.backgroundContainer.position.y = -60;
-        // this.backgroundContainer.cacheAsBitmap = true;
-
-        this.mainContainer.addChild(this.backgroundContainer);
-    }
-
-    public async update(dt: number): Promise<void> {
-        await this.objectGenerate();
-        await this.objectDelete();
-        await this.objectUpdate();
-        await this.setLighting();
-        await this.camera.update(dt);
-        this.rayCaster.update();
-    }
-
-    public initWorld(): void {
+    public init(): void {
         const worldSize: any = {
             width: this.gameData.worldProperties.width * TILE_SIZE.WIDTH,
             height: (this.gameData.worldProperties.height + 17) * TILE_SIZE.HEIGHT
         };
+
+        for (var i = this.stage.children.length - 1; i >= 0; i--) {
+            this.stage.removeChild(this.stage.children[i]);
+        };
+
+        this.background = new PIXI.Container();
+        this.background.addChild(new Background(worldSize));
+        this.stage.addChild(this.background);
+
+        this.map = new PIXI.Container();
+        this.stage.addChild(this.map);
 
         this.objectGenerate();
         this.camera.setSize(worldSize);
@@ -127,107 +100,7 @@ export default class GameRenderer extends EventEmitter {
         this.rayCaster.setPosition({ x: worldSize.width / 2, y: -600 });
         this.rayCaster.setSize(worldSize);
         this.rayCaster.initRay();
-        this.mainContainer.addChild(this.rayCaster.rayContainer);
-    }
-
-    private async setLighting(): Promise<void> {
-        if (this.gameData.worldProperties.height === 0) return;
-        let depth = this.camera.position.y + (this.gameData.worldProperties.height * TILE_SIZE.HEIGHT * this.camera.currentZoom) - this.SCREEN_HEIGHT;
-        depth /= (this.gameData.worldProperties.height - 17) * TILE_SIZE.HEIGHT;
-        depth = (depth * 2.5)<0?0:(depth * 2.5);
-        if (this.camera.currentZoom < 0.9) {
-            depth = depth < 0.4?0.4:depth;
-        }
-        this.lightbulb.alpha = depth>=1?1:depth;
-    }
-
-    private async objectUpdate(): Promise<void> {
-        for (let type in this.gameData.dirties) {
-            this.gameData.dirties[type].forEach((id: string) => {
-                const obj = this.objectDict[type][id];
-                const data = this.gameData.data[type][id];
-
-                if (obj && data && (Math.round(obj.x) !== Math.round(data.position.x) || Math.round(obj.y) !== Math.round(data.position.y))) {
-                    obj.x = Math.round(data.position.x);
-                    obj.y = Math.round(data.position.y);
-                    this.gameData.clean(id, type);
-                }
-            });
-        }
-    }
-
-    private async objectDelete(): Promise<void> {
-        for (let type in this.gameData.beDeletes) {
-            this.gameData.beDeletes[type].forEach((id: string): void => {
-                this.objectDict[type][id].parent.removeChild(this.objectDict[type][id]);
-                delete this.objectDict[type][id];
-                this.gameData.doneDelete(id, type);
-            });
-        }
-    }
-
-    private async objectGenerate(): Promise<void> {
-        let count: number = 0;
-        for (let type in this.gameData.beGenerates) {
-            this.gameData.beGenerates[type].every((id: string): any => {
-                count++;
-                // 임시 Tile Map TODO: 제거.
-                let fileName = '';
-                if (this.gameData.data[type][id].tileNumber !== undefined) {
-                    fileName = `Terrain Tileset${this.gameData.data[type][id].tileNumber}.png`;
-                } else {
-                    fileName = 'src/assets/hitBox.png';
-                }
-                const container: PIXI.Container = new PIXI.Container();
-                container.x = this.gameData.data[type][id].position.x;
-                container.y = this.gameData.data[type][id].position.y;
-                container.interactive = true;
-
-                const newTile = PIXI.Sprite.from(fileName);
-                newTile.scale.x = this.gameData.data[type][id].scale.x;
-                newTile.scale.y = this.gameData.data[type][id].scale.y;
-                container.addChild(newTile);
-
-                if (type === 'tiles') {
-                    this.mapContainer.addChild(container);
-                } else {
-                    this.mainContainer.addChild(container);
-                }
-                this.objectDict[type][id] = container;
-                this.gameData.doneGenerate(id, type);
-
-                // 임시 Test Event ------------------------------------------------------------
-                container.on('click', (): void => {
-                    this.camera.setObject(this.gameData.data[type][id]);
-                    // const command = {
-                    //     script: 'deleteCharacter',
-                    //     data: {
-                    //         id: id,
-                    //         objectType: type
-                    //     }
-                    // };
-                    // this.emit('broadcast', command);
-                });
-
-                if (count > 150) {
-                    return false;
-                }
-            });
-        }
-    }
-
-    public get view(): any {
-        return this.app.view;
-    }
-
-    public clearRenderer(): void {
-        for (var i = this.mainContainer.children.length - 1; i >= 0; i--) {
-            this.mainContainer.removeChild(this.mainContainer.children[i]);
-        };
-
-        this.testFunc();
-        this.mapContainer = new PIXI.Container();
-        this.mainContainer.addChild(this.mapContainer);
+        this.stage.addChild(this.rayCaster.rayContainer);
     }
 
     public start() {
@@ -244,6 +117,93 @@ export default class GameRenderer extends EventEmitter {
             this.render(now, t_1);
         });
     }
+
+    public async update(dt: number): Promise<void> {
+        await this.objectGenerate();
+        await this.objectDelete();
+        await this.objectUpdate(dt);
+        await this.setLighting();
+        await this.camera.update(dt);
+        this.rayCaster.update(dt);
+    }
+
+    private async objectUpdate(dt: number): Promise<void> {
+        for (let type in this.gameData.dirties) {
+            this.gameData.dirties[type].forEach((id: string) => {
+                const obj = this.objectDict[type][id];
+                const data = this.gameData.data[type][id];
+
+                if (obj && data && (Math.round(obj.x) !== Math.round(data.position.x) || Math.round(obj.y) !== Math.round(data.position.y))) {
+                    obj.x = Math.round(data.position.x);
+                    obj.y = Math.round(data.position.y);
+                    this.gameData.clean(id, type);
+                }
+            });
+        }
+
+        for (let key in this.objectDict) {
+            for (let id in this.objectDict[key]) {
+                this.objectDict[key][id]._update(dt);
+            }
+        }
+    }
+
+    private async objectDelete(): Promise<void> {
+        for (let type in this.gameData.beDeletes) {
+            this.gameData.beDeletes[type].forEach((id: string): void => {
+                this.objectDict[type][id].delete();
+                delete this.objectDict[type][id];
+                this.gameData.doneDelete(id, type);
+
+                if (type === 'tiles') {
+                    this.changeTile(id);
+                }
+            });
+        }
+    }
+
+    private async objectGenerate(): Promise<void> {
+        let count: number = 0;
+        for (let type in this.gameData.beGenerates) {
+            this.gameData.beGenerates[type].every((id: string): any => {
+                const object = ObjectFactory.create(this.gameData.data[type][id]);
+
+                if (type === 'tiles') {
+                    this.map.addChild(object);
+                } else {
+                    this.stage.addChild(object);
+                }
+
+                this.objectDict[type][id] = object;
+                this.gameData.doneGenerate(id, type);
+
+                if (id === this.owner) {
+                    this.camera.setObject(this.gameData.data[type][id]);
+                }
+
+                if (count++ > 150) {
+                    return false;
+                }
+            });
+        }
+    }
+
+    private async setLighting(): Promise<void> {
+        if (this.gameData.worldProperties.height === 0) return;
+        let depth = this.camera.position.y + (this.gameData.worldProperties.height * TILE_SIZE.HEIGHT * this.camera.currentZoom) - this.SCREEN_HEIGHT;
+        depth /= (this.gameData.worldProperties.height - 17) * TILE_SIZE.HEIGHT;
+        depth = (depth * 1.5)<0?0:(depth * 1.5);
+
+        if (this.camera.currentZoom < 0.9) {
+            depth = depth < 0.15?0.15:depth;
+        }
+        
+        this.lightbulb.alpha = depth>=1?1:depth;
+    }
+
+    public get view(): any {
+        return this.app.view;
+    }
     
     private checkRenderingPerformance(dt: number): void {
         this.time += dt;
@@ -253,6 +213,22 @@ export default class GameRenderer extends EventEmitter {
             system({ text: `render: ${(this.renderCount / this.AVERAGE_LOOPING).toFixed(2)}fps (${(this.renderCount / this.AVERAGE_LOOPING/60*100).toFixed(2)}%)` });
             this.time = 0;
             this.renderCount = 0;
+        }
+    }
+
+    private changeTile(id: string): void {
+        const width: number = this.gameData.worldProperties.width;
+        const tiles: any = {}
+
+        tiles[(Number(id) - width).toString()] = this.objectDict['tiles'][(Number(id) - width).toString()];
+        tiles[(Number(id) + width).toString()] = this.objectDict['tiles'][(Number(id) + width).toString()];
+        tiles[(Number(id) - 1).toString()] = this.objectDict['tiles'][(Number(id) - 1).toString()];
+        tiles[(Number(id) + 1).toString()] = this.objectDict['tiles'][(Number(id) + 1).toString()];
+
+        for (let key in tiles) {
+            if (tiles[key] !== undefined) {
+                tiles[key].changeTile(this.gameData.data['tiles'], key, width);
+            }
         }
     }
 }
