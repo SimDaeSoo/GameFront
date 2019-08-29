@@ -11,7 +11,7 @@ export default class BaseObject extends PIXI.Container {
     private size: any = { x: 0, y: 0 };
     public targetPosition: any = { x: 0, y: 0 };
     public currentPosition: any = { x: 0, y: 0 };
-    public INTERPOLATION: any = 1.007
+    public INTERPOLATION: any = 1.02;
 
     constructor(options: any) {
         super();
@@ -41,7 +41,7 @@ export default class BaseObject extends PIXI.Container {
     }
 
     private interpolationPosition(dt: number): void {
-        const strength: number = (this.INTERPOLATION ** dt)>=1? 1: (this.INTERPOLATION ** dt);
+        const strength: number = ((this.INTERPOLATION ** dt) - 1)>=1? 1: ((this.INTERPOLATION ** dt) - 1);
         this.currentPosition.x += (this.targetPosition.x - this.currentPosition.x) * strength;
         this.currentPosition.y += (this.targetPosition.y - this.currentPosition.y) * strength;
 

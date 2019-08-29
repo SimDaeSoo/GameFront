@@ -137,11 +137,15 @@ export default class GameLogic extends EventEmitter {
         const object: any = this.gameData.data[data.objectType][data.id];
         const tempVector: any = { x: data.vector.x, y: data.vector.y };
 
-        object.vector.x = ((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x);
-        object.vector.y = ((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y);
-
-        if (!this.characterTileCollision(object, 1)) {
+        data.vector.x = (((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x)) / dt;
+        data.vector.y = 0;
+        if (!this.characterTileCollision(data, dt)) {
             data.position.x += ((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x);
+        }
+
+        data.vector.x = 0;
+        data.vector.y = (((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y)) / dt;
+        if (!this.characterTileCollision(data, dt)) {
             data.position.y += ((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y);
         }
 
@@ -159,6 +163,7 @@ export default class GameLogic extends EventEmitter {
     public runCommand(command: any, date: number): void {
         if (typeof((this as any)[command.script]) === 'function') {
             const dt: number = Date.now() - date;
+            console.log('ping: ', dt);
             (this as any)[command.script](command.data, dt);
         }
     }
