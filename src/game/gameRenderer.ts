@@ -38,7 +38,7 @@ export default class GameRenderer extends EventEmitter {
     constructor() {
         super();
 
-        // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
         this.app = new PIXI.Application({
             width: this.SCREEN_WIDTH,
@@ -46,7 +46,7 @@ export default class GameRenderer extends EventEmitter {
             backgroundColor: 0x7296D5,
             autoStart: false,
             antialias: false,
-            // sharedLoader: true
+            sharedLoader: true
         });
         this.app.stage = new PIXI.display.Stage();
         this.stage = new PIXI.Container();

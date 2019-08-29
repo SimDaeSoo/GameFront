@@ -18,7 +18,7 @@ export default class GameClient {
     public pings: Array<number> = [];
     public checkPing: any;
     public pingInterpolation: number = 0;
-    private PING_CHECK_TIME: number = 100;
+    private PING_CHECK_TIME: number = 50;
 
     constructor() {
         this.keyboard = new Keyboard();
@@ -67,6 +67,7 @@ export default class GameClient {
             this.pingInterpolation += eachPing;
         });
         this.pingInterpolation /= this.pings.length;
+        this.pingInterpolation = Math.round(this.pingInterpolation);
 
         setTimeout((): void => {
             this.checkPing.start = Date.now();
@@ -76,6 +77,7 @@ export default class GameClient {
 
     public broadcast(message: string, date: number): void {
         if (this.isInit) {
+            console.log(this.pingInterpolation);
             const command: any = JSON.parse(message);
             this.gameLogic.runCommand(command, date - this.pingInterpolation);
         }
