@@ -6,7 +6,6 @@ import Display from 'pixi-layers';
 import { TILE_SIZE } from "./define";
 import RayCaster from './class/rayCaster';
 import Background from "./class/background";
-import Tile from "./class/tile";
 import ObjectFactory from "./class/objectFactory";
 
 export default class GameRenderer extends EventEmitter {

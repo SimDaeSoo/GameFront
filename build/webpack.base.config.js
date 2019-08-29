@@ -33,6 +33,12 @@ const webpackConfig = {
                 options: {
                     name: '[path][name].[ext]',
                 },
+            }, {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'file-loader',
+                options: {
+                    name: '[path][name].[hash:7].[ext]'
+                }
             }
         ]
     },

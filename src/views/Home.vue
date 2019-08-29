@@ -17,8 +17,12 @@ export default class Home extends Vue {
   }
 
   mounted() {
+    this.start();
+  }
+
+  private async start(): Promise<void> {
     this.loader = new Loader;
-    this.$preload();
+    await this.$preload();
 
     this.loader.load(() =>{
       this.client = new GameClient();
@@ -28,7 +32,7 @@ export default class Home extends Vue {
     });
   }
 
-  async $preload() {
+  private async $preload() {
     const preloads = require('../json/preloads.json');
 
     for(const r of preloads) {
@@ -42,6 +46,7 @@ export default class Home extends Vue {
 
 <style>
 .Home {
+  font-family: 'soya_direct10';
   text-align: center;
 }
 

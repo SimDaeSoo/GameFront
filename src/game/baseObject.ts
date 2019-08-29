@@ -8,7 +8,7 @@ export default class BaseObject extends PIXI.Container {
     private strength: number = 0;
     private duration: number = 0;
     private vibrateFlag: boolean = true;
-    private size: any = { x: 0, y: 0 };
+    public size: any = { x: 0, y: 0 };
     public targetPosition: any = { x: 0, y: 0 };
     public currentPosition: any = { x: 0, y: 0 };
     public INTERPOLATION: any = 1.02;
