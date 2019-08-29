@@ -9,6 +9,9 @@ export default class BaseObject extends PIXI.Container {
     private duration: number = 0;
     private vibrateFlag: boolean = true;
     private size: any = { x: 0, y: 0 };
+    public targetPosition: any = { x: 0, y: 0 };
+    public currentPosition: any = { x: 0, y: 0 };
+    public INTERPOLATION: any = 1.007
 
     constructor(options: any) {
         super();
@@ -18,16 +21,32 @@ export default class BaseObject extends PIXI.Container {
         this.setSize(options.size);
         this.addChild(this.container);
         this.addChild(this.uiContainer);
+        this.init(options);
 
         this.on('click', (): void => {
             this.vibration(300, 3);
         });
     }
+    
+    private init(options: any): void {
+        this.targetPosition.x = this.currentPosition.x = options.position.x;
+        this.targetPosition.y = this.currentPosition.y = options.position.y;
+    }
 
     public update(dt: number): void {}
     public _update(dt: number): void {
+        this.interpolationPosition(dt);
         this.updateVibration(dt);
         this.update(dt);
+    }
+
+    private interpolationPosition(dt: number): void {
+        const strength: number = (this.INTERPOLATION ** dt)>=1? 1: (this.INTERPOLATION ** dt);
+        this.currentPosition.x += (this.targetPosition.x - this.currentPosition.x) * strength;
+        this.currentPosition.y += (this.targetPosition.y - this.currentPosition.y) * strength;
+
+        this.x = Math.round(this.currentPosition.x);
+        this.y = Math.round(this.currentPosition.y);
     }
 
     public updateVibration(dt: number): void {

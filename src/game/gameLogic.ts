@@ -28,7 +28,7 @@ export default class GameLogic extends EventEmitter {
         }
     }
 
-    private characterTileCollision(character: any, dt: number): void {
+    private characterTileCollision(character: any, dt: number): boolean {
         const tiles: Array<any> = this.getTiles(character);
         const result: Array<any> = CollisionEngine.getHitObjects(character, tiles, dt);
 
@@ -36,8 +36,10 @@ export default class GameLogic extends EventEmitter {
             result.forEach((collisionData) => {
                 CollisionEngine.applyTilePhysics(character, collisionData);
             });
+            return true;
         } else {
             character.forceVector.y = character.forceVector.y === 0?0.0002:character.forceVector.y;
+            return false;
         }
     }
 
@@ -131,24 +133,27 @@ export default class GameLogic extends EventEmitter {
         });
     }
 
-    public setVector(data: any, dt: number): void {
-        data.position.x += dt * data.vector.x;
-        data.position.y += dt * data.vector.y;
-        this.gameData.data[data.objectType][data.id].position = data.position;
-        this.gameData.data[data.objectType][data.id].vector = data.vector;
-        this.gameData.dirty(data.id, data.objectType);
-    }
+    public setState(data: any, dt: number): void {
+        const object: any = this.gameData.data[data.objectType][data.id];
+        const tempVector: any = { x: data.vector.x, y: data.vector.y };
 
-    // setVector, addCharacter랑 통합해서 setState로 만들 수 있을 것 같다..
-    public setForceVector(data: any, dt: number): void {
-        data.position.x += dt * dt * data.forceVector.x / 2;
-        data.position.y += dt * dt * data.forceVector.y / 2;
-        data.vector.x += dt * data.forceVector.x;
-        data.vector.y += dt * data.forceVector.y;
-        this.gameData.data[data.objectType][data.id].position = data.position;
-        this.gameData.data[data.objectType][data.id].vector = data.vector;
-        this.gameData.data[data.objectType][data.id].forceVector = data.forceVector;
-        this.gameData.dirty(data.id, data.objectType);
+        object.vector.x = ((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x);
+        object.vector.y = ((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y);
+
+        if (!this.characterTileCollision(object, 1)) {
+            data.position.x += ((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x);
+            data.position.y += ((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y);
+        }
+
+        data.vector.x = tempVector.x + dt * data.forceVector.x;
+        data.vector.y = tempVector.y + dt * data.forceVector.y;
+        object.position.x = data.position.x;
+        object.position.y = data.position.y;
+        object.vector.x = data.vector.x;
+        object.vector.y = data.vector.y;
+        object.forceVector.x = data.forceVector.x;
+        object.forceVector.y = data.forceVector.y;
+        this.gameData.dirty(data.id, data.objectType);   
     }
 
     public runCommand(command: any, date: number): void {

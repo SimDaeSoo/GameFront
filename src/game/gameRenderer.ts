@@ -139,8 +139,8 @@ export default class GameRenderer extends EventEmitter {
                 const data = this.gameData.data[type][id];
 
                 if (obj && data && (Math.round(obj.x) !== Math.round(data.position.x) || Math.round(obj.y) !== Math.round(data.position.y))) {
-                    obj.x = Math.round(data.position.x);
-                    obj.y = Math.round(data.position.y);
+                    obj.targetPosition.x = Math.round(data.position.x);
+                    obj.targetPosition.y = Math.round(data.position.y);
                     this.gameData.clean(id, type);
                 }
             });
