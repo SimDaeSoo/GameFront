@@ -15,6 +15,10 @@ export default class GameClient {
     public updater: Updater;
     public keyboard: Keyboard;
     public isInit: boolean;
+    public pings: Array<number> = [];
+    public checkPing: any;
+    public pingInterpolation: number = 0;
+    private PING_CHECK_TIME: number = 100;
 
     constructor() {
         this.keyboard = new Keyboard();
@@ -23,6 +27,10 @@ export default class GameClient {
         this.updater = new Updater();
         this.isInit = false;
         this.gameData;
+        this.checkPing = {
+            start: 0,
+            end: 0
+        };
 
         this.gameLogic.on('setWorldProperties', () => {
             this.gameRenderer.init();
@@ -30,7 +38,8 @@ export default class GameClient {
     }
 
     public run(): any {
-        this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
+        // this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
+        this.io = io.connect('http://localhost:3020');
 
         this.io.on('connect', (): void => {
             system({text: 'connect success!'});
@@ -39,13 +48,36 @@ export default class GameClient {
             this.io.emit('init');
             this.io.on('initGameData', (message: string, date: number): void => { this.initGameData(message, date); });
             this.io.on('broadcast', (message: string, date: number): void => { this.broadcast(message, date); });
+            this.io.on('pingTest', (date: number): void => { this.ping(date); });
+
+            this.checkPing.start = Date.now();
+            this.io.emit('pingTest', this.checkPing.start);
+        });
+    }
+    
+    private ping(date: number): void {
+        if (this.pings.length >= 500 / this.PING_CHECK_TIME) {
+            this.pings.splice(0, 1);
+        }
+        
+        this.pingInterpolation = 0;
+        this.checkPing.end = Date.now();
+        this.pings.push(date - (this.checkPing.start + this.checkPing.end) / 2);
+        this.pings.forEach((eachPing: number) => {
+            this.pingInterpolation += eachPing;
+        });
+        this.pingInterpolation /= this.pings.length;
+
+        setTimeout((): void => {
+            this.checkPing.start = Date.now();
+            this.io.emit('pingTest', this.checkPing.start);
         });
     }
 
     public broadcast(message: string, date: number): void {
         if (this.isInit) {
             const command: any = JSON.parse(message);
-            this.gameLogic.runCommand(command, date);
+            this.gameLogic.runCommand(command, date - this.pingInterpolation);
         }
     }
 
