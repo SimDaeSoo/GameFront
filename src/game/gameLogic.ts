@@ -135,29 +135,26 @@ export default class GameLogic extends EventEmitter {
 
     public setState(data: any, dt: number): void {
         const object: any = this.gameData.data[data.objectType][data.id];
-        const tempVector: any = { x: data.vector.x, y: data.vector.y };
-
-        data.vector.x = (((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x)) / dt;
-        data.vector.y = 0;
-        if (!this.characterTileCollision(data, dt)) {
-            data.position.x += ((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x);
-        }
-
-        data.vector.x = 0;
-        data.vector.y = (((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y)) / dt;
-        if (!this.characterTileCollision(data, dt)) {
-            data.position.y += ((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y);
-        }
-
-        data.vector.x = tempVector.x + dt * data.forceVector.x;
-        data.vector.y = tempVector.y + dt * data.forceVector.y;
         object.position.x = data.position.x;
         object.position.y = data.position.y;
-        object.vector.x = data.vector.x;
-        object.vector.y = data.vector.y;
+
+        object.vector.x = (((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x)) / dt;
+        object.vector.y = 0;
+        if (!this.characterTileCollision(object, dt)) {
+            object.position.x += ((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x);
+        }
+
+        object.vector.x = 0;
+        object.vector.y = (((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y)) / dt;
+        if (!this.characterTileCollision(object, dt)) {
+            object.position.y += ((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y);
+        }
+
+        object.vector.x = data.vector.x + dt * data.forceVector.x;
+        object.vector.y = data.vector.y + dt * data.forceVector.y;
         object.forceVector.x = data.forceVector.x;
         object.forceVector.y = data.forceVector.y;
-        this.gameData.dirty(data.id, data.objectType);   
+        this.gameData.dirty(data.id, data.objectType);
     }
 
     public runCommand(command: any, date: number): void {

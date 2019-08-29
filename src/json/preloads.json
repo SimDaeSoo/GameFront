@@ -1,5 +1,4 @@
 [
-    ["tile", "assets/tile.png"],
     ["hitBox", "assets/hitBox.png"],
     ["assets/Terrain Tileset.json"],
     ["background", "assets/background.png"]
