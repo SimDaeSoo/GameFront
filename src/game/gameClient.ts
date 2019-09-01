@@ -18,7 +18,7 @@ export default class GameClient {
     public pings: Array<number> = [];
     public checkPing: any;
     public pingInterpolation: number = 0;
-    private PING_CHECK_TIME: number = 50;
+    private PING_CHECK_TIME: number = 200;
 
     constructor() {
         this.keyboard = new Keyboard();
@@ -56,7 +56,7 @@ export default class GameClient {
     }
     
     private ping(date: number): void {
-        if (this.pings.length >= 500 / this.PING_CHECK_TIME) {
+        if (this.pings.length >= 1000 / this.PING_CHECK_TIME) {
             this.pings.splice(0, 1);
         }
         
@@ -72,7 +72,7 @@ export default class GameClient {
         setTimeout((): void => {
             this.checkPing.start = Date.now();
             this.io.emit('pingTest', this.checkPing.start);
-        });
+        }, this.PING_CHECK_TIME);
     }
 
     public broadcast(message: string, date: number): void {
