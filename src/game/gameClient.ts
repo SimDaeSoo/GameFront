@@ -19,6 +19,7 @@ export default class GameClient {
     public checkPing: any;
     public pingInterpolation: number = 0;
     private PING_CHECK_TIME: number = 200;
+    private PING_TEST: number = 40;
 
     constructor() {
         this.keyboard = new Keyboard();
@@ -38,8 +39,8 @@ export default class GameClient {
     }
 
     public run(): any {
-        // this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
-        this.io = io.connect('http://localhost:3020');
+        this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
+        // this.io = io.connect('http://localhost:3020');
 
         this.io.on('connect', (): void => {
             system({text: 'connect success!'});
@@ -103,15 +104,22 @@ export default class GameClient {
                     this.gameRenderer.camera.setZoom(0.5);
                 }
             }
+            setTimeout(() => {
+                this.io.emit('keydown', keyCode);
+            }, this.PING_TEST);
             this.io.emit('keydown', keyCode);
         }
 
         this.keyboard.onKeyUp = (keyCode: number) => {
-            this.io.emit('keyup', keyCode);
+            setTimeout(() => {
+                this.io.emit('keyup', keyCode);
+            }, this.PING_TEST);
         }
 
         this.gameRenderer.on('broadcast', (data) => {
-            this.io.emit('broadcast', JSON.stringify(data), Date.now());
+            setTimeout(() => {
+                this.io.emit('broadcast', JSON.stringify(data), Date.now());
+            }, this.PING_TEST);
         })
 
         // TODO 다른 곳으로 뺄 것.
