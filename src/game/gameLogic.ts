@@ -137,6 +137,8 @@ export default class GameLogic extends EventEmitter {
 
     public setState(data: any, dt: number): void {
         const object: any = this.gameData.data[data.objectType][data.id];
+        if (!object) return;
+        
         object.position.x = data.position.x;
         object.position.y = data.position.y;
 
@@ -156,6 +158,7 @@ export default class GameLogic extends EventEmitter {
         object.vector.y = data.vector.y + dt * data.forceVector.y;
         object.forceVector.x = data.forceVector.x;
         object.forceVector.y = data.forceVector.y;
+        object.currentState = data.currentState;
         this.gameData.dirty(data.id, data.objectType);
     }
 

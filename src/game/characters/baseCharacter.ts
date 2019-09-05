@@ -1,8 +1,8 @@
 import BaseObject from "../baseObject";
+import { State } from '../class/state';
 
 export default class BaseCharacter extends BaseObject {
-    private state: any;
-    private animation: any;
+    public state: State;
 
     constructor(options: any) {
         super(options);
@@ -11,8 +11,8 @@ export default class BaseCharacter extends BaseObject {
     public update(dt: number): void {
     }
 
-    loadAnimation(): void {
-
+    public setState(state: State): void {
+        this.state = state;
     }
 }
 
