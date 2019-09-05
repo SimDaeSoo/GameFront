@@ -1,6 +1,7 @@
 export default class BaseObject extends PIXI.Container {
     public container: PIXI.Container = new PIXI.Container();
     public uiContainer: PIXI.Container = new PIXI.Container();
+    public outerContainer: PIXI.Container = new PIXI.Container();
     public sprite: PIXI.Sprite;
 
     private nextVibrationTime: number = 0;
@@ -19,7 +20,8 @@ export default class BaseObject extends PIXI.Container {
         this.setPosition(options.position);
         this.setScale(options.scale);
         this.setSize(options.size);
-        this.addChild(this.container);
+        this.outerContainer.addChild(this.container);
+        this.addChild(this.outerContainer);
         this.addChild(this.uiContainer);
         this.init(options);
 
@@ -31,6 +33,20 @@ export default class BaseObject extends PIXI.Container {
     private init(options: any): void {
         this.targetPosition.x = this.currentPosition.x = options.position.x;
         this.targetPosition.y = this.currentPosition.y = options.position.y;
+
+        options.showCollisionBox = true;
+        if (options.showCollisionBox) {
+            const collisionBox: PIXI.Graphics = new PIXI.Graphics();
+            collisionBox.lineStyle(1, 0xff0000);
+            collisionBox.moveTo(0, 0);
+            collisionBox.lineTo(this.size.x / this.scale.x, 0);
+            collisionBox.lineTo(this.size.x / this.scale.x, this.size.y / this.scale.y);
+            collisionBox.lineTo(0, this.size.y / this.scale.y);
+            collisionBox.lineTo(0, 0);
+            collisionBox.endFill();
+            collisionBox.alpha = 0.5;
+            this.addChild(collisionBox);
+        }
     }
 
     public update(dt: number): void {}
@@ -55,15 +71,15 @@ export default class BaseObject extends PIXI.Container {
         
         this.vibrationTimer += dt;
         if (this.duration < this.vibrationTimer) {
-            this.duration = this.strength = this.container.position.x = this.container.position.y = 0;
+            this.duration = this.strength = this.outerContainer.position.x = this.outerContainer.position.y = 0;
         } else if (this.nextVibrationTime < this.vibrationTimer && this.vibrateFlag) {
-            this.container.position.x += this.strength * (1 - Math.round(Math.random()) * 2);
-            this.container.position.y += this.strength * (1 - Math.round(Math.random()) * 2);
+            this.outerContainer.position.x += this.strength * (1 - Math.round(Math.random()) * 2);
+            this.outerContainer.position.y += this.strength * (1 - Math.round(Math.random()) * 2);
             this.nextVibrationTime += PERIOD;
             this.vibrateFlag = !this.vibrateFlag;
             this.strength *= 0.9;
         } else if (this.nextVibrationTime < this.vibrationTimer && !this.vibrateFlag) {
-            this.container.position.x = this.container.position.y = 0;
+            this.outerContainer.position.x = this.outerContainer.position.y = 0;
             this.nextVibrationTime += PERIOD;
             this.vibrateFlag = !this.vibrateFlag;
         }
@@ -89,7 +105,7 @@ export default class BaseObject extends PIXI.Container {
     }
 
     public setScale(scale: any): void {
-        if (!scale) return;
+        if (!scale) scale = { x:1, y:1 };
         this.scale.x = scale.x;
         this.scale.y = scale.y;
     }
