@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as path from 'path';
 
+// Electron과 함께 사용하게 될 것 같다.
 class ServerApp {
     public express: express.Application;
     public server: http.Server;

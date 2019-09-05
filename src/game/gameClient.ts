@@ -19,7 +19,7 @@ export default class GameClient {
     public checkPing: any;
     public pingInterpolation: number = 0;
     private PING_CHECK_TIME: number = 200;
-    private PING_TEST: number = 40;
+    private PING_TEST: number = 0;
 
     constructor() {
         this.keyboard = new Keyboard();
@@ -39,8 +39,8 @@ export default class GameClient {
     }
 
     public run(): any {
-        this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
-        // this.io = io.connect('http://localhost:3020');
+        // this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
+        this.io = io.connect('http://localhost:3020');
 
         this.io.on('connect', (): void => {
             system({text: 'connect success!'});
@@ -78,7 +78,6 @@ export default class GameClient {
 
     public broadcast(message: string, date: number): void {
         if (this.isInit) {
-            console.log(this.pingInterpolation);
             const command: any = JSON.parse(message);
             this.gameLogic.runCommand(command, date - this.pingInterpolation);
         }
