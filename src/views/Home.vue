@@ -46,7 +46,6 @@ export default class Home extends Vue {
 
 <style>
 .Home {
-  font-family: 'soya_direct10';
   text-align: center;
 }
 

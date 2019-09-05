@@ -6,7 +6,7 @@ const path = require('path');
 
 const webpackConfig = {
     entry: {
-        app: ['./src/main.ts']
+        app: ['./src/App.ts']
     },
     output: {
       filename: '[name].bundle.js',

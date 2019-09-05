@@ -42,7 +42,8 @@ const webpackConfig = merge(baseConfig, {
               chunks: 'all'
             }
           }
-        }
+        },
+        runtimeChunk: true
     },
     module: {
         rules: [
