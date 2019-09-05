@@ -39,9 +39,9 @@ export default class BaseObject extends PIXI.Container {
             const collisionBox: PIXI.Graphics = new PIXI.Graphics();
             collisionBox.lineStyle(1, 0xff0000);
             collisionBox.moveTo(0, 0);
-            collisionBox.lineTo(this.size.x / this.scale.x, 0);
-            collisionBox.lineTo(this.size.x / this.scale.x, this.size.y / this.scale.y);
-            collisionBox.lineTo(0, this.size.y / this.scale.y);
+            collisionBox.lineTo(this.size.x, 0);
+            collisionBox.lineTo(this.size.x, this.size.y);
+            collisionBox.lineTo(0, this.size.y);
             collisionBox.lineTo(0, 0);
             collisionBox.endFill();
             collisionBox.alpha = 0.5;
@@ -106,8 +106,12 @@ export default class BaseObject extends PIXI.Container {
 
     public setScale(scale: any): void {
         if (!scale) scale = { x:1, y:1 };
-        this.scale.x = scale.x;
-        this.scale.y = scale.y;
+        this.container.scale.x = scale.x;
+        this.container.scale.y = scale.y;
+    }
+
+    public get scale(): any {
+        return this.container.scale;
     }
     
     public delete(): void {
