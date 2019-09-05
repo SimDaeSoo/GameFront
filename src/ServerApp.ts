@@ -41,6 +41,10 @@ class ServerApp {
             const filePath: string = path.join('dist', req.url);
             res.sendfile(filePath);
         });
+        this.express.get('/', (req: express.Request, res: express.Response, next: express.NextFunction): any => {
+            const filePath: string = path.join('dist', 'index.html');
+            res.sendfile(filePath);
+        });
     }
 
     private normalizePort(val: number | string): number | string | boolean {

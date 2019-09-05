@@ -34,7 +34,6 @@ export default class BaseObject extends PIXI.Container {
         this.targetPosition.x = this.currentPosition.x = options.position.x;
         this.targetPosition.y = this.currentPosition.y = options.position.y;
 
-        options.showCollisionBox = true;
         if (options.showCollisionBox) {
             const collisionBox: PIXI.Graphics = new PIXI.Graphics();
             collisionBox.lineStyle(1, 0xff0000);

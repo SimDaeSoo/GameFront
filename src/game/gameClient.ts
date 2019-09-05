@@ -16,8 +16,10 @@ export default class GameClient {
     public keyboard: Keyboard;
     public isInit: boolean;
     public pings: Array<number> = [];
+    public avgPings: Array<number> = [];
     public checkPing: any;
     public pingInterpolation: number = 0;
+    public avgPing: number = 0;
     private PING_CHECK_TIME: number = 200;
     private PING_TEST: number = 0;
 
@@ -59,16 +61,23 @@ export default class GameClient {
     private ping(date: number): void {
         if (this.pings.length >= 1000 / this.PING_CHECK_TIME) {
             this.pings.splice(0, 1);
+            this.avgPings.splice(0, 1);
         }
-        
-        this.pingInterpolation = 0;
+        this.pingInterpolation = this.avgPing = 0;
         this.checkPing.end = Date.now();
+
         this.pings.push(date - (this.checkPing.start + this.checkPing.end) / 2);
-        this.pings.forEach((eachPing: number) => {
+        this.pings.forEach((eachPing: number): void => {
             this.pingInterpolation += eachPing;
         });
         this.pingInterpolation /= this.pings.length;
         this.pingInterpolation = Math.round(this.pingInterpolation);
+        
+        this.avgPings.push(this.checkPing.end - this.checkPing.start);
+        this.avgPings.forEach((eachPing: number): void => {
+            this.avgPing += eachPing;
+        });
+        this.avgPing = Number((this.avgPing / this.avgPings.length).toFixed(2));
 
         setTimeout((): void => {
             this.checkPing.start = Date.now();
@@ -123,6 +132,8 @@ export default class GameClient {
 
         // TODO 다른 곳으로 뺄 것.
         this.updater.onUpdate(async (dt: number): Promise<void> => {
+            this.gameRenderer.systemData.ping = this.avgPing;
+            this.gameRenderer.systemData.ups = this.updater.ups;
             await this.gameLogic.update(dt);
             await this.gameRenderer.update(dt);
         });

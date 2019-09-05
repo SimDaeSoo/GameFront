@@ -7,6 +7,7 @@ import { TILE_SIZE } from "./define";
 import RayCaster from './class/rayCaster';
 import Background from "./class/background";
 import ObjectFactory from "./class/objectFactory";
+import UI from "./class/ui";
 
 export default class GameRenderer extends EventEmitter {
     // Application
@@ -15,6 +16,7 @@ export default class GameRenderer extends EventEmitter {
     private SCREEN_HEIGHT: number = 600;
 
     public camera: Camera;
+    public ui: UI;
     public stage: PIXI.Container;
     public map: PIXI.Container;
     public background: PIXI.Container;
@@ -33,7 +35,8 @@ export default class GameRenderer extends EventEmitter {
     // Rendering Performance
     private time: number = 0;
     private renderCount: number = 0;
-    private AVERAGE_LOOPING: number = 30;
+    private AVERAGE_LOOPING: number = 3;
+    public systemData: { fps: number, ups: number, ping: number } = { fps: 0, ups: 0, ping: 0 };
 
     constructor() {
         super();
@@ -56,7 +59,10 @@ export default class GameRenderer extends EventEmitter {
         this.camera.setStage(this.stage);
         this.camera.setZoom(1);
         this.camera.setRenderer(this);
-
+        
+        this.ui = new UI({ size: { width: this.SCREEN_WIDTH, height: this.SCREEN_HEIGHT }, fpsChecker: true, upsChecker: true, pingInterpolationChecker: true });
+        this.ui.systemData = this.systemData;
+        this.app.stage.addChild(this.ui);
         // ----------------------------- Lightings
         this.lighting = new PIXI.display.Layer();
         this.lighting.on('display', (element) => { element.blendMode = PIXI.BLEND_MODES.LIGHTEN; });
@@ -126,6 +132,7 @@ export default class GameRenderer extends EventEmitter {
         await this.objectDelete();
         await this.objectUpdate(dt);
         await this.setLighting();
+        await this.ui.update();
         await this.camera.update(dt);
         this.rayCaster.update(dt);
     }
@@ -223,7 +230,8 @@ export default class GameRenderer extends EventEmitter {
         this.renderCount++;
 
         if (this.time > 1000 * this.AVERAGE_LOOPING) {
-            system({ text: `render: ${(this.renderCount / this.AVERAGE_LOOPING).toFixed(2)}fps (${(this.renderCount / this.AVERAGE_LOOPING/60*100).toFixed(2)}%)` });
+            this.systemData.fps = Number((this.renderCount / this.AVERAGE_LOOPING).toFixed(2));
+            // system({ text: `render: ${(this.renderCount / this.AVERAGE_LOOPING).toFixed(2)}fps (${(this.renderCount / this.AVERAGE_LOOPING/60*100).toFixed(2)}%)` });
             this.time = 0;
             this.renderCount = 0;
         }
