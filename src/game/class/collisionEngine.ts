@@ -54,6 +54,32 @@ export default class CollisionEngine {
         };
     }
 
+    public static getHitTileGroup(objA: any, objects: Array<any>, dt: number): Array<any> {
+        let result: Array<any> = [];
+        let time: number = Infinity;
+        const tickInterpolation: number = 24;
+
+        objects.forEach((objB: any) => {
+            const hitTestResult: any = CollisionEngine.hitTest(objA, objB);
+            hitTestResult.direction.left = hitTestResult.direction.left && (objB.endXAxis === objB.id);
+            hitTestResult.direction.right = hitTestResult.direction.right && (objB.startXAxis === objB.id);
+            hitTestResult.direction.up = hitTestResult.direction.up && (objB.endYAxis === objB.id);
+            hitTestResult.direction.down = hitTestResult.direction.down && (objB.startYAxis === objB.id);
+
+            if (hitTestResult.direction.left || hitTestResult.direction.right || hitTestResult.direction.up || hitTestResult.direction.down) {
+                if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time > hitTestResult.time) {
+                    result = [hitTestResult];
+                    time = hitTestResult.time;
+                } else if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time === hitTestResult.time) {
+                    result.push(hitTestResult);
+                    time = hitTestResult.time;
+                }
+            }
+        });
+
+        return result;
+    }
+
     public static getHitObjects(objA: any, objects: Array<any>, dt: number): Array<any> {
         let result: Array<any> = [];
         let time: number = Infinity;

@@ -47,7 +47,7 @@ export default class GameLogic extends EventEmitter {
 
     private characterTileCollision(character: any, dt: number): boolean {
         const tiles: Array<any> = this.getTiles(character);
-        const result: Array<any> = CollisionEngine.getHitObjects(character, tiles, dt);
+        const result: Array<any> = CollisionEngine.getHitTileGroup(character, tiles, dt);
 
         if (result.length > 0) {
             result.forEach((collisionData) => {
@@ -55,7 +55,7 @@ export default class GameLogic extends EventEmitter {
             });
             return true;
         } else {
-            character.forceVector.y = character.forceVector.y === 0?0.0002:character.forceVector.y;
+            character.forceVector.y = character.forceVector.y === 0?0.001:character.forceVector.y;
             return false;
         }
     }

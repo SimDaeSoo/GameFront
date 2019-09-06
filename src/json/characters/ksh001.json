@@ -1,0 +1,83 @@
+{
+    "name": "권성훈",
+    "size": { "x": 14, "y": 68 },
+    "movingSpeed": 0.15,
+    "jumpForceVector": -0.35,
+    "baseStat": {
+        "health": 100,
+        "mana": 100,
+        "healthRecovery": 2,
+        "manaRecovery": 10,
+        "STR": 5,
+        "INT": 5,
+        "STA": 5,
+        "AGI": 5,
+        "critical": 0.1,
+        "criticalDamage": 1.2,
+        "speed": 0.1,
+        "armor": 0.1
+    },
+    "levelStat": {
+        "health": 10,
+        "mana": 10,
+        "healthRecovery": 0.2,
+        "manaRecovery": 1,
+        "STR": 0.5,
+        "INT": 0.5,
+        "STA": 0.5,
+        "AGI": 0.5,
+        "critical": 0.01,
+        "criticalDamage": 0.02,
+        "speed": 0.01,
+        "armor": 0.01
+    },
+    "skills": {
+
+    },
+    "baseState": "idle",
+    "state": {
+        "idle": {
+            "animation": "idle",
+            "mutations": {
+                "walk": [{ "arg": "vector.x", "sign": "!==", "value": 0}],
+                "jump": [{ "arg": "land", "sign": "===", "value": "false"}]
+            }
+        },
+        "jump": {
+            "animation": "jump",
+            "mutations": {
+                "idle": [{ "arg": "land", "sign": "===", "value": "true"}]
+            }
+        },
+        "walk": {
+            "animation": "walk",
+            "mutations": {
+                "idle": [{ "arg": "vector.x", "sign": "===", "value": 0}],
+                "jump": [{ "arg": "land", "sign": "===", "value": "false"}]
+            }
+        }
+    },
+    "animations": {
+        "idle": {
+            "src": "ksh001_idle",
+            "offset": { "x": 0, "y": 0 },
+            "length": 10,
+            "tick": [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+            "loop": true
+        },
+        "jump": {
+            "src": "ksh001_jump",
+            "offset": { "x": 0, "y": 0 },
+            "length": 1,
+            "tick": [100],
+            "loop": false
+        },
+        "walk": {
+            "src": "ksh001_walk",
+            "offset": { "x": 0, "y": 0 },
+            "length": 5,
+            "tick": [20, 20, 20, 20, 20],
+            "loop": false
+        }
+    }
+}
