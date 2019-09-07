@@ -60,13 +60,14 @@ export default class CollisionEngine {
         const tickInterpolation: number = 24;
 
         objects.forEach((objB: any) => {
-            const hitTestResult: any = CollisionEngine.hitTest(objA, objB);
-            hitTestResult.direction.left = hitTestResult.direction.left && (objB.endXAxis === objB.id);
-            hitTestResult.direction.right = hitTestResult.direction.right && (objB.startXAxis === objB.id);
-            hitTestResult.direction.up = hitTestResult.direction.up && (objB.endYAxis === objB.id);
-            hitTestResult.direction.down = hitTestResult.direction.down && (objB.startYAxis === objB.id);
+            if (objB.endXAxis === objB.id || objB.startXAxis === objB.id || objB.endYAxis === objB.id || objB.startYAxis === objB.id) {
+                const hitTestResult: any = CollisionEngine.hitTest(objA, objB);
 
-            if (hitTestResult.direction.left || hitTestResult.direction.right || hitTestResult.direction.up || hitTestResult.direction.down) {
+                hitTestResult.direction.left = hitTestResult.direction.left && (objB.endXAxis === objB.id);
+                hitTestResult.direction.right = hitTestResult.direction.right && (objB.startXAxis === objB.id);
+                hitTestResult.direction.up = hitTestResult.direction.up && (objB.endYAxis === objB.id);
+                hitTestResult.direction.down = hitTestResult.direction.down && (objB.startYAxis === objB.id);
+
                 if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time > hitTestResult.time) {
                     result = [hitTestResult];
                     time = hitTestResult.time;
