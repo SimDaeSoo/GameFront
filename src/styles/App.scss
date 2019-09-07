@@ -1,5 +1,12 @@
 $display-default:block;
 $color-point:#080;
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 .lnk{
     display:$display-default;
     position:absolute;
