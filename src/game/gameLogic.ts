@@ -135,11 +135,11 @@ export default class GameLogic extends EventEmitter {
         state.registState('idle');
         state.registState('jump');
         state.registState('walk');
-        state.registMutate('idle', { mutateState: 'walk', conditions: [{ arg: 'vector.x', sign: '!==', value: 0}]});
-        state.registMutate('idle', { mutateState: 'jump', conditions: [{ arg: 'land', sign: '===', value: 'false'}]});
-        state.registMutate('jump', { mutateState: 'idle', conditions: [{ arg: 'land', sign: '===', value: 'true'}]});
-        state.registMutate('walk', { mutateState: 'idle', conditions: [{ arg: 'vector.x', sign: '===', value: 0}]});
-        state.registMutate('walk', { mutateState: 'jump', conditions: [{ arg: 'land', sign: '===', value: 'false'}]});
+        state.registMutate('idle', { mutateState: 'walk', conditions: [{ arg: 'data.vector.x', sign: '!==', value: 0}]});
+        state.registMutate('idle', { mutateState: 'jump', conditions: [{ arg: 'Math.abs(data.vector.y)', sign: '>=', value: '0.1'}]});
+        state.registMutate('jump', { mutateState: 'idle', conditions: [{ arg: 'Math.abs(data.vector.y)', sign: '<', value: '0.04'}]});
+        state.registMutate('walk', { mutateState: 'idle', conditions: [{ arg: 'data.vector.x', sign: '===', value: 0}]});
+        state.registMutate('walk', { mutateState: 'jump', conditions: [{ arg: 'Math.abs(data.vector.y)', sign: '>=', value: '0.1'}]});
         state.setState('idle');
         this.stateMap[data.objectType][data.id] = state;
     }

@@ -1,7 +1,31 @@
 [
     {
+        "code": "sds001",
+        "name": "심대수",
+        "difficulty": 1,
+        "classes": ["AP", "SURPPORT", "WIZARD"],
+        "synergies": ["FUGITIVE", "WEAK_SPICY", "WEACK_DRINK"],
+        "description": "맨날 탈주하는 탈주닌자다. 뜬금없는 타이밍에 게임에서 탈주당한다."
+    }, {
         "code": "ksh001",
         "name": "권성훈",
-        "description": "흑인이다."
+        "difficulty": 1,
+        "classes": ["AD", "CARRY", "ARCHER"],
+        "synergies": ["KING", "BLACK", "RAPPER", "MY_BRO"],
+        "description": "흑인이다. 음식을 잘 먹으며, 시시각각 바뀌는 우리형이 특징."
+    }, {
+        "code": "jyh001",
+        "name": "조윤하",
+        "difficulty": 3,
+        "classes": ["AP", "NUKER", "WIZARD"],
+        "synergies": ["ALCOHOL_HOLIC", "TEACHER", "WEAK_SPICY", "STRONG_DRINK"],
+        "description": "13살인 것 같은 30살이다. 금주라고 하고 술먹는 것이 특징."
+    }, {
+        "code": "knw001",
+        "name": "김나원",
+        "difficulty": 2,
+        "classes": ["AD", "TANKER", "WARRIOR"],
+        "synergies": ["ALCOHOL_HOLIC", "HOBBIT", "BLACK", "FOUR_CHIN", "STRONG_DRINK"],
+        "description": "흑인이다2. 곱창과 떡볶이에 미쳐있으며, 감정의 변화시 턱이 4개가 된다."
     }
 ]

@@ -39,21 +39,21 @@
         "idle": {
             "animation": "idle",
             "mutations": {
-                "walk": [{ "arg": "vector.x", "sign": "!==", "value": 0}],
-                "jump": [{ "arg": "land", "sign": "===", "value": "false"}]
+                "walk": [{ "arg": "data.vector.x", "sign": "!==", "value": 0}],
+                "jump": [{ "arg": "Math.abs(data.vector.y)", "sign": ">=", "value": "0.1"}]
             }
         },
         "jump": {
             "animation": "jump",
             "mutations": {
-                "idle": [{ "arg": "land", "sign": "===", "value": "true"}]
+                "idle": [{ "arg": "Math.abs(data.vector.y)", "sign": "<", "value": "0.04"}]
             }
         },
         "walk": {
             "animation": "walk",
             "mutations": {
-                "idle": [{ "arg": "vector.x", "sign": "===", "value": 0}],
-                "jump": [{ "arg": "land", "sign": "===", "value": "false"}]
+                "idle": [{ "arg": "data.vector.x", "sign": "===", "value": 0}],
+                "jump": [{ "arg": "Math.abs(data.vector.y)", "sign": ">=", "value": "0.1"}]
             }
         }
     },
@@ -61,8 +61,8 @@
         "idle": {
             "src": "ksh001_idle",
             "offset": { "x": 0, "y": 0 },
-            "length": 10,
-            "tick": [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+            "length": 4,
+            "tick": [25, 25, 25, 25],
             "loop": true
         },
         "jump": {
@@ -75,8 +75,8 @@
         "walk": {
             "src": "ksh001_walk",
             "offset": { "x": 0, "y": 0 },
-            "length": 5,
-            "tick": [20, 20, 20, 20, 20],
+            "length": 4,
+            "tick": [25, 25, 25, 25],
             "loop": false
         }
     }

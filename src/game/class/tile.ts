@@ -2,6 +2,8 @@ import { changeTileNumber } from "../../utils/utils";
 import BaseObject from "../baseObject";
 
 export default class Tile extends BaseObject {
+    public sprite: PIXI.Sprite;
+
     constructor(options: any) {
         super(options);
 

@@ -1,0 +1,87 @@
+{
+    "ALCOHOL_HOLIC": {
+        "description": "술에 미친 사람들이 받는 칭호.",
+        "conditions": [
+            { "member": 1, "script": "" },
+            { "member": 3, "script": "" }
+        ]
+    },
+    "FUGITIVE": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "WEAK_SPICY": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "STRONG_SPICY": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "WEAK_DRINK": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "STRONG_DRINK": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "BLACK": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "WHITE": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "HOBBIT": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "FOUR_CHIN": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "TEACHER": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "KING": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "RAPPER": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    },
+    "MY_BRO": {
+        "description": "",
+        "conditions": [
+            { "member": 1, "script": "" }
+        ]
+    }
+}

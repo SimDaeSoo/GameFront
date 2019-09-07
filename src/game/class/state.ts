@@ -49,7 +49,7 @@ export class State {
                 const conditions: Array<IMutateCondition> = mutatableState[state].conditions;
     
                 conditions.forEach((condition: IMutateCondition): void => {
-                    const arg: any = eval(`data.${condition.arg}`);
+                    const arg: any = eval(condition.arg);
                     if (arg === undefined || !eval(`${arg}${condition.sign}${condition.value}`)) {
                         result = false;
                     }

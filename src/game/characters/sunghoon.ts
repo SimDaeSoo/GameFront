@@ -1,15 +1,25 @@
 import BaseCharacter from "./baseCharacter";
+import { loadAniTexture } from "../../utils/utils";
 
 export default class SungHoon extends BaseCharacter {
+    public sprite: PIXI.AnimatedSprite;
 
     constructor(options: any) {
         super(options);
 
-        this.sprite = PIXI.Sprite.from(`src/assets/hitBox.png`);
+        // Sprite Load
+        this.sprite = new PIXI.AnimatedSprite(loadAniTexture('ksh001_idle', 4));
+        
+        // Offset
         this.sprite.position.x -= 18;
         this.sprite.position.y -= 4;
-        this.container.addChild(this.sprite);
 
+        // Setting Animation
+        this.sprite.animationSpeed = 0.1;
+        this.sprite.loop = true;
+        this.sprite.play();
+
+        this.container.addChild(this.sprite);
         this.makeNameTag();
     }
 

@@ -2,7 +2,6 @@ export default class BaseObject extends PIXI.Container {
     public container: PIXI.Container = new PIXI.Container();
     public uiContainer: PIXI.Container = new PIXI.Container();
     public outerContainer: PIXI.Container = new PIXI.Container();
-    public sprite: PIXI.Sprite;
 
     private nextVibrationTime: number = 0;
     private vibrationTimer: number = 0;
