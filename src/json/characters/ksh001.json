@@ -1,6 +1,8 @@
 {
     "name": "권성훈",
     "size": { "x": 14, "y": 68 },
+    "scale": { "x": 1, "y": 1 },
+    "weight": 1,
     "movingSpeed": 0.15,
     "jumpForceVector": -0.35,
     "baseStat": {

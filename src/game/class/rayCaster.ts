@@ -117,9 +117,6 @@ export default class RayCaster {
         this.realObjs['boundary'] = {
             class: 'dirt',
             objectType: 'tiles',
-            health: Number.MAX_VALUE,
-            maxHealth: Number.MAX_VALUE,
-            movableRate: 0,
             tileNumber: 0,
             weight: 10000000000000000000,
             scale: { x: 0, y: 0 },
