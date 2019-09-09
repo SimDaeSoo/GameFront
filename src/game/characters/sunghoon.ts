@@ -1,5 +1,4 @@
 import BaseCharacter from "./baseCharacter";
-import { loadAniTexture } from "../../utils/utils";
 
 export default class SungHoon extends BaseCharacter {
     public sprite: PIXI.AnimatedSprite;
@@ -7,22 +6,32 @@ export default class SungHoon extends BaseCharacter {
     constructor(options: any) {
         super(options);
 
-        // Sprite Load
-        this.sprite = new PIXI.AnimatedSprite(loadAniTexture('ksh001_idle', 4));
-        
-        // Offset
-        this.sprite.position.x -= 18;
-        this.sprite.position.y -= 4;
+        this.addAnimation('idle', { src: 'ksh001_idle', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true});
+        this.addAnimation('walk', { src: 'ksh001_walk', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true});
+        this.addAnimation('jump', { src: 'ksh001_jump', length: 1, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true});
 
-        // Setting Animation
-        this.sprite.animationSpeed = 0.1;
-        this.sprite.loop = true;
-        this.sprite.play();
-
-        this.container.addChild(this.sprite);
         this.makeNameTag();
     }
 
     public update(dt: number): void {
+        this.changeAnimation();
+    }
+
+    private changeAnimation(): void {
+        if (this.animationName !== this.state.currentState) {
+            this.setAnimation(this.state.currentState);
+
+            if (!this.sprite) {
+                this.sprite = new PIXI.AnimatedSprite(this.animation.sprite.textures);
+                this.container.addChild(this.sprite);
+            }
+
+            this.sprite.textures = this.animation.sprite.textures;
+            this.sprite.position.x = this.animation.options.offset.x;
+            this.sprite.position.y = this.animation.options.offset.y;
+            this.sprite.animationSpeed = this.animation.options.animationSpeed;
+            this.sprite.loop = this.animation.options.loop;
+            this.sprite.gotoAndPlay(0);
+        }
     }
 }

@@ -3,11 +3,9 @@ import CollisionEngine from './class/collisionEngine';
 import { TILE_SIZE } from "./define";
 import { EventEmitter } from "events";
 import { changeTileNumber } from "../utils/utils";
-import { State } from './class/state';
 
 export default class GameLogic extends EventEmitter {
     public gameData: GameData;
-    public stateMap: {[type: string]: {[id: string]: State}} = { tiles: {}, objects: {}, characters: {}};
     public lastUpdate: number = Date.now();
 
     /* ----------------------- Logic ----------------------- */
@@ -18,19 +16,7 @@ export default class GameLogic extends EventEmitter {
         this.applyVector(dt);
         this.applyForceVector(dt);
         this.interpolationCharacterPosition(dt);
-        this.changeState();
-    }
-
-    public changeState(): void {
-        for (let type in this.stateMap) {
-            for (let id in this.stateMap[type]) {
-                const object: any = this.gameData.data[type][id];
-
-                if (object !== undefined) {
-                    this.gameData.data[type][id].currentState = this.stateMap[type][id].mutation(object);
-                }
-            }
-        }
+        this.gameData.changeState();
     }
 
     private collision(dt: number): void {
@@ -121,27 +107,9 @@ export default class GameLogic extends EventEmitter {
     /* ----------------------- Command ----------------------- */
 
     public addCharacter(data: any, dt: number): void {
-        data.position.x += dt * data.vector.x;
-        data.position.y += dt * data.vector.y;
-        data.position.x += dt * dt * data.forceVector.x / 2;
-        data.position.y += dt * dt * data.forceVector.y / 2;
-        data.vector.x += dt * data.forceVector.x;
-        data.vector.y += dt * data.forceVector.y;
         this.gameData.insertData(data.id, data);
+        this.setState(data, dt);
         this.emit('addCharacter');
-
-        // Test
-        const state: State = new State();
-        state.registState('idle');
-        state.registState('jump');
-        state.registState('walk');
-        state.registMutate('idle', { mutateState: 'walk', conditions: [{ arg: 'data.vector.x', sign: '!==', value: 0}]});
-        state.registMutate('idle', { mutateState: 'jump', conditions: [{ arg: 'Math.abs(data.vector.y)', sign: '>=', value: '0.1'}]});
-        state.registMutate('jump', { mutateState: 'idle', conditions: [{ arg: 'Math.abs(data.vector.y)', sign: '<', value: '0.04'}]});
-        state.registMutate('walk', { mutateState: 'idle', conditions: [{ arg: 'data.vector.x', sign: '===', value: 0}]});
-        state.registMutate('walk', { mutateState: 'jump', conditions: [{ arg: 'Math.abs(data.vector.y)', sign: '>=', value: '0.1'}]});
-        state.setState('idle');
-        this.stateMap[data.objectType][data.id] = state;
     }
 
     public deleteCharacter(data: any, dt: number): void {
@@ -150,9 +118,6 @@ export default class GameLogic extends EventEmitter {
             this.changeTile(data.id);
         }
         this.emit('deleteCharacter');
-
-        // Test
-        delete this.stateMap[data.objectType][data.id];
     }
 
     public changeTile(id: string): void {
@@ -170,21 +135,23 @@ export default class GameLogic extends EventEmitter {
         const object: any = this.gameData.data[data.objectType][data.id];
         if (!object) return;
         
+        // dt 에 따른 position 변화와, 충돌감지.
         object.position.x = data.position.x;
         object.position.y = data.position.y;
 
-        object.vector.x = (((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x)) / dt;
+        object.vector.x = (dt * data.forceVector.x / 2) + data.vector.x;
         object.vector.y = 0;
         if (!this.characterTileCollision(object, dt)) {
             object.position.x += ((dt ** 2) * data.forceVector.x / 2) + (dt * data.vector.x);
         }
 
         object.vector.x = 0;
-        object.vector.y = (((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y)) / dt;
+        object.vector.y = (dt * data.forceVector.y / 2) + data.vector.y;
         if (!this.characterTileCollision(object, dt)) {
             object.position.y += ((dt ** 2) * data.forceVector.y / 2) + (dt * data.vector.y);
         }
 
+        // data들을 옮긴다.
         object.vector.x = data.vector.x + dt * data.forceVector.x;
         object.vector.y = data.vector.y + dt * data.forceVector.y;
         object.forceVector.x = data.forceVector.x;

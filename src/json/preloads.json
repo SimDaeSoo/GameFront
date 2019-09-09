@@ -5,5 +5,5 @@
 
     ["assets/characters/ksh001/ksh001_idle.json"],
     ["assets/characters/ksh001/ksh001_walk.json"],
-    ["assets/characters/ksh001/ksh001_walk.json"]
+    ["assets/characters/ksh001/ksh001_jump.json"]
 ]

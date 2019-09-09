@@ -1,3 +1,5 @@
+import { State } from "./class/state";
+
 export default class BaseObject extends PIXI.Container {
     public container: PIXI.Container = new PIXI.Container();
     public uiContainer: PIXI.Container = new PIXI.Container();
@@ -9,9 +11,11 @@ export default class BaseObject extends PIXI.Container {
     private duration: number = 0;
     private vibrateFlag: boolean = true;
     public size: any = { x: 0, y: 0 };
+    public _flip: { x: boolean, y: boolean } = { x: false, y: false };
     public targetPosition: any = { x: 0, y: 0 };
     public currentPosition: any = { x: 0, y: 0 };
     public INTERPOLATION: any = 1.02;
+    public state: State;
 
     constructor(options: any) {
         super();
@@ -54,7 +58,7 @@ export default class BaseObject extends PIXI.Container {
         this.update(dt);
     }
 
-    private interpolationPosition(dt: number): void {
+    public interpolationPosition(dt: number): void {
         const strength: number = ((this.INTERPOLATION ** dt) - 1)>=1? 1: ((this.INTERPOLATION ** dt) - 1);
         this.currentPosition.x += (this.targetPosition.x - this.currentPosition.x) * strength;
         this.currentPosition.y += (this.targetPosition.y - this.currentPosition.y) * strength;
@@ -69,7 +73,9 @@ export default class BaseObject extends PIXI.Container {
         
         this.vibrationTimer += dt;
         if (this.duration < this.vibrationTimer) {
-            this.duration = this.strength = this.outerContainer.position.x = this.outerContainer.position.y = 0;
+            this.outerContainer.position.x = this.flip.x?this.size.x:0;
+            this.outerContainer.position.y = this.flip.y?this.size.y:0;
+            this.duration = this.strength = 0;
         } else if (this.nextVibrationTime < this.vibrationTimer && this.vibrateFlag) {
             this.outerContainer.position.x += this.strength * (1 - Math.round(Math.random()) * 2);
             this.outerContainer.position.y += this.strength * (1 - Math.round(Math.random()) * 2);
@@ -77,10 +83,24 @@ export default class BaseObject extends PIXI.Container {
             this.vibrateFlag = !this.vibrateFlag;
             this.strength *= 0.9;
         } else if (this.nextVibrationTime < this.vibrationTimer && !this.vibrateFlag) {
-            this.outerContainer.position.x = this.outerContainer.position.y = 0;
+            this.outerContainer.position.x = this.flip.x?this.size.x:0;
+            this.outerContainer.position.y = this.flip.y?this.size.y:0;
             this.nextVibrationTime += PERIOD;
             this.vibrateFlag = !this.vibrateFlag;
         }
+    }
+
+    public get flip(): { x: boolean, y: boolean } {
+        return this._flip;
+    }
+
+    public set flip(flip: { x: boolean, y: boolean }) {
+        this._flip.x = flip.x;
+        this._flip.y = flip.y;
+        this.outerContainer.position.x = this.flip.x?this.size.x:0;
+        this.outerContainer.position.y = this.flip.y?this.size.y:0;
+        this.outerContainer.scale.x = this.flip.x?-1:1;
+        this.outerContainer.scale.y = this.flip.y?-1:1;
     }
 
     public vibration(duration: number, strength: number): void {
@@ -88,6 +108,10 @@ export default class BaseObject extends PIXI.Container {
         this.strength = strength;
         this.vibrationTimer = 0;
         this.nextVibrationTime = 0;
+    }
+
+    public setState(state: State): void {
+        this.state = state;
     }
 
     public setPosition(position: any): void {

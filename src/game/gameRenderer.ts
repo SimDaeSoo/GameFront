@@ -8,6 +8,7 @@ import RayCaster from './class/rayCaster';
 import Background from "./class/background";
 import ObjectFactory from "./class/objectFactory";
 import UI from "./class/ui";
+import BaseObject from "./baseObject";
 
 export default class GameRenderer extends EventEmitter {
     // Application
@@ -181,28 +182,28 @@ export default class GameRenderer extends EventEmitter {
     }
 
     private async objectGenerate(): Promise<void> {
-        let count: number = 0;
+        let generateCount: number = 0;
         for (let type in this.gameData.beGenerates) {
             this.gameData.beGenerates[type].every((id: string): any => {
+                if (generateCount++ > 150) return false;
                 if (this.objectDict[type][id]) return true;
 
-                const object = ObjectFactory.create(this.gameData.data[type][id]);
-
+                const object: BaseObject = ObjectFactory.create(this.gameData.data[type][id]);
+                this.objectDict[type][id] = object;
+                this.gameData.doneGenerate(id, type);
+                
+                // State가 있을경우 설정. Test
+                if (this.gameData.stateMap[type][id]) {
+                    object.setState(this.gameData.stateMap[type][id]);
+                }
+                // 코드 나중에 변경하자. 자신의 Parent로 삼을 Layer를 가지는 것으로..
                 if (type === 'tiles') {
                     this.map.addChild(object);
                 } else {
                     this.stage.addChild(object);
                 }
-
-                this.objectDict[type][id] = object;
-                this.gameData.doneGenerate(id, type);
-
                 if (id === this.owner) {
                     this.camera.setObject(this.gameData.data[type][id]);
-                }
-
-                if (count++ > 150) {
-                    return false;
                 }
             });
         }
