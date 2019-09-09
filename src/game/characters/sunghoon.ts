@@ -18,7 +18,7 @@ export default class SungHoon extends BaseCharacter {
     }
 
     private changeAnimation(): void {
-        if (this.animationName !== this.state.currentState) {
+        if (this.state && this.animationName !== this.state.currentState) {
             this.setAnimation(this.state.currentState);
 
             if (!this.sprite) {
