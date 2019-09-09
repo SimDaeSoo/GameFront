@@ -41,8 +41,8 @@ export default class GameClient {
     }
 
     public run(): any {
-        // this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
-        this.io = io.connect('http://localhost:3020');
+        this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
+        // this.io = io.connect('http://localhost:3020');
 
         this.io.on('connect', (): void => {
             system({text: 'connect success!'});
