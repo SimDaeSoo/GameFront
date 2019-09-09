@@ -141,8 +141,8 @@ export default class BaseObject extends PIXI.Container {
         this.destroy();
     }
 
-    public makeNameTag(): void {
-        const message3 = new PIXI.Text("Lv.1 권성훈",
+    public makeNameTag(name: string): void {
+        const message3 = new PIXI.Text(name,
             { fontSize: 10, fill: 'white' }
         );
         message3.anchor.x = 0.5;

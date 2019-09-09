@@ -10,7 +10,7 @@ export default class SungHoon extends BaseCharacter {
         this.addAnimation('walk', { src: 'ksh001_walk', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true});
         this.addAnimation('jump', { src: 'ksh001_jump', length: 1, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true});
 
-        this.makeNameTag();
+        this.makeNameTag(`SOCKET ID:${options.id}`);
     }
 
     public update(dt: number): void {
