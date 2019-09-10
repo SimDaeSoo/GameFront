@@ -33,7 +33,6 @@ export default class GameData {
 
     public insertData(id: string, data: any): void {
         this.data[data.objectType][id] = data;
-        this.setState(data);
 
         if (this.beGenerates[data.objectType].indexOf(id) < 0) {
             this.beGenerates[data.objectType].push(id);
@@ -83,6 +82,7 @@ export default class GameData {
         const index: number = this.beGenerates[type].indexOf(id);
         
         if (index >= 0) {
+            this.setState(this.data[type][id]);
             this.beGenerates[type].splice(index, 1);
         }
     }
