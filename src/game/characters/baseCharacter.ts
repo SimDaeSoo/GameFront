@@ -1,6 +1,6 @@
 import BaseObject from "../baseObject";
 import { loadAniTexture } from "../../utils/utils";
-//{ src: 'ksh001_idle', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true}
+//{ src: "ksh001_idle", length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true}
 interface IAnimationOptions {
     src: string;
     length: number;
@@ -62,11 +62,11 @@ export default class BaseCharacter extends BaseObject {
 }
 /*
 state: {
-    currentState: '',
+    currentState: "",
     startDt: 0,
     endDt: 0,
     loop: true,
-    nextState: ''
+    nextState: ""
 }
 
 state Map이 있어야 할듯하다. -> 그래프 느낌으로
@@ -105,14 +105,14 @@ state Map이 있어야 할듯하다. -> 그래프 느낌으로
         idle: {
             idle: [
                 {
-                    events: ['keyUp', 'all'],
+                    events: ["keyUp", "all"],
                     script: []
                 }
             ],
             walk: [
                 {
-                    events: ['keyDown', 'left'],
-                    script: ['setVector', 'x', -0.2]
+                    events: ["keyDown", "left"],
+                    script: ["setVector", "x", -0.2]
                 }
             ]
         }

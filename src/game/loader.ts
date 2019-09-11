@@ -30,9 +30,9 @@ export default class Loader {
         }
 
         if (url) {
-            url = 'src/' + url;
+            url = "src/" + url;
         } else {
-            url = 'src/' + name;
+            url = "src/" + name;
         }
 
         this.loader.add(name, url);

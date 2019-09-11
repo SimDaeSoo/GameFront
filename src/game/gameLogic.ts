@@ -1,5 +1,5 @@
 import GameData from "./gameData";
-import CollisionEngine from './class/collisionEngine';
+import CollisionEngine from "./class/collisionEngine";
 import { TILE_SIZE } from "./define";
 import { EventEmitter } from "events";
 import { changeTileNumber } from "../utils/utils";
@@ -16,7 +16,7 @@ export default class GameLogic extends EventEmitter {
         this.applyVector(dt);
         this.applyForceVector(dt);
         this.interpolationCharacterPosition(dt);
-        this.gameData.changeState();
+        this.gameData.updateState();
     }
 
     private collision(dt: number): void {
@@ -24,8 +24,8 @@ export default class GameLogic extends EventEmitter {
     }
     
     private characterCollision(dt: number): void {
-        for (let id in this.gameData.data['characters']) {
-            const character: any = this.gameData.data['characters'][id];
+        for (let id in this.gameData.data["characters"]) {
+            const character: any = this.gameData.data["characters"][id];
             
             this.characterTileCollision(character, dt);
         }
@@ -54,8 +54,8 @@ export default class GameLogic extends EventEmitter {
 
         for (let i = pos.x; i < pos.x + size.x; i++) {
             for (let j = pos.y; j < pos.y + size.y; j++) {
-                if (this.gameData.data['tiles'][i + j * this.gameData.worldProperties.width]) {
-                    result.push(this.gameData.data['tiles'][i + j * this.gameData.worldProperties.width]);
+                if (this.gameData.data["tiles"][i + j * this.gameData.worldProperties.width]) {
+                    result.push(this.gameData.data["tiles"][i + j * this.gameData.worldProperties.width]);
                 }
             }
         }
@@ -89,12 +89,12 @@ export default class GameLogic extends EventEmitter {
 
     public setWorldProperties(worldProperties: any): void {
         this.gameData.worldProperties = worldProperties;
-        this.emit('setWorldProperties');
+        this.emit("setWorldProperties");
     }
 
     private interpolationCharacterPosition(dt: number): void {
-        for (let id in this.gameData.data['characters']) {
-            const character: any = this.gameData.data['characters'][id];
+        for (let id in this.gameData.data["characters"]) {
+            const character: any = this.gameData.data["characters"][id];
             
             if (character.position.x < 0) {
                 character.position.x = 0;
@@ -109,15 +109,15 @@ export default class GameLogic extends EventEmitter {
     public addCharacter(data: any, dt: number): void {
         this.gameData.insertData(data.id, data);
         this.setState(data, dt);
-        this.emit('addCharacter');
+        this.emit("addCharacter");
     }
 
     public deleteCharacter(data: any, dt: number): void {
         this.gameData.deleteData(data.id, data.objectType);
-        if (data.objectType === 'tiles') {
+        if (data.objectType === "tiles") {
             this.changeTile(data.id);
         }
-        this.emit('deleteCharacter');
+        this.emit("deleteCharacter");
     }
 
     public changeTile(id: string): void {
@@ -125,8 +125,8 @@ export default class GameLogic extends EventEmitter {
         const tiles: any = [Number(id)-1,Number(id)+1,Number(id)-width,Number(id)+width];
 
         tiles.forEach((key: number): void => {
-            if (this.gameData.data['tiles'][key.toString()] !== undefined) {
-                changeTileNumber(this.gameData.data['tiles'], key.toString(), width);
+            if (this.gameData.data["tiles"][key.toString()] !== undefined) {
+                changeTileNumber(this.gameData.data["tiles"], key.toString(), width);
             }
         });
     }
@@ -161,7 +161,7 @@ export default class GameLogic extends EventEmitter {
     }
 
     public runCommand(command: any, date: number): void {
-        if (typeof((this as any)[command.script]) === 'function') {
+        if (typeof((this as any)[command.script]) === "function") {
             const dt: number = this.lastUpdate - date;
             (this as any)[command.script](command.data, dt);
         }

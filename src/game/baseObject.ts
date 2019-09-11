@@ -28,7 +28,7 @@ export default class BaseObject extends PIXI.Container {
         this.addChild(this.uiContainer);
         this.init(options);
 
-        this.on('click', (): void => {
+        this.on("click", (): void => {
             this.vibration(300, 3);
         });
     }
@@ -143,7 +143,7 @@ export default class BaseObject extends PIXI.Container {
 
     public makeNameTag(name: string): void {
         const message3 = new PIXI.Text(name,
-            { fontSize: 10, fill: 'white' }
+            { fontSize: 10, fill: "white" }
         );
         message3.anchor.x = 0.5;
         message3.anchor.y = 0.5;

@@ -2,9 +2,9 @@ import GameData from "./gameData";
 import { system } from "../utils/utils";
 import { EventEmitter } from "events";
 import Camera from "./class/camera";
-import Display from 'pixi-layers';
+import Display from "pixi-layers";
 import { TILE_SIZE } from "./define";
-import RayCaster from './class/rayCaster';
+import RayCaster from "./class/rayCaster";
 import Background from "./class/background";
 import ObjectFactory from "./class/objectFactory";
 import UI from "./class/ui";
@@ -66,7 +66,7 @@ export default class GameRenderer extends EventEmitter {
         this.app.stage.addChild(this.ui);
         // ----------------------------- Lightings
         this.lighting = new PIXI.display.Layer();
-        this.lighting.on('display', (element) => { element.blendMode = PIXI.BLEND_MODES.LIGHTEN; });
+        this.lighting.on("display", (element) => { element.blendMode = PIXI.BLEND_MODES.LIGHTEN; });
         this.lighting.useRenderTexture = true;
         this.lighting.clearColor = [0.12, 0.12, 0.12, 1];
         this.app.stage.addChild(this.lighting);
@@ -174,7 +174,7 @@ export default class GameRenderer extends EventEmitter {
                 }
                 this.gameData.doneDelete(id, type);
 
-                if (type === 'tiles') {
+                if (type === "tiles") {
                     this.changeTile(id);
                 }
             });
@@ -197,7 +197,7 @@ export default class GameRenderer extends EventEmitter {
                     object.setState(this.gameData.stateMap[type][id]);
                 }
                 // 코드 나중에 변경하자. 자신의 Parent로 삼을 Layer를 가지는 것으로..
-                if (type === 'tiles') {
+                if (type === "tiles") {
                     this.map.addChild(object);
                 } else {
                     this.stage.addChild(object);
@@ -242,14 +242,14 @@ export default class GameRenderer extends EventEmitter {
         const width: number = this.gameData.worldProperties.width;
         const tiles: any = {}
 
-        tiles[(Number(id) - width).toString()] = this.objectDict['tiles'][(Number(id) - width).toString()];
-        tiles[(Number(id) + width).toString()] = this.objectDict['tiles'][(Number(id) + width).toString()];
-        tiles[(Number(id) - 1).toString()] = this.objectDict['tiles'][(Number(id) - 1).toString()];
-        tiles[(Number(id) + 1).toString()] = this.objectDict['tiles'][(Number(id) + 1).toString()];
+        tiles[(Number(id) - width).toString()] = this.objectDict["tiles"][(Number(id) - width).toString()];
+        tiles[(Number(id) + width).toString()] = this.objectDict["tiles"][(Number(id) + width).toString()];
+        tiles[(Number(id) - 1).toString()] = this.objectDict["tiles"][(Number(id) - 1).toString()];
+        tiles[(Number(id) + 1).toString()] = this.objectDict["tiles"][(Number(id) + 1).toString()];
 
         for (let key in tiles) {
             if (tiles[key] !== undefined) {
-                tiles[key].changeTile(this.gameData.data['tiles'], key, width);
+                tiles[key].changeTile(this.gameData.data["tiles"], key, width);
             }
         }
     }

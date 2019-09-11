@@ -9,7 +9,7 @@ export default class Background extends PIXI.Container {
 
         while (backgroundSize.width < worldSize.width) {
             let background: PIXI.Sprite;
-            background = PIXI.Sprite.from('src/assets/background.png');
+            background = PIXI.Sprite.from("src/assets/background.png");
             background.position.x = backgroundSize.width;
             this.addChild(background);
             

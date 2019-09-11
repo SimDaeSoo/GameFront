@@ -3,10 +3,10 @@
   </div>
 </template>
 
-<script lang = 'ts'>
+<script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import GameClient from '../game/gameClient';
-import Loader from '../game/loader';
+import GameClient from "../game/gameClient";
+import Loader from "../game/loader";
 
 @Component
 export default class Home extends Vue {
@@ -33,7 +33,7 @@ export default class Home extends Vue {
   }
 
   private async $preload() {
-    const preloads = require('../json/preloads.json');
+    const preloads = require("../json/preloads.json");
 
     for(const r of preloads) {
       this.loader.add(...r);

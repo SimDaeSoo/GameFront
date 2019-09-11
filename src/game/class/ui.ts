@@ -42,17 +42,17 @@ export default class UI extends PIXI.Container {
             this.updateUPS();
             this.updatePing();
 
-            // this.fpsText.style = { fontSize: 10, fill: 'green' };
+            // this.fpsText.style = { fontSize: 10, fill: "green" };
         }
     }
 
     public updateFPS(): void {
         if (this.fpsText && this.fpsText.text !== `FPS ${this.systemData.fps}`) {
-            let color: string = 'red';
+            let color: string = "red";
             if (this.systemData.fps >= 54) { // 90%
-                color = 'green';
+                color = "green";
             } else if (this.systemData.fps >= 42) { // 70%
-                color = 'orange';
+                color = "orange";
             }
             this.fpsText.style = { fontSize: 15, fill: color };
             this.fpsText.text = `FPS ${this.systemData.fps}`;
@@ -61,11 +61,11 @@ export default class UI extends PIXI.Container {
 
     public updateUPS(): void {
         if (this.upsText && this.upsText.text !== `UPS ${this.systemData.ups}`) {
-            let color: string = 'red';
+            let color: string = "red";
             if (this.systemData.ups >= 90) { // 90%
-                color = 'green';
+                color = "green";
             } else if (this.systemData.ups >= 70) { // 70%
-                color = 'orange';
+                color = "orange";
             }
             this.upsText.style = { fontSize: 15, fill: color };
             this.upsText.text = `UPS ${this.systemData.ups}`;
@@ -74,11 +74,11 @@ export default class UI extends PIXI.Container {
 
     public updatePing(): void {
         if (this.pingText && this.pingText.text !== `Ping ${this.systemData.ping}`) {
-            let color: string = 'red';
+            let color: string = "red";
             if (this.systemData.ping <= 20) {
-                color = 'green';
+                color = "green";
             } else if (this.systemData.ping <= 80) {
-                color = 'orange';
+                color = "orange";
             }
             this.pingText.style = { fontSize: 15, fill: color };
             this.pingText.text = `Ping ${this.systemData.ping}`;
@@ -87,7 +87,7 @@ export default class UI extends PIXI.Container {
 
     public makeFPS(): void {
         if (!this.fpsText) {
-            this.fpsText = new PIXI.Text('FPS 0', { fontSize: 15, fill: 'green' });
+            this.fpsText = new PIXI.Text("FPS 0", { fontSize: 15, fill: "green" });
             this.fpsText.position.x += 2;
             this.fpsText.position.y += 2;
             this.systemContainer.addChild(this.fpsText);
@@ -96,7 +96,7 @@ export default class UI extends PIXI.Container {
 
     public makeUPS(): void {
         if (!this.upsText) {
-            this.upsText = new PIXI.Text('UPS 0', { fontSize: 15, fill: 'green' });
+            this.upsText = new PIXI.Text("UPS 0", { fontSize: 15, fill: "green" });
             this.upsText.position.x += 2;
             this.upsText.position.y += 17;
             this.systemContainer.addChild(this.upsText);
@@ -105,7 +105,7 @@ export default class UI extends PIXI.Container {
 
     public makePing(): void {
         if (!this.pingText) {
-            this.pingText = new PIXI.Text('Ping 0', { fontSize: 15, fill: 'green' });
+            this.pingText = new PIXI.Text("Ping 0", { fontSize: 15, fill: "green" });
             this.pingText.position.x += 2;
             this.pingText.position.y += 32;
             this.systemContainer.addChild(this.pingText);

@@ -11,10 +11,10 @@ export default class ObjectFactory {
         let object: BaseObject;
 
         switch(data.objectType) {
-            case 'tiles': 
+            case "tiles": 
                 object = new Tile(data);
                 break;
-            case 'characters':
+            case "characters":
                 object = new SungHoon(data);
                 break;
         }

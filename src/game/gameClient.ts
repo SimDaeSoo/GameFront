@@ -1,10 +1,10 @@
-import * as io from 'socket.io-client';
-import GameLogic from './gameLogic';
-import Updater from './updater';
-import GameRenderer from './gameRenderer';
-import GameData from './gameData';
-import { system } from '../utils/utils';
-import Keyboard from './keyboard';
+import * as io from "socket.io-client";
+import GameLogic from "./gameLogic";
+import Updater from "./updater";
+import GameRenderer from "./gameRenderer";
+import GameData from "./gameData";
+import { system } from "../utils/utils";
+import Keyboard from "./keyboard";
 
 // Main Socket Server의 Room과 흡사.
 export default class GameClient {
@@ -35,26 +35,26 @@ export default class GameClient {
             end: 0
         };
 
-        this.gameLogic.on('setWorldProperties', () => {
+        this.gameLogic.on("setWorldProperties", () => {
             this.gameRenderer.init();
         });
     }
 
     public run(): any {
-        this.io = io.connect('ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020');
-        // this.io = io.connect('http://localhost:3020');
+        // this.io = io.connect("ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020");
+        this.io = io.connect("http://localhost:3020");
 
-        this.io.on('connect', (): void => {
-            system({text: 'connect success!'});
+        this.io.on("connect", (): void => {
+            system({text: "connect success!"});
             system({text: `socket id : ${this.io.id}`});
 
-            this.io.emit('init');
-            this.io.on('initGameData', (message: string, date: number): void => { this.initGameData(message, date); });
-            this.io.on('broadcast', (message: string, date: number): void => { this.broadcast(message, date); });
-            this.io.on('pingTest', (date: number): void => { this.ping(date); });
+            this.io.emit("init");
+            this.io.on("init", (message: string, date: number): void => { this.init(message, date); });
+            this.io.on("broadcast", (message: string, date: number): void => { this.broadcast(message, date); });
+            this.io.on("pingTest", (date: number): void => { this.ping(date); });
 
             this.checkPing.start = Date.now();
-            this.io.emit('pingTest', this.checkPing.start);
+            this.io.emit("pingTest", this.checkPing.start);
         });
     }
     
@@ -81,7 +81,7 @@ export default class GameClient {
 
         setTimeout((): void => {
             this.checkPing.start = Date.now();
-            this.io.emit('pingTest', this.checkPing.start);
+            this.io.emit("pingTest", this.checkPing.start);
         }, this.PING_CHECK_TIME);
     }
 
@@ -92,8 +92,7 @@ export default class GameClient {
         }
     }
 
-    public initGameData(message: string, date: number): void {
-        system({text: `init start`});
+    public init(message: string, date: number): void {
         this.updater.forceDisConnect = () => { this.io.disconnect(); };
         this.gameData = new GameData();
         this.gameLogic.gameData = this.gameData;
@@ -101,8 +100,7 @@ export default class GameClient {
         this.gameRenderer.owner = this.io.id;
         
         const data: any = JSON.parse(message);
-        this.gameData.initGameData(data);
-        system({text: `init done`});
+        this.gameData.init(data);
 
         this.keyboard.onKeyDown = (keyCode: number) => {
             if (keyCode === 77) {
@@ -113,20 +111,20 @@ export default class GameClient {
                 }
             }
             setTimeout(() => {
-                this.io.emit('keydown', keyCode);
+                this.io.emit("keydown", keyCode);
             }, this.PING_TEST);
-            this.io.emit('keydown', keyCode);
+            this.io.emit("keydown", keyCode);
         }
 
         this.keyboard.onKeyUp = (keyCode: number) => {
             setTimeout(() => {
-                this.io.emit('keyup', keyCode);
+                this.io.emit("keyup", keyCode);
             }, this.PING_TEST);
         }
 
-        this.gameRenderer.on('broadcast', (data) => {
+        this.gameRenderer.on("broadcast", (data) => {
             setTimeout(() => {
-                this.io.emit('broadcast', JSON.stringify(data), Date.now());
+                this.io.emit("broadcast", JSON.stringify(data), Date.now());
             }, this.PING_TEST);
         })
 

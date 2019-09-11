@@ -1,6 +1,6 @@
 export interface IMutateCondition {
     arg: string;
-    sign: '<' | '>' | '>=' | '<=' | '===' | '!==';
+    sign: "<" | ">" | ">=" | "<=" | "===" | "!==";
     value: number | string;
 }
 

@@ -1,5 +1,5 @@
-import CollisionEngine from './collisionEngine';
-import { TILE_SIZE } from '../define';
+import CollisionEngine from "./collisionEngine";
+import { TILE_SIZE } from "../define";
 
 export default class RayCaster {
     public dirties: Array<any> = [];
@@ -114,9 +114,9 @@ export default class RayCaster {
     }
 
     private makeBoundary(): void {
-        this.realObjs['boundary'] = {
-            class: 'dirt',
-            objectType: 'tiles',
+        this.realObjs["boundary"] = {
+            class: "dirt",
+            objectType: "tiles",
             tileNumber: 0,
             weight: 10000000000000000000,
             scale: { x: 0, y: 0 },
@@ -156,7 +156,7 @@ export default class RayCaster {
             };
 
             if (hitObjects[0].object.size.x >= TILE_SIZE.WIDTH * this.size.width / 2) {
-                this.triangles[key].name = 'boundary'
+                this.triangles[key].name = "boundary"
             }
         } else {
             delete this.triangles[key];
