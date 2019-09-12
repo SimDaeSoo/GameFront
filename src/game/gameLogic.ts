@@ -107,13 +107,13 @@ export default class GameLogic extends EventEmitter {
     /* ----------------------- Command ----------------------- */
 
     public addCharacter(data: any, dt: number): void {
-        this.gameData.insertData(data.id, data);
+        this.gameData.generate(data.id, data);
         this.setState(data, dt);
         this.emit("addCharacter");
     }
 
     public deleteCharacter(data: any, dt: number): void {
-        this.gameData.deleteData(data.id, data.objectType);
+        this.gameData.delete(data.id, data.objectType);
         if (data.objectType === "tiles") {
             this.changeTile(data.id);
         }

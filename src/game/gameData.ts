@@ -11,21 +11,12 @@ interface IWorldProperties {
 }
 
 export default class GameData {
-    public worldProperties: IWorldProperties;
-    public data: IGameData<any>;
-    public beGenerates: IGameData<any>;
-    public beDeletes: IGameData<any>;
-    public dirties: IGameData<any>;
-    public stateMap: IGameData<any>;
-
-    constructor() {
-        this.worldProperties = { width: 0, height: 0 };
-        this.data = { tiles: {}, objects: {}, characters: {} };
-        this.beGenerates = { tiles: [], objects: [], characters: [] };
-        this.beDeletes = { tiles: [], objects: [], characters: [] };
-        this.dirties = { tiles: [], objects: [], characters: [] };
-        this.stateMap = { tiles: {}, objects: {}, characters: {}};
-    }
+    public worldProperties: IWorldProperties = { width: 0, height: 0 };
+    public data: IGameData<any> = { tiles: {}, objects: {}, characters: {} };
+    public beGenerates: IGameData<any> = { tiles: [], objects: [], characters: [] };
+    public beDeletes: IGameData<any> = { tiles: [], objects: [], characters: [] };
+    public dirties: IGameData<any> = { tiles: [], objects: [], characters: [] };
+    public stateMap: IGameData<any> = { tiles: {}, objects: {}, characters: {}};
 
     public init(data: any): void {
         this.data = data;
@@ -44,7 +35,7 @@ export default class GameData {
         this.dirty(id, data.objectType);
     }
 
-    public insertData(id: string, data: any): void {
+    public generate(id: string, data: any): void {
         this.data[data.objectType][id] = data;
 
         if (this.beGenerates[data.objectType].indexOf(id) < 0) {
@@ -61,7 +52,7 @@ export default class GameData {
         }
     }
 
-    public deleteData(id: string, type: string): void {
+    public delete(id: string, type: string): void {
         delete this.data[type][id];
         delete this.stateMap[type][id];
 
@@ -127,7 +118,7 @@ export default class GameData {
         const worldMap: any = mapGenerator.generate(width, height);
 
         for (let key in worldMap.map) {
-            this.insertData(key, worldMap.map[key]);
+            this.generate(key, worldMap.map[key]);
         }
 
         this.worldProperties = worldMap.worldProperties;
