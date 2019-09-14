@@ -2,7 +2,11 @@ import { State } from "./class/state";
 import MapGenerator from "./class/mapGenerator";
 
 interface IGameData<T> {
-    [type: string]: { [id:string]: T } | Array<T>;
+    [type: string]: { [id:string]: T };
+}
+
+interface IGameDataIDs {
+    [type: string]: Array<string>;
 }
 
 interface IWorldProperties {
@@ -13,19 +17,15 @@ interface IWorldProperties {
 export default class GameData {
     public worldProperties: IWorldProperties = { width: 0, height: 0 };
     public data: IGameData<any> = { tiles: {}, objects: {}, characters: {} };
-    public beGenerates: IGameData<any> = { tiles: [], objects: [], characters: [] };
-    public beDeletes: IGameData<any> = { tiles: [], objects: [], characters: [] };
-    public dirties: IGameData<any> = { tiles: [], objects: [], characters: [] };
+    public beGenerates: IGameDataIDs = { tiles: [], objects: [], characters: [] };
+    public beDeletes: IGameDataIDs = { tiles: [], objects: [], characters: [] };
+    public dirties: IGameDataIDs = { tiles: [], objects: [], characters: [] };
     public stateMap: IGameData<any> = { tiles: {}, objects: {}, characters: {}};
 
     public init(data: any): void {
-        this.data = data;
-
-        for (let type in this.data) {
-            for (let id in this.data[type]) {
-                if (id && this.beGenerates[type].indexOf(id) < 0) {
-                    this.beGenerates[type].push(id);
-                }
+        for (let type in data) {
+            for (let id in data[type]) {
+                this.generate(id, data[type][id]);
             }
         }
     }
@@ -36,7 +36,9 @@ export default class GameData {
     }
 
     public generate(id: string, data: any): void {
-        this.data[data.objectType][id] = data;
+        if (!this.data[data.objectType][id]) {
+            this.data[data.objectType][id] = data;
+        }
 
         if (this.beGenerates[data.objectType].indexOf(id) < 0) {
             this.beGenerates[data.objectType].push(id);
