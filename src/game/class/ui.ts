@@ -9,7 +9,7 @@ interface IuiOptions {
 }
 
 export default class UI extends PIXI.Container {
-    public size: { width: number, height: number};
+    public size: { width: number, height: number };
     public systemContainer: PIXI.Container;
     public fpsText: PIXI.Text;
     public upsText: PIXI.Text;

@@ -2,19 +2,19 @@ export default class CollisionEngine {
     public static applyTilePhysics(objA: any, collisionResult: any): any {
         const dt: number = collisionResult.time;
         const objB: any = collisionResult.object;
-        
+
         // xAxis
         if (collisionResult.direction.left || collisionResult.direction.right) {
             const vectorA = objA.vector.x + objB.weight * (objB.vector.x - objA.vector.x) / (objA.weight + objB.weight) * 2;
-            objA.position.x += objA.vector.x * dt + (collisionResult.direction.left?0.15:-0.15);
-            objA.vector.x = CollisionEngine.translateTinyValue(vectorA)*0;
+            objA.position.x += objA.vector.x * dt + (collisionResult.direction.left ? 0.15 : -0.15);
+            objA.vector.x = CollisionEngine.translateTinyValue(vectorA) * 0;
         }
 
         // yAxis
         if (collisionResult.direction.up || collisionResult.direction.down) {
             const vectorA = objA.vector.y + objB.weight * (objB.vector.y - objA.vector.y) / (objA.weight + objB.weight) * 2;
-            objA.position.y += objA.vector.y * dt + (collisionResult.direction.up?0.15:-0.15);
-            objA.vector.y = CollisionEngine.translateTinyValue(vectorA)*0;
+            objA.position.y += objA.vector.y * dt + (collisionResult.direction.up ? 0.15 : -0.15);
+            objA.vector.y = CollisionEngine.translateTinyValue(vectorA) * 0;
             objA.land = collisionResult.direction.down;
         }
 
@@ -27,7 +27,7 @@ export default class CollisionEngine {
     public static applyPhysics(objA: any, collisionResult: any): any {
         const dt: number = collisionResult.time;
         const objB: any = collisionResult.object;
-        
+
         // xAxis
         if (collisionResult.direction.left || collisionResult.direction.right) {
             const vectorA = objA.vector.x + objB.weight * (objB.vector.x - objA.vector.x) / (objA.weight + objB.weight) * 2;
@@ -108,11 +108,11 @@ export default class CollisionEngine {
 
         // Collision
         if (xAxis.min < yAxis.max && xAxis.max > yAxis.min) {
-            result.time = xAxis.min<yAxis.min?yAxis.min:xAxis.min;
-            result.direction.left = (xAxis.min === result.time) && (objB.vector.x-objA.vector.x > 0);
-            result.direction.right = (xAxis.min === result.time) && (objB.vector.x-objA.vector.x < 0);
-            result.direction.up = (yAxis.min === result.time) && (objB.vector.y-objA.vector.y > 0);
-            result.direction.down = (yAxis.min === result.time) && (objB.vector.y-objA.vector.y < 0);
+            result.time = xAxis.min < yAxis.min ? yAxis.min : xAxis.min;
+            result.direction.left = (xAxis.min === result.time) && (objB.vector.x - objA.vector.x > 0);
+            result.direction.right = (xAxis.min === result.time) && (objB.vector.x - objA.vector.x < 0);
+            result.direction.up = (yAxis.min === result.time) && (objB.vector.y - objA.vector.y > 0);
+            result.direction.down = (yAxis.min === result.time) && (objB.vector.y - objA.vector.y < 0);
             result.object = objB;
         }
 
@@ -157,6 +157,6 @@ export default class CollisionEngine {
     }
 
     public static translateTinyValue(value: number): number {
-        return Math.abs(value)<=0.00000000001?0:value;
+        return Math.abs(value) <= 0.00000000001 ? 0 : value;
     }
 }

@@ -22,11 +22,11 @@ export default class GameLogic extends EventEmitter {
     private collision(dt: number): void {
         this.characterCollision(dt);
     }
-    
+
     private characterCollision(dt: number): void {
         for (let id in this.gameData.data["characters"]) {
             const character: any = this.gameData.data["characters"][id];
-            
+
             this.characterTileCollision(character, dt);
         }
     }
@@ -41,7 +41,7 @@ export default class GameLogic extends EventEmitter {
             });
             return true;
         } else {
-            character.forceVector.y = character.forceVector.y === 0?0.001:character.forceVector.y;
+            character.forceVector.y = character.forceVector.y === 0 ? 0.001 : character.forceVector.y;
             return false;
         }
     }
@@ -95,7 +95,7 @@ export default class GameLogic extends EventEmitter {
     private interpolationCharacterPosition(dt: number): void {
         for (let id in this.gameData.data["characters"]) {
             const character: any = this.gameData.data["characters"][id];
-            
+
             if (character.position.x < 0) {
                 character.position.x = 0;
             } else if (character.position.x + character.size.x > this.gameData.worldProperties.width * TILE_SIZE.WIDTH) {
@@ -122,7 +122,7 @@ export default class GameLogic extends EventEmitter {
 
     public changeTile(id: string): void {
         const width: number = this.gameData.worldProperties.width;
-        const tiles: any = [Number(id)-1,Number(id)+1,Number(id)-width,Number(id)+width];
+        const tiles: any = [Number(id) - 1, Number(id) + 1, Number(id) - width, Number(id) + width];
 
         tiles.forEach((key: number): void => {
             if (this.gameData.data["tiles"][key.toString()] !== undefined) {
@@ -134,7 +134,7 @@ export default class GameLogic extends EventEmitter {
     public setState(data: any, dt: number): void {
         const object: any = this.gameData.data[data.objectType][data.id];
         if (!object) return;
-        
+
         // dt 에 따른 position 변화와, 충돌감지.
         object.position.x = data.position.x;
         object.position.y = data.position.y;
@@ -161,7 +161,7 @@ export default class GameLogic extends EventEmitter {
     }
 
     public runCommand(command: any, date: number): void {
-        if (typeof((this as any)[command.script]) === "function") {
+        if (typeof ((this as any)[command.script]) === "function") {
             const dt: number = this.lastUpdate - date;
             (this as any)[command.script](command.data, dt);
         }

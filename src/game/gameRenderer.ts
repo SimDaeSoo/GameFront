@@ -27,11 +27,11 @@ export default class GameRenderer extends EventEmitter {
     private lighting: PIXI.display.Layer;
     private lightbulb: PIXI.Graphics;
     private rayCaster: RayCaster;
-    
+
     // GameData
     public owner: string;
     public gameData: GameData;
-    private objectDict: any = { tiles: {}, characters: {}, objects: {}};
+    private objectDict: any = { tiles: {}, characters: {}, objects: {} };
 
     // Rendering Performance
     private time: number = 0;
@@ -60,7 +60,7 @@ export default class GameRenderer extends EventEmitter {
         this.camera.setStage(this.stage);
         this.camera.setZoom(1);
         this.camera.setRenderer(this);
-        
+
         this.ui = new UI({ size: { width: this.SCREEN_WIDTH, height: this.SCREEN_HEIGHT }, fpsChecker: true, upsChecker: true, pingInterpolationChecker: true });
         this.ui.systemData = this.systemData;
         this.app.stage.addChild(this.ui);
@@ -118,7 +118,7 @@ export default class GameRenderer extends EventEmitter {
             this.render(now, 0);
         });
     }
-    
+
     public async render(t_1: number, t_2: number): Promise<void> {
         const dt: number = t_1 - t_2;
         this.checkRenderingPerformance(dt);
@@ -191,7 +191,7 @@ export default class GameRenderer extends EventEmitter {
                 const object: BaseObject = ObjectFactory.create(this.gameData.data[type][id]);
                 this.objectDict[type][id] = object;
                 this.gameData.doneGenerate(id, type);
-                
+
                 // State가 있을경우 설정. Test
                 if (this.gameData.stateMap[type][id]) {
                     object.setState(this.gameData.stateMap[type][id]);
@@ -213,19 +213,19 @@ export default class GameRenderer extends EventEmitter {
         if (this.gameData.worldProperties.height === 0) return;
         let depth = this.camera.position.y + (this.gameData.worldProperties.height * TILE_SIZE.HEIGHT * this.camera.currentZoom) - this.SCREEN_HEIGHT;
         depth /= (this.gameData.worldProperties.height - 17) * TILE_SIZE.HEIGHT;
-        depth = (depth * 1.5)<0?0:(depth * 1.5);
+        depth = (depth * 1.5) < 0 ? 0 : (depth * 1.5);
 
         if (this.camera.currentZoom < 0.9) {
-            depth = depth < 0.15?0.15:depth;
+            depth = depth < 0.15 ? 0.15 : depth;
         }
-        
-        this.lightbulb.alpha = depth>=1?1:depth;
+
+        this.lightbulb.alpha = depth >= 1 ? 1 : depth;
     }
 
     public get view(): any {
         return this.app.view;
     }
-    
+
     private checkRenderingPerformance(dt: number): void {
         this.time += dt;
         this.renderCount++;

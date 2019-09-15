@@ -7,7 +7,7 @@ export default class Tile extends BaseObject {
     constructor(options: any) {
         super(options);
 
-        this.sprite = PIXI.Sprite.from(`Terrain Tileset${options.tileNumber!==undefined? options.tileNumber: 6}.png`);
+        this.sprite = PIXI.Sprite.from(`Terrain Tileset${options.tileNumber !== undefined ? options.tileNumber : 6}.png`);
         this.container.addChild(this.sprite);
     }
 

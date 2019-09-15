@@ -26,22 +26,22 @@ const webpackConfig = merge(baseConfig, {
         minimizer: [
             new OptimizeCSSAssetsPlugin({
                 cssProcessorPluginOptions: {
-                    preset: [ 
+                    preset: [
                         'default',
-                        { discardComments: { removeAll: true } } 
+                        { discardComments: { removeAll: true } }
                     ],
                 }
             }),
             new TerserPlugin()
         ],
         splitChunks: {
-          cacheGroups: {
-            commons: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all'
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all'
+                }
             }
-          }
         },
         runtimeChunk: true
     },

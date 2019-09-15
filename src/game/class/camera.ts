@@ -38,7 +38,7 @@ export default class Camera {
     }
 
     public setVibration(strength: number): void {
-        
+
     }
 
     public setStage(stage: any): void {
@@ -62,7 +62,7 @@ export default class Camera {
     }
 
     private applyVibration(): void {
-        
+
     }
 
     private updateStage(): void {
@@ -80,7 +80,7 @@ export default class Camera {
         if (data && data.worldProperties.height > 0 && this.position.y <= -((data.worldProperties.height) * TILE_SIZE.HEIGHT * this.currentZoom - this.screenHeight) + 1 * this.currentZoom) {
             this.position.y = -((data.worldProperties.height) * TILE_SIZE.HEIGHT * this.currentZoom - this.screenHeight);
         }
-        
+
         this.stage.position.x = Math.round(this.position.x);
         this.stage.position.y = Math.round(this.position.y);
     }

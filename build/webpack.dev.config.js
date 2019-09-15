@@ -7,8 +7,8 @@ const webpackConfig = merge(baseConfig, {
     devServer: {
         open: true,
         hot: true
-      },
-      plugins: [
+    },
+    plugins: [
         new webpack.HotModuleReplacementPlugin()
     ],
     module: {

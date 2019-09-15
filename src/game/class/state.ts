@@ -10,7 +10,7 @@ export interface IMutateMap {
 }
 
 export class State {
-    private stateMap: {[stateName: string]: {[stateName: string]: IMutateMap}};
+    private stateMap: { [stateName: string]: { [stateName: string]: IMutateMap } };
     public currentState: string;
 
     constructor() {
@@ -41,20 +41,20 @@ export class State {
         let lastState: string;
 
         while (this.currentState !== lastState) {
-            const mutatableState: {[stateName: string]: IMutateMap} = this.stateMap[this.currentState];
+            const mutatableState: { [stateName: string]: IMutateMap } = this.stateMap[this.currentState];
             lastState = this.currentState;
-            
+
             for (let state in mutatableState) {
                 let result: boolean = true;
                 const conditions: Array<IMutateCondition> = mutatableState[state].conditions;
-    
+
                 conditions.forEach((condition: IMutateCondition): void => {
                     const arg: any = eval(condition.arg);
                     if (arg === undefined || !eval(`${arg}${condition.sign}${condition.value}`)) {
                         result = false;
                     }
                 });
-    
+
                 if (result) {
                     this.currentState = state;
                     break;

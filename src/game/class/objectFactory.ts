@@ -10,8 +10,8 @@ export default class ObjectFactory {
     public static create(data: any): BaseObject {
         let object: BaseObject;
 
-        switch(data.objectType) {
-            case "tiles": 
+        switch (data.objectType) {
+            case "tiles":
                 object = new Tile(data);
                 break;
             case "characters":

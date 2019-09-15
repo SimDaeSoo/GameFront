@@ -23,7 +23,7 @@ export default class Loader {
         this.loader = new PIXI.Loader();
         this.loader.pre(memoryMiddleware);
     }
-    
+
     add(name?: string, url?: string) {
         if (this.loader.resources[name]) {
             return;

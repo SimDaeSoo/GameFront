@@ -2,7 +2,7 @@ import { State } from "./class/state";
 import MapGenerator from "./class/mapGenerator";
 
 interface IGameData<T> {
-    [type: string]: { [id:string]: T };
+    [type: string]: { [id: string]: T };
 }
 
 interface IGameDataIDs {
@@ -20,7 +20,7 @@ export default class GameData {
     public beGenerates: IGameDataIDs = { tiles: [], objects: [], characters: [] };
     public beDeletes: IGameDataIDs = { tiles: [], objects: [], characters: [] };
     public dirties: IGameDataIDs = { tiles: [], objects: [], characters: [] };
-    public stateMap: IGameData<any> = { tiles: {}, objects: {}, characters: {}};
+    public stateMap: IGameData<any> = { tiles: {}, objects: {}, characters: {} };
 
     public init(data: any): void {
         for (let type in data) {
@@ -47,7 +47,7 @@ export default class GameData {
 
     public doneGenerate(id: string, type: string): void {
         const index: number = this.beGenerates[type].indexOf(id);
-        
+
         if (index >= 0) {
             this.setState(this.data[type][id]);
             this.beGenerates[type].splice(index, 1);
@@ -65,7 +65,7 @@ export default class GameData {
 
     public doneDelete(id: string, type: string): void {
         const index: number = this.beDeletes[type].indexOf(id);
-        
+
         if (index >= 0) {
             this.beDeletes[type].splice(index, 1);
         }
@@ -73,7 +73,7 @@ export default class GameData {
 
     public dirty(id: string, type: string): void {
         const index: number = this.dirties[type].indexOf(id);
-        
+
         if (index < 0) {
             this.dirties[type].push(id);
         }
@@ -81,7 +81,7 @@ export default class GameData {
 
     public clean(id: string, type: string): void {
         const index: number = this.dirties[type].indexOf(id);
-        
+
         if (index >= 0) {
             this.dirties[type].splice(index, 1);
         }
@@ -95,11 +95,11 @@ export default class GameData {
             state.registState("idle");
             state.registState("jump");
             state.registState("walk");
-            state.registMutate("idle", { mutateState: "walk", conditions: [{ arg: "data.vector.x", sign: "!==", value: 0}]});
-            state.registMutate("idle", { mutateState: "jump", conditions: [{ arg: "Math.abs(data.vector.y)", sign: ">=", value: "0.1"}]});
-            state.registMutate("jump", { mutateState: "idle", conditions: [{ arg: "Math.abs(data.vector.y)", sign: "<", value: "0.04"}, { arg: "data.land", sign: "===", value: "true"}]});
-            state.registMutate("walk", { mutateState: "idle", conditions: [{ arg: "data.vector.x", sign: "===", value: 0}]});
-            state.registMutate("walk", { mutateState: "jump", conditions: [{ arg: "Math.abs(data.vector.y)", sign: ">=", value: "0.1"}]});
+            state.registMutate("idle", { mutateState: "walk", conditions: [{ arg: "data.vector.x", sign: "!==", value: 0 }] });
+            state.registMutate("idle", { mutateState: "jump", conditions: [{ arg: "Math.abs(data.vector.y)", sign: ">=", value: "0.1" }] });
+            state.registMutate("jump", { mutateState: "idle", conditions: [{ arg: "Math.abs(data.vector.y)", sign: "<", value: "0.04" }, { arg: "data.land", sign: "===", value: "true" }] });
+            state.registMutate("walk", { mutateState: "idle", conditions: [{ arg: "data.vector.x", sign: "===", value: 0 }] });
+            state.registMutate("walk", { mutateState: "jump", conditions: [{ arg: "Math.abs(data.vector.y)", sign: ">=", value: "0.1" }] });
             state.setState("idle");
             this.stateMap[data.objectType][data.id] = state;
         }

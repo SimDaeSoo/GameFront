@@ -15,7 +15,7 @@ interface IAnimation {
 }
 
 export default class BaseCharacter extends BaseObject {
-    public animations: {[name: string]: IAnimation} = {};
+    public animations: { [name: string]: IAnimation } = {};
     public animationName: string;
     private options: any;
 

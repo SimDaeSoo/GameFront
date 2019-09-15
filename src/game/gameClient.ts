@@ -45,8 +45,8 @@ export default class GameClient {
         this.io = io.connect("http://localhost:3020");
 
         this.io.on("connect", (): void => {
-            system({text: "connect success!"});
-            system({text: `socket id : ${this.io.id}`});
+            system({ text: "connect success!" });
+            system({ text: `socket id : ${this.io.id}` });
 
             this.io.emit("init");
             this.io.on("init", (message: string, date: number): void => { this.init(message, date); });
@@ -57,7 +57,7 @@ export default class GameClient {
             this.io.emit("pingTest", this.checkPing.start);
         });
     }
-    
+
     private ping(date: number): void {
         if (this.pings.length >= 1000 / this.PING_CHECK_TIME) {
             this.pings.splice(0, 1);
@@ -72,7 +72,7 @@ export default class GameClient {
         });
         this.pingInterpolation /= this.pings.length;
         this.pingInterpolation = Math.round(this.pingInterpolation);
-        
+
         this.avgPings.push(this.checkPing.end - this.checkPing.start);
         this.avgPings.forEach((eachPing: number): void => {
             this.avgPing += eachPing;
@@ -98,13 +98,13 @@ export default class GameClient {
         this.gameLogic.gameData = this.gameData;
         this.gameRenderer.gameData = this.gameData;
         this.gameRenderer.owner = this.io.id;
-        
+
         const data: any = JSON.parse(message);
         this.gameData.init(data);
 
         this.keyboard.onKeyDown = (keyCode: number) => {
             if (keyCode === 77) {
-                if(this.gameRenderer.camera.targetZoom < 1) {
+                if (this.gameRenderer.camera.targetZoom < 1) {
                     this.gameRenderer.camera.setZoom(1);
                 } else {
                     this.gameRenderer.camera.setZoom(0.5);

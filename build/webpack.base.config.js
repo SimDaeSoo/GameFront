@@ -9,8 +9,8 @@ const webpackConfig = {
         app: ['./src/App.ts']
     },
     output: {
-      filename: '[name].bundle.js',
-      path: path.resolve(__dirname, '../dist')
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, '../dist')
     },
     module: {
         rules: [
@@ -51,11 +51,11 @@ const webpackConfig = {
             PIXI: ['pixi.js']
         }),
         new CopyWebpackPlugin([
-          {
-            from: path.resolve(__dirname, '../src/assets'),
-            to: 'src/assets',
-            ignore: ['.*']
-          }
+            {
+                from: path.resolve(__dirname, '../src/assets'),
+                to: 'src/assets',
+                ignore: ['.*']
+            }
         ])
     ],
     resolve: {

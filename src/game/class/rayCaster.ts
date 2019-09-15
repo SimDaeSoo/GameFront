@@ -11,7 +11,7 @@ export default class RayCaster {
     public rayContainer: PIXI.Container;
     private rayPolygon: any;
     private RAY_DENSITY: number = 0.15;
-    
+
     constructor() {
         this.rayContainer = new PIXI.Container();
     }
@@ -52,7 +52,7 @@ export default class RayCaster {
             vector: { x: 0, y: 0 }
         };
 
-        for (let i=0; i<=180; i += this.RAY_DENSITY) {
+        for (let i = 0; i <= 180; i += this.RAY_DENSITY) {
             ray.vector.x = Math.cos(i * Math.PI / 180);
             ray.vector.y = Math.sin(i * Math.PI / 180);
             const hitObjects: Array<any> = CollisionEngine.getHitObjects(ray, this.objs, Number.MAX_SAFE_INTEGER);
@@ -65,7 +65,7 @@ export default class RayCaster {
                 };
             }
         }
-        
+
         this.makeBoundary();
     }
 
@@ -98,8 +98,8 @@ export default class RayCaster {
         }
 
         const boundaryAngle: any = {
-            min: { x: this.size.width  / 2 + (this.position.y - this.size.height) / Math.tan((min - this.RAY_DENSITY) * Math.PI / 180), y: this.size.height },
-            max: { x: this.size.width  / 2 + (this.position.y - this.size.height) / Math.tan((max + this.RAY_DENSITY) * Math.PI / 180), y: this.size.height }
+            min: { x: this.size.width / 2 + (this.position.y - this.size.height) / Math.tan((min - this.RAY_DENSITY) * Math.PI / 180), y: this.size.height },
+            max: { x: this.size.width / 2 + (this.position.y - this.size.height) / Math.tan((max + this.RAY_DENSITY) * Math.PI / 180), y: this.size.height }
         };
 
         const startPoint: Array<any> = [
@@ -129,7 +129,7 @@ export default class RayCaster {
             rotationVector: 0
         };
     }
-    
+
     private changeDetect(): void {
         for (let key in this.triangles) {
             if (this.realObjs[this.triangles[key].name] === undefined) {

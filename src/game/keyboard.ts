@@ -13,7 +13,7 @@ export default class Keyboard {
             }
 
             if (this.keyData[e.keyCode].isUp) {
-                this.onKeyDown?this.onKeyDown(e.keyCode): null;
+                this.onKeyDown ? this.onKeyDown(e.keyCode) : null;
                 this.keyData[e.keyCode].isDown = true;
                 this.keyData[e.keyCode].isUp = false;
             }
@@ -27,7 +27,7 @@ export default class Keyboard {
                 };
             }
 
-            this.onKeyDown?this.onKeyUp(e.keyCode): null;
+            this.onKeyDown ? this.onKeyUp(e.keyCode) : null;
             this.keyData[e.keyCode].isDown = false;
             this.keyData[e.keyCode].isUp = true;
         });
