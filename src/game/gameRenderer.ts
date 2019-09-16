@@ -13,8 +13,8 @@ import BaseObject from "./baseObject";
 export default class GameRenderer extends EventEmitter {
     // Application
     private app: PIXI.Application;
-    private SCREEN_WIDTH: number = 1050;
-    private SCREEN_HEIGHT: number = 600;
+    private SCREEN_WIDTH: number = window.innerWidth > 1024 ? 1024 : window.innerWidth;
+    private SCREEN_HEIGHT: number = Math.floor(this.SCREEN_WIDTH * window.innerHeight / window.innerWidth - 4);
 
     public camera: Camera;
     public ui: UI;
@@ -60,10 +60,6 @@ export default class GameRenderer extends EventEmitter {
         this.camera.setStage(this.stage);
         this.camera.setZoom(1);
         this.camera.setRenderer(this);
-
-        this.ui = new UI({ size: { width: this.SCREEN_WIDTH, height: this.SCREEN_HEIGHT }, fpsChecker: true, upsChecker: true, pingInterpolationChecker: true });
-        this.ui.systemData = this.systemData;
-        this.app.stage.addChild(this.ui);
         // ----------------------------- Lightings
         this.lighting = new PIXI.display.Layer();
         this.lighting.on("display", (element) => { element.blendMode = PIXI.BLEND_MODES.LIGHTEN; });
@@ -85,6 +81,10 @@ export default class GameRenderer extends EventEmitter {
         this.rayCaster = new RayCaster();
         this.rayCaster.setLightingLayer(this.lighting);
         // ----------------------------- Lightings
+
+        this.ui = new UI({ size: { width: this.SCREEN_WIDTH, height: this.SCREEN_HEIGHT }, fpsChecker: true, upsChecker: true, pingInterpolationChecker: true });
+        this.ui.systemData = this.systemData;
+        this.app.stage.addChild(this.ui);
     }
 
     public init(): void {

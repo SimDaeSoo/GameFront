@@ -90,7 +90,7 @@ export default class Camera {
 
         const targetPosition: any = {
             x: ((-this.obj.position.x - this.obj.size.x / 2) * this.currentZoom + this.screenWidth / 2),
-            y: ((-this.obj.position.y - this.obj.size.y / 2 + 100) * this.currentZoom + this.screenHeight / 2)
+            y: ((-this.obj.position.y - this.obj.size.y / 2 + Math.round(this.screenHeight / 6)) * this.currentZoom + this.screenHeight / 2)
         };
 
         this.position.x += (targetPosition.x - this.position.x) * coeifficient;
