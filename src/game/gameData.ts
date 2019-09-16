@@ -22,7 +22,7 @@ export default class GameData {
     public dirties: IGameDataIDs = { tiles: [], objects: [], characters: [] };
     public stateMap: IGameData<any> = { tiles: {}, objects: {}, characters: {} };
 
-    public init(data: any): void {
+    public initialize(data: any): void {
         for (let type in data) {
             for (let id in data[type]) {
                 this.generate(id, data[type][id]);

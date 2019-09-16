@@ -26,14 +26,14 @@ export default class BaseObject extends PIXI.Container {
         this.outerContainer.addChild(this.container);
         this.addChild(this.outerContainer);
         this.addChild(this.uiContainer);
-        this.init(options);
+        this.initialize(options);
 
         this.on("click", (): void => {
             this.vibration(300, 3);
         });
     }
 
-    private init(options: any): void {
+    private initialize(options: any): void {
         this.targetPosition.x = this.currentPosition.x = options.position.x;
         this.targetPosition.y = this.currentPosition.y = options.position.y;
 

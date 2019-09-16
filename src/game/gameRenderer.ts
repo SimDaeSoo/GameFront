@@ -14,7 +14,7 @@ export default class GameRenderer extends EventEmitter {
     // Application
     private app: PIXI.Application;
     private SCREEN_WIDTH: number = window.innerWidth > 1024 ? 1024 : window.innerWidth;
-    private SCREEN_HEIGHT: number = Math.floor(this.SCREEN_WIDTH * window.innerHeight / window.innerWidth);
+    private SCREEN_HEIGHT: number = Math.floor(this.SCREEN_WIDTH * this.SCREEN_RATIO);
 
     public camera: Camera;
     public ui: UI;
@@ -87,7 +87,7 @@ export default class GameRenderer extends EventEmitter {
         this.app.stage.addChild(this.ui);
     }
 
-    public init(): void {
+    public initialize(): void {
         const worldSize: any = {
             width: this.gameData.worldProperties.width * TILE_SIZE.WIDTH,
             height: (this.gameData.worldProperties.height + 17) * TILE_SIZE.HEIGHT
@@ -109,7 +109,7 @@ export default class GameRenderer extends EventEmitter {
         this.rayCaster.setObjects(this.gameData.data.tiles);
         this.rayCaster.setPosition({ x: worldSize.width / 2, y: -600 });
         this.rayCaster.setSize(worldSize);
-        this.rayCaster.initRay();
+        this.rayCaster.initializeRay();
         this.stage.addChild(this.rayCaster.rayContainer);
     }
 
@@ -252,5 +252,12 @@ export default class GameRenderer extends EventEmitter {
                 tiles[key].changeTile(this.gameData.data["tiles"], key, width);
             }
         }
+    }
+
+    private get SCREEN_RATIO(): number {
+        let screenRatio: number = window.innerHeight / window.innerWidth;
+        if (screenRatio < 9 / 16) screenRatio = 9 / 16;
+        if (screenRatio > 3 / 4) screenRatio = 3 / 4;
+        return screenRatio;
     }
 }

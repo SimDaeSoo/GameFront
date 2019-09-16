@@ -45,7 +45,7 @@ export default class RayCaster {
         this.lighting = lighting;
     }
 
-    public initRay(): void {
+    public initializeRay(): void {
         const ray: any = {
             position: this.position,
             size: { x: 0.1, y: 0.1 },

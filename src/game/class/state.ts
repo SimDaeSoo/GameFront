@@ -14,10 +14,10 @@ export class State {
     public currentState: string;
 
     constructor() {
-        this.init();
+        this.initialize();
     }
 
-    private init(): void {
+    private initialize(): void {
         this.stateMap = {};
     }
 

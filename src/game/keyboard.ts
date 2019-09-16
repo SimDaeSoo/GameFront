@@ -4,7 +4,7 @@ export default class Keyboard {
     public onKeyUp: any;
 
     constructor() {
-        window.addEventListener("keydown", (e) => {
+        window.addEventListener("keydown", (e: KeyboardEvent): void => {
             if (!this.keyData[e.keyCode]) {
                 this.keyData[e.keyCode] = {
                     isDown: false,
@@ -19,7 +19,7 @@ export default class Keyboard {
             }
         });
 
-        window.addEventListener("keyup", (e) => {
+        window.addEventListener("keyup", (e: KeyboardEvent): void => {
             if (!this.keyData[e.keyCode]) {
                 this.keyData[e.keyCode] = {
                     isDown: false,

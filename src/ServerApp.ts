@@ -13,7 +13,7 @@ class ServerApp {
         this.express = express();
     }
 
-    public async init(): Promise<void> {
+    public async initialize(): Promise<void> {
         this.middleware();
         this.routes();
         this.setNormalizePort(8000);
@@ -60,5 +60,5 @@ class ServerApp {
 }
 
 const serverApp: ServerApp = new ServerApp();
-serverApp.init();
+serverApp.initialize();
 serverApp.createServer();
