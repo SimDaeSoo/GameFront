@@ -14,7 +14,7 @@ export default class GameRenderer extends EventEmitter {
     // Application
     private app: PIXI.Application;
     private SCREEN_WIDTH: number = window.innerWidth > 1024 ? 1024 : window.innerWidth;
-    private SCREEN_HEIGHT: number = Math.floor(this.SCREEN_WIDTH * window.innerHeight / window.innerWidth - 4);
+    private SCREEN_HEIGHT: number = Math.floor(this.SCREEN_WIDTH * window.innerHeight / window.innerWidth);
 
     public camera: Camera;
     public ui: UI;
