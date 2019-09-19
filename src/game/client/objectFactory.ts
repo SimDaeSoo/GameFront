@@ -1,6 +1,6 @@
 import Tile from "./tile";
-import SungHoon from "../characters/sunghoon";
-import BaseObject from "../baseObject";
+import SungHoon from "./characters/sunghoon";
+import BaseObject from "./baseObject";
 
 export default class ObjectFactory {
     constructor() {

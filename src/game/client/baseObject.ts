@@ -1,4 +1,4 @@
-import { State } from "./class/state";
+import { State } from "../union/state";
 
 export default class BaseObject extends PIXI.Container {
     public container: PIXI.Container = new PIXI.Container();

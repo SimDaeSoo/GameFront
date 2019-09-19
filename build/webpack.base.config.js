@@ -52,7 +52,7 @@ const webpackConfig = {
         }),
         new CopyWebpackPlugin([
             {
-                from: path.resolve(__dirname, '../src/assets'),
+                from: path.resolve(__dirname, '../src/game/assets'),
                 to: 'src/assets',
                 ignore: ['.*']
             }
@@ -61,8 +61,8 @@ const webpackConfig = {
     resolve: {
         extensions: ['.ts', '.js', '.json'],
         alias: {
-            assets: path.resolve('src/assets/'),
-            json: path.resolve('src/json/')
+            assets: path.resolve('src/game/assets/'),
+            json: path.resolve('src/game/json/')
         }
     }
 };

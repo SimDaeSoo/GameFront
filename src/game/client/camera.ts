@@ -1,4 +1,4 @@
-import { TILE_SIZE } from "../define";
+import { TILE_SIZE } from "../union/define";
 
 export default class Camera {
     private renderer: any;

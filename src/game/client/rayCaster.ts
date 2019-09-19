@@ -1,5 +1,5 @@
-import CollisionEngine from "./collisionEngine";
-import { TILE_SIZE } from "../define";
+import CollisionEngine from "../union/collisionEngine";
+import { TILE_SIZE } from "../union/define";
 
 export default class RayCaster {
     public dirties: Array<any> = [];

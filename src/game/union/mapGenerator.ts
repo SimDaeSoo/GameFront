@@ -1,5 +1,5 @@
-import { TILE_SIZE } from "../define";
-import { changeTileNumber } from "../../utils/utils";
+import { TILE_SIZE } from "./define";
+import { changeTileNumber } from "./utils";
 
 /*
     플레이어는 초당 30발의 armo를 생성 => 10명제한 => 300개의 Object
@@ -137,8 +137,8 @@ export default class MapGenerator {
     // TODO 변경
     public newTile(x: number, y: number): any {
         const tileProperties: any = {
-            class: "dirt",
-            objectType: "tiles",
+            class: 'dirt',
+            objectType: 'tiles',
             size: { x: TILE_SIZE.WIDTH, y: TILE_SIZE.HEIGHT },
             scale: { x: 1.5, y: 1.5 },
             weight: 10000000000000000000,

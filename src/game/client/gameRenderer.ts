@@ -1,13 +1,13 @@
-import GameData from "./gameData";
-import { system } from "../utils/utils";
+import GameData from "../union/gameData";
+import { system } from "../union/utils";
 import { EventEmitter } from "events";
-import Camera from "./class/camera";
+import Camera from "./camera";
 import Display from "pixi-layers";
-import { TILE_SIZE } from "./define";
-import RayCaster from "./class/rayCaster";
-import Background from "./class/background";
-import ObjectFactory from "./class/objectFactory";
-import UI from "./class/ui";
+import { TILE_SIZE } from "../union/define";
+import RayCaster from "./rayCaster";
+import Background from "./background";
+import ObjectFactory from "./objectFactory";
+import UI from "./ui";
 import BaseObject from "./baseObject";
 
 export default class GameRenderer extends EventEmitter {
@@ -232,7 +232,7 @@ export default class GameRenderer extends EventEmitter {
 
         if (this.time > 1000 * this.AVERAGE_LOOPING) {
             this.systemData.fps = Number((this.renderCount / this.AVERAGE_LOOPING).toFixed(2));
-            // system({ text: `render: ${(this.renderCount / this.AVERAGE_LOOPING).toFixed(2)}fps (${(this.renderCount / this.AVERAGE_LOOPING/60*100).toFixed(2)}%)` });
+            system({ text: `render: ${(this.renderCount / this.AVERAGE_LOOPING).toFixed(2)}fps (${(this.renderCount / this.AVERAGE_LOOPING / 60 * 100).toFixed(2)}%)` });
             this.time = 0;
             this.renderCount = 0;
         }

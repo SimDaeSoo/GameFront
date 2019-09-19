@@ -1,9 +1,9 @@
 import * as io from "socket.io-client";
-import GameLogic from "./gameLogic";
-import Updater from "./updater";
+import GameLogic from "../union/gameLogic";
+import Updater from "../union/updater";
+import GameData from "../union/gameData";
+import { system } from "../union/utils";
 import GameRenderer from "./gameRenderer";
-import GameData from "./gameData";
-import { system } from "../utils/utils";
 import Keyboard from "./keyboard";
 
 // Main Socket Server의 Room과 흡사.
@@ -88,8 +88,8 @@ export default class GameClient {
     }
 
     public run(): any {
-        this.io = io.connect("ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020");
-        // this.io = io.connect("http://localhost:3020");
+        // this.io = io.connect("ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:3020");
+        this.io = io.connect("http://localhost:3020");
 
         this.io.on("connect", (): void => {
             system({ text: "connect success!" });

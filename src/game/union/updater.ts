@@ -1,4 +1,4 @@
-import { warn, system } from "../utils/utils";
+import { warn, system } from "./utils";
 
 export default class Updater {
     private time: number = 0;
@@ -29,12 +29,12 @@ export default class Updater {
         if (this.time >= 1000 * this.AVERAGE_LOOPING) {
             const ups: number = this.ups = Number((this.updateCount / this.AVERAGE_LOOPING).toFixed(2));
             if (this.updateCount < 1000 / this.GAME_UPDATE_MILLISEC * this.AVERAGE_LOOPING * 0.8) {
-                // warn({ text: `update: ${ups.toFixed(2)} ups (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
+                warn({ text: `update: ${ups.toFixed(2)} ups (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
                 if (this.updateCount < 1000 / this.GAME_UPDATE_MILLISEC * this.AVERAGE_LOOPING * 0.2) {
                     this.forceDisConnect ? this.forceDisConnect() : null;
                 }
             } else {
-                // system({ text: `update: ${ups.toFixed(2)} ups (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
+                system({ text: `update: ${ups.toFixed(2)} ups (${(ups / (1000 / this.GAME_UPDATE_MILLISEC) * 100).toFixed(2)}%)`});
             }
 
             this.time = this.updateCount = 0;

@@ -1,5 +1,5 @@
-import { State } from "./class/state";
-import MapGenerator from "./class/mapGenerator";
+import { State } from "./state";
+import MapGenerator from "./mapGenerator";
 
 interface IGameData<T> {
     [type: string]: { [id: string]: T };

@@ -1,12 +1,11 @@
 <template>
-  <div class="Home" ref="Home">
-  </div>
+  <div class="Home" ref="Home"></div>
 </template>
 
 <script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import GameClient from "../game/gameClient";
-import Loader from "../game/loader";
+import GameClient from "../game/client/gameClient";
+import Loader from "../game/client/loader";
 import ChatModal from "../modals/ChatModal.vue";
 
 @Component
@@ -15,7 +14,7 @@ export default class Home extends Vue {
   private loader: Loader;
   private chatFlag: boolean = false;
 
-  created() {}
+  created() { }
 
   mounted() {
     this.start();
@@ -61,10 +60,10 @@ export default class Home extends Vue {
   }
 
   private showChatModal(): void {
-    this.$modal.show(ChatModal, { },{
+    this.$modal.show(ChatModal, {}, {
       name: 'ChatModal',
-      width : '330px',
-      height : '130px'
+      width: '330px',
+      height: '130px'
     })
   }
 

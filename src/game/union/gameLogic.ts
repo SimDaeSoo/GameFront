@@ -1,8 +1,8 @@
 import GameData from "./gameData";
-import CollisionEngine from "./class/collisionEngine";
+import CollisionEngine from "./collisionEngine";
 import { TILE_SIZE } from "./define";
 import { EventEmitter } from "events";
-import { changeTileNumber } from "../utils/utils";
+import { changeTileNumber } from "./utils";
 
 export default class GameLogic extends EventEmitter {
     public gameData: GameData;

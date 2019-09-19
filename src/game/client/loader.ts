@@ -16,6 +16,15 @@ function memoryMiddleware(resource, next) {
     next();
 }
 
+
+export function loadAniTexture(name, count) {
+    const frames = [];
+    for (let i = 0; i < count; i++) {
+        frames.push(PIXI.Texture.from(name + i + ".png"));
+    }
+    return frames;
+}
+
 export default class Loader {
     private loader: PIXI.Loader;
 
