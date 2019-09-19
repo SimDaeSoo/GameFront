@@ -1,6 +1,14 @@
 Game Project / Front End
 =============
-Example URL : http://13.124.180.130:8000/
+Game Front Server
+멀티 슈팅게임 ADI의 Front 서버로서, Client에 해당한다.
+
+Example URL : http://13.124.180.130:7000/
+
+### Controll ###
+Arrow Key : Moving  
+'M' : Zoom In / Zoom Out  
+'Enter' : Chat (TODO)  
 
 ### How To Run? ###
 - dependency install
