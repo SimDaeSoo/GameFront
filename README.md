@@ -1,5 +1,6 @@
 Game Project / Front End
 =============
+Example URL : http://13.124.180.130:8000/
 
 ### How To Run? ###
 - dependency install
