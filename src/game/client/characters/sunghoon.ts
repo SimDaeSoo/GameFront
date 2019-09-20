@@ -1,4 +1,5 @@
-import BaseCharacter from "./baseCharacter";
+import BaseCharacter from './baseCharacter';
+import ChatBalloon from '../chatBalloon';
 
 export default class SungHoon extends BaseCharacter {
     public sprite: PIXI.AnimatedSprite;
@@ -6,11 +7,15 @@ export default class SungHoon extends BaseCharacter {
     constructor(options: any) {
         super(options);
 
-        this.addAnimation("idle", { src: "ksh001_idle", length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
-        this.addAnimation("walk", { src: "ksh001_walk", length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
-        this.addAnimation("jump", { src: "ksh001_jump", length: 1, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
+        const cb: ChatBalloon = new ChatBalloon('Hello Hellasdfasdf Hellsdo Heffallo Hsdello Helaasdfaslo Heflslo ');
+        cb.position.y -= 100;
+
+        this.addAnimation('idle', { src: 'ksh001_idle', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
+        this.addAnimation('walk', { src: 'ksh001_walk', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
+        this.addAnimation('jump', { src: 'ksh001_jump', length: 1, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
 
         this.makeNameTag(`SOCKET ID:${options.id}`);
+        this.addChild(cb);
     }
 
     public update(dt: number): void {
