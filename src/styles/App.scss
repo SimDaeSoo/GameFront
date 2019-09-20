@@ -1,5 +1,4 @@
 $display-default:block;
-$color-point:#080;
 
 body {
     margin: 0;
@@ -7,9 +6,44 @@ body {
     overflow-y: hidden;
 }
 
-.lnk{
-    display:$display-default;
-    position:absolute;
-    left:5px;
-    color:$color-point;
+.ChatModal {
+    background-color: transparent;
+    overflow: visible;
+}
+
+$highlight: rgba(#FFFFFF, 0.3);
+$color: #444444;
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.chat-bar {
+    background: $color;
+    box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 0.39em;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    &__message {
+        width: 100%;
+        position: relative;
+    }
+    &__input {
+        background: $highlight;
+        height: 21px;
+        box-sizing: border-box;
+        border-radius: 8px;
+        width: 100%;
+        border: 0;
+        padding: 0.7em;
+        color: white;
+        &::placeholder {
+            color: rgba(#FFFFFF, 0.5);
+        }
+    }
 }

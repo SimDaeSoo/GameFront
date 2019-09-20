@@ -1,18 +1,23 @@
 <template>
-  <div class="Home" ref="Home"></div>
+  <div class="Home" ref="Home">
+    <dom-ui/>
+  </div>
 </template>
 
 <script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import GameClient from "../game/client/gameClient";
 import Loader from "../game/client/loader";
-import ChatModal from "../modals/ChatModal.vue";
+import DomUI from "../ui/DomUI.vue";
 
-@Component
+@Component({
+  components: {
+    'dom-ui': DomUI
+  }
+})
 export default class Home extends Vue {
   private client: GameClient;
   private loader: Loader;
-  private chatFlag: boolean = false;
 
   created() { }
 
@@ -31,7 +36,6 @@ export default class Home extends Vue {
       (this.$refs.Home as HTMLElement).appendChild(
         this.client.gameRenderer.view
       );
-      this.chatInitialize();
     });
   }
 
@@ -43,32 +47,6 @@ export default class Home extends Vue {
     }
 
     await this.loader.asyncLoad();
-  }
-
-  private chatInitialize(): void {
-    window.addEventListener("keydown", (event: KeyboardEvent): void => {
-      const keyCode: number = event.keyCode;
-      if (keyCode === 13) {
-        if (!this.chatFlag) {
-          this.showChatModal();
-        } else {
-          this.hideChatModal();
-        }
-        this.chatFlag = !this.chatFlag;
-      }
-    });
-  }
-
-  private showChatModal(): void {
-    this.$modal.show(ChatModal, {}, {
-      name: 'ChatModal',
-      width: '330px',
-      height: '130px'
-    })
-  }
-
-  private hideChatModal(): void {
-    this.$modal.hide('ChatModal');
   }
 }
 </script>
