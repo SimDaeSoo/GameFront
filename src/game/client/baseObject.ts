@@ -1,4 +1,5 @@
 import { State } from "../union/state";
+import { Size } from "../union/define";
 
 export default class BaseObject extends PIXI.Container {
     public container: PIXI.Container = new PIXI.Container();
@@ -10,7 +11,7 @@ export default class BaseObject extends PIXI.Container {
     private strength: number = 0;
     private duration: number = 0;
     private vibrateFlag: boolean = true;
-    public size: any = { x: 0, y: 0 };
+    public size: Size = { width: 0, height: 0 };
     public _flip: { x: boolean, y: boolean } = { x: false, y: false };
     public targetPosition: any = { x: 0, y: 0 };
     public currentPosition: any = { x: 0, y: 0 };
@@ -41,9 +42,9 @@ export default class BaseObject extends PIXI.Container {
             const collisionBox: PIXI.Graphics = new PIXI.Graphics();
             collisionBox.lineStyle(1, 0xff0000);
             collisionBox.moveTo(0, 0);
-            collisionBox.lineTo(this.size.x, 0);
-            collisionBox.lineTo(this.size.x, this.size.y);
-            collisionBox.lineTo(0, this.size.y);
+            collisionBox.lineTo(this.size.width, 0);
+            collisionBox.lineTo(this.size.width, this.size.height);
+            collisionBox.lineTo(0, this.size.height);
             collisionBox.lineTo(0, 0);
             collisionBox.endFill();
             collisionBox.alpha = 0.5;
@@ -73,8 +74,8 @@ export default class BaseObject extends PIXI.Container {
 
         this.vibrationTimer += dt;
         if (this.duration < this.vibrationTimer) {
-            this.outerContainer.position.x = this.flip.x ? this.size.x : 0;
-            this.outerContainer.position.y = this.flip.y ? this.size.y : 0;
+            this.outerContainer.position.x = this.flip.x ? this.size.width : 0;
+            this.outerContainer.position.y = this.flip.y ? this.size.height : 0;
             this.duration = this.strength = 0;
         } else if (this.nextVibrationTime < this.vibrationTimer && this.vibrateFlag) {
             this.outerContainer.position.x += this.strength * (1 - Math.round(Math.random()) * 2);
@@ -83,8 +84,8 @@ export default class BaseObject extends PIXI.Container {
             this.vibrateFlag = !this.vibrateFlag;
             this.strength *= 0.9;
         } else if (this.nextVibrationTime < this.vibrationTimer && !this.vibrateFlag) {
-            this.outerContainer.position.x = this.flip.x ? this.size.x : 0;
-            this.outerContainer.position.y = this.flip.y ? this.size.y : 0;
+            this.outerContainer.position.x = this.flip.x ? this.size.width : 0;
+            this.outerContainer.position.y = this.flip.y ? this.size.height : 0;
             this.nextVibrationTime += PERIOD;
             this.vibrateFlag = !this.vibrateFlag;
         }
@@ -97,8 +98,8 @@ export default class BaseObject extends PIXI.Container {
     public set flip(flip: { x: boolean, y: boolean }) {
         this._flip.x = flip.x;
         this._flip.y = flip.y;
-        this.outerContainer.position.x = this.flip.x ? this.size.x : 0;
-        this.outerContainer.position.y = this.flip.y ? this.size.y : 0;
+        this.outerContainer.position.x = this.flip.x ? this.size.width : 0;
+        this.outerContainer.position.y = this.flip.y ? this.size.height : 0;
         this.outerContainer.scale.x = this.flip.x ? -1 : 1;
         this.outerContainer.scale.y = this.flip.y ? -1 : 1;
     }
@@ -122,8 +123,8 @@ export default class BaseObject extends PIXI.Container {
 
     public setSize(size: any): void {
         if (!size) return;
-        this.size.x = size.x;
-        this.size.y = size.y;
+        this.size.width = size.width;
+        this.size.height = size.height;
     }
 
     public setScale(scale: any): void {
@@ -147,7 +148,7 @@ export default class BaseObject extends PIXI.Container {
         );
         nameTag.anchor.x = 0.5;
         nameTag.anchor.y = 0.5;
-        nameTag.position.x += this.size.x / 2;
+        nameTag.position.x += this.size.width / 2;
         nameTag.position.y = -nameTag.height;
 
         const box = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -157,7 +158,7 @@ export default class BaseObject extends PIXI.Container {
         box.anchor.y = 0.5;
         box.width = nameTag.width + 4;
         box.height = nameTag.height - 1;
-        box.position.x += this.size.x / 2;
+        box.position.x += this.size.width / 2;
         box.position.y = -nameTag.height - 1;
 
         this.uiContainer.addChild(box);

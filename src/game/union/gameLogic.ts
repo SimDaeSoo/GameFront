@@ -50,10 +50,10 @@ export default class GameLogic extends EventEmitter {
         const result: Array<any> = [];
 
         const pos = { x: Math.round(character.position.x / TILE_SIZE.WIDTH) - 2, y: Math.round(character.position.y / TILE_SIZE.HEIGHT) - 2 };
-        const size = { x: Math.round(character.size.x / TILE_SIZE.WIDTH + 0.5) + 4, y: Math.round(character.size.y / TILE_SIZE.HEIGHT + 0.5) + 4 };
+        const size = { width: Math.round(character.size.width / TILE_SIZE.WIDTH + 0.5) + 4, height: Math.round(character.size.height / TILE_SIZE.HEIGHT + 0.5) + 4 };
 
-        for (let i = pos.x; i < pos.x + size.x; i++) {
-            for (let j = pos.y; j < pos.y + size.y; j++) {
+        for (let i = pos.x; i < pos.x + size.width; i++) {
+            for (let j = pos.y; j < pos.y + size.height; j++) {
                 if (this.gameData.data["tiles"][i + j * this.gameData.worldProperties.width]) {
                     result.push(this.gameData.data["tiles"][i + j * this.gameData.worldProperties.width]);
                 }
@@ -98,8 +98,8 @@ export default class GameLogic extends EventEmitter {
 
             if (character.position.x < 0) {
                 character.position.x = 0;
-            } else if (character.position.x + character.size.x > this.gameData.worldProperties.width * TILE_SIZE.WIDTH) {
-                character.position.x = this.gameData.worldProperties.width * TILE_SIZE.WIDTH - character.size.x;
+            } else if (character.position.x + character.size.width > this.gameData.worldProperties.width * TILE_SIZE.WIDTH) {
+                character.position.x = this.gameData.worldProperties.width * TILE_SIZE.WIDTH - character.size.width;
             }
         }
     }
@@ -132,6 +132,7 @@ export default class GameLogic extends EventEmitter {
     }
 
     public setState(data: any, dt: number): void {
+        console.log(data);
         const object: any = this.gameData.data[data.objectType][data.id];
         if (!object) return;
 

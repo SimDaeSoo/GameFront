@@ -124,15 +124,15 @@ export default class CollisionEngine {
         let timestamp: any = { min: Infinity, max: -Infinity };
 
         if (vector === 0) {
-            if (objA.position.y + objA.size.y >= objB.position.y && objA.position.y <= objB.position.y + objB.size.y) {
+            if (objA.position.y + objA.size.height >= objB.position.y && objA.position.y <= objB.position.y + objB.size.height) {
                 timestamp = { min: -Infinity, max: Infinity };
             }
         } else if (vector > 0) {
-            timestamp.max = ((objA.position.y + objA.size.y) - objB.position.y) / vector;
-            timestamp.min = (objA.position.y - (objB.position.y + objB.size.y)) / vector;
+            timestamp.max = ((objA.position.y + objA.size.height) - objB.position.y) / vector;
+            timestamp.min = (objA.position.y - (objB.position.y + objB.size.height)) / vector;
         } else if (vector < 0) {
-            timestamp.max = (objA.position.y - (objB.position.y + objB.size.y)) / vector;
-            timestamp.min = ((objA.position.y + objA.size.y) - objB.position.y) / vector;
+            timestamp.max = (objA.position.y - (objB.position.y + objB.size.height)) / vector;
+            timestamp.min = ((objA.position.y + objA.size.height) - objB.position.y) / vector;
         }
         return timestamp;
     }
@@ -142,15 +142,15 @@ export default class CollisionEngine {
         let timestamp: any = { min: Infinity, max: -Infinity };
 
         if (vector === 0) {
-            if (objA.position.x + objA.size.x >= objB.position.x && objA.position.x <= objB.position.x + objB.size.x) {
+            if (objA.position.x + objA.size.width >= objB.position.x && objA.position.x <= objB.position.x + objB.size.width) {
                 timestamp = { min: -Infinity, max: Infinity };
             }
         } else if (vector > 0) {
-            timestamp.max = ((objA.position.x + objA.size.x) - objB.position.x) / vector;
-            timestamp.min = (objA.position.x - (objB.position.x + objB.size.x)) / vector;
+            timestamp.max = ((objA.position.x + objA.size.width) - objB.position.x) / vector;
+            timestamp.min = (objA.position.x - (objB.position.x + objB.size.width)) / vector;
         } else if (vector < 0) {
-            timestamp.max = (objA.position.x - (objB.position.x + objB.size.x)) / vector;
-            timestamp.min = ((objA.position.x + objA.size.x) - objB.position.x) / vector;
+            timestamp.max = (objA.position.x - (objB.position.x + objB.size.width)) / vector;
+            timestamp.min = ((objA.position.x + objA.size.width) - objB.position.x) / vector;
         }
 
         return timestamp;

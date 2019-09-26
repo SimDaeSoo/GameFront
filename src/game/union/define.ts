@@ -14,3 +14,53 @@ export const enum CHAT_TYPE {
     NOTICE = 'notice',
     TEAM = 'team'
 };
+
+export interface Dictionary<T> {
+    [id: string]: T
+}
+
+export interface Vector {
+    x: number;
+    y: number;
+}
+
+export interface Point {
+    x: number;
+    y: number;
+}
+
+export interface Size {
+    width: number;
+    height: number;
+}
+
+export interface Scale {
+    x: number;
+    y: number;
+}
+
+export interface Flip {
+    x: boolean;
+    y: boolean;
+}
+
+export interface Scale {
+    x: number;
+    y: number;
+}
+
+export interface IObjectData {
+    id: string;
+    class: string;
+    objectType: string;
+    vector: Vector;
+    forceVector: Vector;
+    position: Point;
+    rotation: number;
+    rotationVector: number;
+    flip: Flip;
+    size: Size;
+    scale: Scale;
+    weight: number;
+    [property: string]: any;
+}

@@ -158,7 +158,7 @@ export default class GameRenderer extends EventEmitter {
         }
         for (let type in this.objectDict) {
             for (let id in this.objectDict[type]) {
-                const centerX: number = this.objectDict[type][id].position.x + this.objectDict[type][id].size.x / 2;
+                const centerX: number = this.objectDict[type][id].position.x + this.objectDict[type][id].size.width / 2;
                 this.objectDict[type][id].visible = centerX < boundary.max && centerX > boundary.min;
                 this.objectDict[type][id]._update(dt);
             }

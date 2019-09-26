@@ -1,12 +1,12 @@
 import CollisionEngine from "../union/collisionEngine";
-import { TILE_SIZE } from "../union/define";
+import { TILE_SIZE, Size } from "../union/define";
 
 export default class RayCaster {
     public dirties: Array<any> = [];
     private realObjs: any;
     private lighting: any;
     private position: any;
-    private size: any;
+    private size: Size;
     private triangles: any = {};
     public rayContainer: PIXI.Container;
     private rayPolygon: any;
@@ -25,7 +25,7 @@ export default class RayCaster {
         this.position = position;
     }
 
-    public setSize(size: any): void {
+    public setSize(size: Size): void {
         this.size = size;
     }
 
@@ -48,7 +48,7 @@ export default class RayCaster {
     public initializeRay(): void {
         const ray: any = {
             position: this.position,
-            size: { x: 0.1, y: 0.1 },
+            size: { width: 0.1, height: 0.1 },
             vector: { x: 0, y: 0 }
         };
 
@@ -121,7 +121,7 @@ export default class RayCaster {
             weight: 10000000000000000000,
             scale: { x: 0, y: 0 },
             position: { x: -Number.MAX_VALUE / 2, y: this.size.height },
-            size: { x: Number.MAX_VALUE, y: 1 },
+            size: { width: Number.MAX_VALUE, height: 1 },
             vector: { x: 0, y: 0 },
             forceVector: { x: 0, y: 0 },
             flip: { x: false, y: false },
@@ -141,7 +141,7 @@ export default class RayCaster {
     private resolution(key: any): void {
         const ray: any = {
             position: this.position,
-            size: { x: 0.1, y: 0.1 },
+            size: { width: 0.1, height: 0.1 },
             vector: { x: 0, y: 0 }
         };
         ray.vector.x = Math.cos(Number(key) * Math.PI / 180);
@@ -155,7 +155,7 @@ export default class RayCaster {
                 name: Math.round(hitObjects[0].object.position.x / TILE_SIZE.WIDTH) % this.size.width + Math.round(hitObjects[0].object.position.y / TILE_SIZE.HEIGHT * this.size.width / TILE_SIZE.WIDTH)
             };
 
-            if (hitObjects[0].object.size.x >= TILE_SIZE.WIDTH * this.size.width / 2) {
+            if (hitObjects[0].object.size.width >= TILE_SIZE.WIDTH * this.size.width / 2) {
                 this.triangles[key].name = "boundary"
             }
         } else {

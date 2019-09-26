@@ -139,33 +139,12 @@ export default class MapGenerator {
         const tileProperties: any = {
             class: 'dirt',
             objectType: 'tiles',
-            size: { x: TILE_SIZE.WIDTH, y: TILE_SIZE.HEIGHT },
+            size: { width: TILE_SIZE.WIDTH, height: TILE_SIZE.HEIGHT },
             scale: { x: 1.5, y: 1.5 },
             weight: 10000000000000000000,
             tileNumber: 0,
 
             position: { x: x * (TILE_SIZE.WIDTH), y: y * (TILE_SIZE.HEIGHT) },
-            vector: { x: 0, y: 0 },
-            forceVector: { x: 0, y: 0 },
-            flip: { x: false, y: false },
-            rotation: 0,
-            rotationVector: 0
-        }
-
-        return tileProperties;
-    }
-
-    // TODO 변경
-    public endTile(x: number, y: number, height: number): any {
-        const tileProperties: any = {
-            class: "dirt",
-            objectType: "tiles",
-            size: { x: 1, y: height },
-            scale: { x: 0, y: 0 },
-            weight: 10000000000000000000,
-            tileNumber: 0,
-
-            position: { x: x, y: y },
             vector: { x: 0, y: 0 },
             forceVector: { x: 0, y: 0 },
             flip: { x: false, y: false },

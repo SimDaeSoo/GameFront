@@ -1,26 +1,15 @@
 import { State } from "./state";
 import MapGenerator from "./mapGenerator";
-
-interface IGameData<T> {
-    [type: string]: { [id: string]: T };
-}
-
-interface IGameDataIDs {
-    [type: string]: Array<string>;
-}
-
-interface IWorldProperties {
-    width: number;
-    height: number;
-}
+import { Size, Dictionary } from "./define";
+import ObjectFactory from "./objectFactory";
 
 export default class GameData {
-    public worldProperties: IWorldProperties = { width: 0, height: 0 };
-    public data: IGameData<any> = { tiles: {}, objects: {}, characters: {} };
-    public beGenerates: IGameDataIDs = { tiles: [], objects: [], characters: [] };
-    public beDeletes: IGameDataIDs = { tiles: [], objects: [], characters: [] };
-    public dirties: IGameDataIDs = { tiles: [], objects: [], characters: [] };
-    public stateMap: IGameData<any> = { tiles: {}, objects: {}, characters: {} };
+    public worldProperties: Size = { width: 0, height: 0 };
+    public data: Dictionary<Dictionary<any>> = { tiles: {}, objects: {}, characters: {} };
+    public beGenerates: Dictionary<Array<string>> = { tiles: [], objects: [], characters: [] };
+    public beDeletes: Dictionary<Array<string>> = { tiles: [], objects: [], characters: [] };
+    public dirties: Dictionary<Array<string>> = { tiles: [], objects: [], characters: [] };
+    public stateMap: Dictionary<Dictionary<any>> = { tiles: {}, objects: {}, characters: {} };
 
     public initialize(data: any): void {
         for (let type in data) {

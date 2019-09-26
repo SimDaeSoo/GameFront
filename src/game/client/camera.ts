@@ -1,4 +1,4 @@
-import { TILE_SIZE } from "../union/define";
+import { TILE_SIZE, Size } from "../union/define";
 
 export default class Camera {
     private renderer: any;
@@ -9,7 +9,7 @@ export default class Camera {
     public targetZoom: number = 1;
     public currentZoom: number = 1;
     public position: any = { x: 0, y: 0 };
-    private size: any = { width: 0, height: 0 };
+    private size: Size = { width: 0, height: 0 };
     private obj: any = undefined;
     private stage: any = undefined;
 
@@ -89,8 +89,8 @@ export default class Camera {
         if (this.obj === undefined) return;
 
         const targetPosition: any = {
-            x: ((-this.obj.position.x - this.obj.size.x / 2) * this.currentZoom + this.screenWidth / 2),
-            y: ((-this.obj.position.y - this.obj.size.y / 2 + Math.round(this.screenHeight / 6)) * this.currentZoom + this.screenHeight / 2)
+            x: ((-this.obj.position.x - this.obj.size.width / 2) * this.currentZoom + this.screenWidth / 2),
+            y: ((-this.obj.position.y - this.obj.size.height / 2 + Math.round(this.screenHeight / 6)) * this.currentZoom + this.screenHeight / 2)
         };
 
         this.position.x += (targetPosition.x - this.position.x) * coeifficient;
