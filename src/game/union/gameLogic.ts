@@ -132,7 +132,6 @@ export default class GameLogic extends EventEmitter {
     }
 
     public setState(data: any, dt: number): void {
-        console.log(data);
         const object: any = this.gameData.data[data.objectType][data.id];
         if (!object) return;
 

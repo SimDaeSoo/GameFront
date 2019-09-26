@@ -1,12 +1,10 @@
-import { IObjectData, Vector, Flip, Point, Size } from './define';
+import { IObjectData, Vector, Flip, Point, Size, Scale } from './define';
 
 export default class BaseGameObject {
     private _data: IObjectData;
-    private _dirty: boolean = false;
 
     constructor(data: IObjectData) {
         this._data = data;
-        this.dirty();
     }
 
     private update(dt: number): void { }
@@ -20,25 +18,10 @@ export default class BaseGameObject {
         this.position.y += dt * this.vector.y;
         this.vector.x += dt * this.forceVector.x / this.weight;
         this.vector.y += dt * this.forceVector.y / this.weight;
-        this.dirty();
-    }
-
-    public setData(data: IObjectData): void {
-        this._data = data;
-        this.dirty();
-    }
-
-    public dirty(): void {
-        this._dirty = true;
-    }
-
-    public clean(): void {
-        this._dirty = false;
     }
 
     // Public getter
     public get data(): IObjectData { return this._data; }
-    public get isDirty(): boolean { return this._dirty; }
     public get id(): string { return this.data.id; }
     public get class(): string { return this.data.class; }
     public get objectType(): string { return this.data.objectType; }
@@ -49,5 +32,6 @@ export default class BaseGameObject {
     public get rotationVector(): number { return this.data.rotationVector; }
     public get flip(): Flip { return this.data.flip; }
     public get size(): Size { return this.data.size; }
+    public get scale(): Scale { return this.data.scale; }
     public get weight(): number { return this.data.weight; }
 }

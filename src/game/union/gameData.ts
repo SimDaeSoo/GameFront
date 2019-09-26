@@ -19,6 +19,19 @@ export default class GameData {
         }
     }
 
+    public get initializeData(): Dictionary<Dictionary<any>> {
+        const data: Dictionary<Dictionary<any>> = {};
+
+        for (let key in this.data) {
+            data[key] = {};
+            for (let id in this.data[key]) {
+                data[key][id] = this.data[key][id].data;
+            }
+        }
+
+        return data;
+    }
+
     public setData(id: string, data: any): void {
         this.data[data.objectType][id] = data;
         this.dirty(id, data.objectType);
@@ -26,7 +39,7 @@ export default class GameData {
 
     public generate(id: string, data: any): void {
         if (!this.data[data.objectType][id]) {
-            this.data[data.objectType][id] = data;
+            this.data[data.objectType][id] = ObjectFactory.create(data);
         }
 
         if (this.beGenerates[data.objectType].indexOf(id) < 0) {
