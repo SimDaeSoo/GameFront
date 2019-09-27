@@ -1,24 +1,20 @@
 <template>
   <div class="Lobby" ref="Lobby">
-    <ul>
-      <li v-for="(status, index) in statuses" :key="index">{{status}}</li>
-    </ul>
+    <CardList :statuses="statuses"/>
   </div>
 </template>
 
 <script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+import { IServerStatus } from "../game/union/define";
 import axios from 'axios';
+import CardList from '../components/CardList.vue';
 
-interface IServerStatus {
-  address: string;
-  user: number;
-  ups: number;
-  ping: number;
-  date?: number;
-}
-
-@Component
+@Component({
+  components: {
+    CardList
+  }
+})
 export default class Lobby extends Vue {
   private statuses: Array<IServerStatus> = [];
 
