@@ -1,58 +1,24 @@
 <template>
   <div class="Home" ref="Home">
-    <dom-ui/>
+    Hello this is Home
+    <button @click="go('lobby')">Go To Lobby</button>
+    <button @click="go('home')">Go To Game</button>
   </div>
 </template>
 
 <script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import GameClient from "../game/client/gameClient";
-import Loader from "../game/client/loader";
-import DomUI from "../ui/DomUI.vue";
 
-@Component({
-  components: {
-    'dom-ui': DomUI
-  }
-})
+@Component
 export default class Home extends Vue {
-  private client: GameClient;
-  private loader: Loader;
-
-  created() { }
-
   mounted() {
-    this.start();
   }
 
-  private async start(): Promise<void> {
-    this.loader = new Loader();
-    await this.$preload();
-
-    this.loader.load(() => {
-      this.client = new GameClient();
-      this.client.run();
-
-      (this.$refs.Home as HTMLElement).appendChild(
-        this.client.gameRenderer.view
-      );
-    });
-  }
-
-  private async $preload() {
-    const preloads = require("../json/preloads.json");
-
-    for (const r of preloads) {
-      this.loader.add(...r);
-    }
-
-    await this.loader.asyncLoad();
+  public go(to: string): void {
+    this.$router.replace(to);
   }
 }
 </script>
 
 <style>
-.Home {
-  text-align: center;
-}
 </style>

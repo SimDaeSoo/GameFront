@@ -2,6 +2,7 @@ import * as http from "http";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as path from "path";
+import * as fs from 'fs';
 
 // Electron과 함께 사용하게 될 것 같다.
 class ServerApp {
@@ -39,11 +40,12 @@ class ServerApp {
         // 음.. 라우터를 달아야 하는데 우선 다 리턴하게 만들어둠.
         this.express.get("*", (req: express.Request, res: express.Response, next: express.NextFunction): any => {
             const filePath: string = path.join("dist", req.url);
-            res.sendfile(filePath);
-        });
-        this.express.get("/", (req: express.Request, res: express.Response, next: express.NextFunction): any => {
-            const filePath: string = path.join("dist", "index.html");
-            res.sendfile(filePath);
+            const isFile: boolean = fs.existsSync(filePath);
+            if (isFile) {
+                res.sendfile(filePath);
+            } else {
+                res.sendfile(path.join("dist", "index.html"));
+            }
         });
     }
 

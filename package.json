@@ -7,7 +7,7 @@
     "clean": "rimraf dist",
     "dev": "webpack-dev-server --config ./build/webpack.dev.config.js",
     "start": "npm run dev",
-    "build": "npm run clean && npm run build-app && npm run build-server && node dist/server.bundle.js",
+    "build": "npm run clean && npm run build-app && npm run build-server",
     "build-app": "webpack --config ./build/webpack.prod.config.js",
     "build-server": "webpack --config ./build/webpack.server.config.js"
   },
@@ -26,6 +26,7 @@
     "@types/node": "^11.11.4",
     "@types/pixi.js": "^4.8.8",
     "@types/socket.io-client": "^1.4.32",
+    "axios": "^0.19.0",
     "copy-webpack-plugin": "^5.0.4",
     "express": "^4.16.4",
     "file-loader": "^4.2.0",

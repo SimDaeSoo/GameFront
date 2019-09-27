@@ -87,8 +87,8 @@ export default class GameClient {
     }
 
     public run(): any {
-        // this.io = io.connect("ec2-13-124-180-130.ap-northeast-2.compute.amazonaws.com:8080");
-        this.io = io.connect("http://localhost:8080");
+        this.io = io.connect("http://13.124.180.130:8080");
+        // this.io = io.connect("http://localhost:8080");
 
         this.io.on("connect", (): void => {
             system({ text: "connect success!" });
