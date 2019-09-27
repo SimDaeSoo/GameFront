@@ -3,7 +3,7 @@
     <img class="card__image" src="https://img.icons8.com/cotton/2x/server.png">
     <div class="card-title">
       <h2>
-        Socket Server {{status.address}}
+        {{status.name}}
         <small>User - {{status.user}} / 100</small>
         <small>Ping - {{status.ping.toFixed(2)}} ms</small>
         <small>UPS - {{status.ups}} update / sec</small>

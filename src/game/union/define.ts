@@ -88,4 +88,5 @@ export interface IServerStatus {
     ups: number;
     ping: number;
     date?: number;
+    name: string;
 }
