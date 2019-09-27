@@ -1,121 +1,143 @@
 // Start Card ---------------------------------------------
-  a.btn {
-    background: #0096a0;
-    border-radius: 4px;
-    box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
-    color: #ffffff;
-    display: inline-block;
-    padding: 6px 30px 8px;
-    position: relative;
-    text-decoration: none;
-    transition: all 0.1s 0s ease-out;
-  }
-  div.cards {
-    margin: 10px auto;
-    max-width: 960px;
-    text-align: center;
-  }
-  div.card {
-    padding-top: 15px;
-    background: #ffffff;
-    display: inline-block;
-    margin: 8px;
-    max-width: 300px;
-    width: 80vw;
-    -webkit-perspective: 1000;
-            perspective: 1000;
-    position: relative;
-    text-align: center;
-    transition: all 0.3s 0s ease-in;
-    z-index: 1;
-  }
-  div.card img {
-      width: 100px;
-      height: 100px;
-  }
-  div.card div.card-title {
-    background: #ffffff;
-    padding: 6px 15px 10px;
-    position: relative;
-    z-index: 0;
-  }
-  div.card div.card-title h2 {
-    font-size: 20px;
-    text-align: center;
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    margin: 0;
-    margin-top: 5px;
-    padding: 0;
-  }
-  div.card div.card-title h2 small {
-    display: block;
-    text-align: left;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    margin-top: 5px;
-  }
-  div.card div.card-title h2 .date {
-    display: block;
-    text-align: right;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: -0.025em;
-    margin-top: 3px;
-    color: darkgrey;
-  }
-  div.card .connect {
-    width: 100%;
-    height: 24px;
-    margin-top: 5px;
-    background: #27AE60;
-    font-weight: bold;
-    color: white;
-    border: 0 none;
-    border-radius: 1px;
-    cursor: pointer;
-  }
+a.btn {
+  background: #0096a0;
+  border-radius: 4px;
+  box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  display: inline-block;
+  padding: 6px 30px 8px;
+  position: relative;
+  text-decoration: none;
+  transition: all 0.1s 0s ease-out;
+}
+
+div.cards {
+  margin: 10px auto;
+  max-width: 960px;
+  text-align: center;
+}
+
+div.card {
+  padding-top: 5px;
+  background: #ffffff;
+  display: inline-block;
+  margin: 8px;
+  max-width: 300px;
+  width: 80vw;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+  position: relative;
+  text-align: center;
+  transition: all 0.3s 0s ease-in;
+  z-index: 1;
+  box-shadow: 2px 2px 2px #00000044;
+}
+
+div.card img {
+  width: 100px;
+  height: 100px;
+}
+
+div.card div.card-title {
+  background: #ffffff;
+  padding: 6px 15px 10px;
+  position: relative;
+  z-index: 0;
+}
+
+div.card div.card-title h2 {
+  font-size: 18px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  margin: 0;
+  margin-top: 2px;
+  padding: 0;
+}
+
+div.card div.card-title h2 .title {
+  margin-bottom: 6px;
+  border-radius: 4px;
+  list-style: none;
+  background: rgba(206, 216, 107, 0.3);
+  box-shadow: 2px 2px 2px #00000044;
+  padding-bottom: 3px;
+  padding-top: 2px;
+}
+
+div.card div.card-title h2 .date {
+  display: block;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  margin-top: 6px;
+  color: darkgrey;
+}
+
+div.card .connect {
+  width: 100%;
+  height: 24px;
+  margin-top: 5px;
+  background: #27AE60;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  box-shadow: 2px 2px 2px #00000044;
+}
+
 // End Card -----------------------------------------------
 $display-default:block;
 
 body {
-    background: #dce1df;
-    color: #4f585e;
-    overflow-x: hidden;
-    margin:0;
+  text-align: -webkit-center;
+  background: #dce1df;
+  color: #4f585e;
+  overflow-x: hidden;
+  margin: 0;
 }
 
 .ChatModal {
-    background-color: transparent;
-    overflow: visible;
+  background-color: transparent;
+  overflow: visible;
+}
+
+.contents {
+  max-width: 1024px;
+  margin-top: 40px;
 }
 
 $highlight: rgba(#FFFFFF, 0.3);
 $color: #444444;
+
 .chat-bar {
-    background: $color;
-    box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
-    border-radius: 10px;
-    padding: 0.39em;
-    display: flex;
+  background: $color;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 0.39em;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+
+  &__message {
+    width: 100%;
     position: relative;
-    overflow: hidden;
-    &__message {
-        width: 100%;
-        position: relative;
+  }
+
+  &__input {
+    background: $highlight;
+    height: 21px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    width: 100%;
+    border: 0;
+    padding: 0.7em;
+    color: white;
+
+    &::placeholder {
+      color: rgba(#FFFFFF, 0.5);
     }
-    &__input {
-        background: $highlight;
-        height: 21px;
-        box-sizing: border-box;
-        border-radius: 8px;
-        width: 100%;
-        border: 0;
-        padding: 0.7em;
-        color: white;
-        &::placeholder {
-            color: rgba(#FFFFFF, 0.5);
-        }
-    }
+  }
 }

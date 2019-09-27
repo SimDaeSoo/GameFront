@@ -2,6 +2,8 @@
   <div class="Home" ref="Home">
     Hello this is Home
     <button @click="go('lobby')">Go To Lobby</button>
+    <button @click="go('login')">Go To Login</button>
+    <button @click="go('register')">Go To Register</button>
   </div>
 </template>
 

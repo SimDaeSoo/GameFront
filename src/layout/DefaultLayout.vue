@@ -1,5 +1,6 @@
 <template>
-  <div class="Register" ref="Register">
+  <div class="contents">
+      <slot/>
   </div>
 </template>
 
@@ -7,9 +8,7 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class Register extends Vue {
-
-}
+export default class DefaultLayout extends Vue {}
 </script>
 
 <style>

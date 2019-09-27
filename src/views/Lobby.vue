@@ -1,5 +1,6 @@
 <template>
   <div class="Lobby" ref="Lobby">
+    Select Server
     <CardList :statuses="statuses" v-on:connect="stop"/>
   </div>
 </template>

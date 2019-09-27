@@ -1,6 +1,6 @@
 <template>
   <div class="Game" ref="Game">
-    <dom-ui/>
+    <dom-ui />
   </div>
 </template>
 
@@ -12,17 +12,22 @@ import DomUI from "../ui/DomUI.vue";
 
 @Component({
   components: {
-    'dom-ui': DomUI
+    "dom-ui": DomUI
   }
 })
 export default class Game extends Vue {
   private client: GameClient;
   private loader: Loader;
 
-  created() { }
+  created() {}
 
   mounted() {
-    this.start();
+    // 가려고 하는 서버가 없을때.
+    if (!this.$store.getters.server) {
+      this.$router.replace("/");
+    } else {
+      this.start();
+    }
   }
 
   private async start(): Promise<void> {

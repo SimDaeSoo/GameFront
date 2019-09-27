@@ -1,16 +1,12 @@
 <template>
   <div class="card">
-    <img class="card__image" src="https://img.icons8.com/cotton/2x/server.png">
     <div class="card-title">
       <h2>
-        {{status.name}}
-        <br>
-        {{status.address}}
-        <small>User - {{status.user}} / 100</small>
-        <small>Ping - {{status.ping.toFixed(2)}} ms</small>
-        <small>UPS - {{status.ups}} update / sec</small>
-        <div class="date">{{parsingDate(status.date)}} Last Update</div>
+        <div class="title">
+          <span>{{status.name}}</span>
+        </div>
         <button class="connect" @click="connect">Connect</button>
+        <div class="date">{{status.user}} user {{status.ping.toFixed(2)}} ms {{status.ups}} ups</div>
       </h2>
     </div>
   </div>
