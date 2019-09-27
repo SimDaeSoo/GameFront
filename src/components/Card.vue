@@ -10,7 +10,7 @@
         <small>Ping - {{status.ping.toFixed(2)}} ms</small>
         <small>UPS - {{status.ups}} update / sec</small>
         <div class="date">{{parsingDate(status.date)}} Last Update</div>
-        <button class="connect">Connect</button>
+        <button class="connect" @click="connect">Connect</button>
       </h2>
     </div>
   </div>
@@ -26,6 +26,16 @@ export default class Card extends Vue {
   private status: IServerStatus;
 
   mounted() {
+  }
+
+  private connect(): void {
+    const channel: string = this.status.address.match(/:[0-9][0-9][0-9][0-9]/g)[0].replace(':', '');
+    const server: string = this.status.address.replace(`:${channel}`, '');
+    this.$store.dispatch('setServer', { server });
+    this.$store.dispatch('setChannel', { channel });
+    this.$router.replace('game');
+    this.$emit('connect');
+
   }
 
   private parsingDate(date: number): string {

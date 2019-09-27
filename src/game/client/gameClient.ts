@@ -9,6 +9,8 @@ import Keyboard from "./keyboard";
 // Main Socket Server의 Room과 흡사.
 export default class GameClient {
     private io: SocketIOClient.Socket;
+    private server: string;
+    private channel: string;
     public gameLogic: GameLogic;
     public gameData: GameData;
     public gameRenderer: GameRenderer;
@@ -23,7 +25,9 @@ export default class GameClient {
     private PING_CHECK_TIME: number = 200;
     private PING_TEST: number = 0;
 
-    constructor() {
+    constructor(server: string, channel: string) {
+        this.server = server;
+        this.channel = channel;
         this.keyboard = new Keyboard();
         this.gameLogic = new GameLogic();
         this.gameRenderer = new GameRenderer();
@@ -87,8 +91,9 @@ export default class GameClient {
     }
 
     public run(): any {
-        this.io = io.connect("http://13.124.180.130:8080");
+        // this.io = io.connect("http://13.124.180.130:8080");
         // this.io = io.connect("http://localhost:8080");
+        this.io = io.connect(`${this.server}:${this.channel}`);
 
         this.io.on("connect", (): void => {
             system({ text: "connect success!" });

@@ -1,6 +1,6 @@
 <template>
   <div class="Lobby" ref="Lobby">
-    <CardList :statuses="statuses"/>
+    <CardList :statuses="statuses" v-on:connect="stop"/>
   </div>
 </template>
 
@@ -17,6 +17,7 @@ import CardList from '../components/CardList.vue';
 })
 export default class Lobby extends Vue {
   private statuses: Array<IServerStatus> = [];
+  private pollingID: any;
 
   mounted() {
     this.polling();
@@ -26,19 +27,18 @@ export default class Lobby extends Vue {
     Vue.set(this, 'statuses', statuses);
   }
 
-  private polling(): void {
-    const ping: any = () => {
-      setTimeout(async (): Promise<void> => {
-        const result: any = await axios.get('http://13.124.180.130:8000/server/status');
-        // const result: any = await axios.get('http://localhost:8000/server/status');
-        const data: Array<IServerStatus> = result.data;
+  public polling(): void {
+    this.pollingID = setInterval(async () => {
+      const result: any = await axios.get('http://13.124.180.130:8000/server/status');
+      // const result: any = await axios.get('http://localhost:8000/server/status');
+      const data: Array<IServerStatus> = result.data;
 
-        this.serServerStatus(data);
-        ping();
-      }, 500);
-    }
+      this.serServerStatus(data);
+    }, 500);
+  }
 
-    ping();
+  public stop(): void {
+    clearInterval(this.pollingID);
   }
 }
 </script>

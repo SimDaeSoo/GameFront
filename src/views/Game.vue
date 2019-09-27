@@ -26,11 +26,14 @@ export default class Game extends Vue {
   }
 
   private async start(): Promise<void> {
+    const server: string = this.$store.getters.server;
+    const channel: string = this.$store.getters.channel;
+
     this.loader = new Loader();
     await this.$preload();
 
     this.loader.load(() => {
-      this.client = new GameClient();
+      this.client = new GameClient(server, channel);
       this.client.run();
 
       (this.$refs.Game as HTMLElement).appendChild(

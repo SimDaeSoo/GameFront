@@ -1,6 +1,6 @@
 <template>
   <div class="cards">
-    <Card v-for="(status, index) in statuses" :key="index" :status="status"/>
+    <Card v-for="(status, index) in statuses" :key="index" :status="status" v-on:connect="connect"/>
   </div>
 </template>
 
@@ -19,6 +19,10 @@ export default class CardList extends Vue {
   private statuses: Array<IServerStatus>;
 
   mounted() {
+  }
+  
+  private connect(): void {
+    this.$emit('connect');
   }
 }
 </script>
