@@ -53,8 +53,7 @@ const webpackConfig = {
         new CopyWebpackPlugin([
             {
                 from: path.resolve(__dirname, '../src/assets'),
-                to: 'src/assets',
-                ignore: ['.*']
+                to: 'src/assets'
             }
         ])
     ],

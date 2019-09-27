@@ -2,7 +2,7 @@
   <div class="Home" ref="Home">
     Hello this is Home
     <button @click="go('lobby')">Go To Lobby</button>
-    <button @click="go('home')">Go To Game</button>
+    <button @click="go('game')">Go To Game</button>
   </div>
 </template>
 

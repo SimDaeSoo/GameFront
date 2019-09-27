@@ -1,9 +1,7 @@
 [
-    ["hitBox", "assets/hitBox.png"],
-    ["assets/Terrain Tileset.json"],
+    ["assets/TerrainTileset.json"],
     ["background", "assets/background.png"],
     ["nineSlice.png", "assets/nineSlice.png"],
-
     ["assets/characters/ksh001/ksh001_idle.json"],
     ["assets/characters/ksh001/ksh001_walk.json"],
     ["assets/characters/ksh001/ksh001_jump.json"]

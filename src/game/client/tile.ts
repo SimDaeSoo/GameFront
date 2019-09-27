@@ -7,7 +7,7 @@ export default class Tile extends BaseObject {
     constructor(options: any) {
         super(options);
 
-        this.sprite = PIXI.Sprite.from(`Terrain Tileset${options.tileNumber !== undefined ? options.tileNumber : 6}.png`);
+        this.sprite = PIXI.Sprite.from(`TerrainTileset${options.tileNumber !== undefined ? options.tileNumber : 6}.png`);
         this.container.addChild(this.sprite);
     }
 
@@ -17,7 +17,7 @@ export default class Tile extends BaseObject {
     public changeTile(gameData: any, key: string, width: number): void {
         const tileNumber: number = changeTileNumber(gameData, key, width);
         this.removeChild(this.sprite);
-        this.sprite = PIXI.Sprite.from(`Terrain Tileset${tileNumber}.png`);
+        this.sprite = PIXI.Sprite.from(`TerrainTileset${tileNumber}.png`);
         this.addChild(this.sprite);
     }
 }
