@@ -1,3 +1,6 @@
+import BaseGameObject from "./baseGameObject";
+import { IObjectData } from "./define";
+
 export interface IMutateCondition {
     arg: string;
     sign: "<" | ">" | ">=" | "<=" | "===" | "!==";
@@ -11,6 +14,7 @@ export interface IMutateMap {
 
 export class State {
     private stateMap: { [stateName: string]: { [stateName: string]: IMutateMap } };
+    private owner: BaseGameObject;
     public currentState: string;
 
     constructor() {
@@ -19,6 +23,10 @@ export class State {
 
     private initialize(): void {
         this.stateMap = {};
+    }
+
+    public setOwner(owner: BaseGameObject): void {
+        this.owner = owner;
     }
 
     public setState(state: string): void {
@@ -37,7 +45,8 @@ export class State {
         }
     }
 
-    public mutation(data: any): string {
+    public mutation(): string {
+        const data: IObjectData = this.owner.data;
         let lastState: string;
 
         while (this.currentState !== lastState) {

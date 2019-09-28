@@ -1,19 +1,26 @@
 <template>
-  <div class="Login" ref="Login">
-    this is Login Form
-    <div class="login-form">
-      <h1>Sign in</h1>
-      <input type="text" name="u" placeholder="Username" required="required" />
-      <input type="password" name="p" placeholder="Password" required="required" />
-      <button class="btn btn-primary btn-block btn-large">Login</button>
+  <DefaultLayout>
+    <div class="Login" ref="Login">
+      this is Login Form
+      <div class="login-form">
+        <h1>Sign in</h1>
+        <input type="text" name="u" placeholder="Username" required="required" />
+        <input type="password" name="p" placeholder="Password" required="required" />
+        <button class="btn btn-primary btn-block btn-large">Login</button>
+      </div>
     </div>
-  </div>
+  </DefaultLayout>
 </template>
 
 <script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+import DefaultLayout from "../layout/DefaultLayout.vue";
 
-@Component
+@Component({
+  components: {
+    DefaultLayout
+  }
+})
 export default class Login extends Vue {}
 </script>
 

@@ -1,8 +1,10 @@
 <template>
-  <div class="Lobby" ref="Lobby">
-    Select Server
-    <CardList :statuses="statuses" v-on:connect="stop"/>
-  </div>
+  <DefaultLayout>
+    <div class="Lobby" ref="Lobby">
+      Select Server
+      <CardList :statuses="statuses" v-on:connect="stop"/>
+    </div>
+  </DefaultLayout>
 </template>
 
 <script lang = "ts">
@@ -10,9 +12,11 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import { IServerStatus } from "../game/union/define";
 import axios from 'axios';
 import CardList from '../components/CardList.vue';
+import DefaultLayout from "../layout/DefaultLayout.vue";
 
 @Component({
   components: {
+    DefaultLayout,
     CardList
   }
 })

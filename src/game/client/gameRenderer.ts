@@ -193,8 +193,8 @@ export default class GameRenderer extends EventEmitter {
                 this.gameData.doneGenerate(id, type);
 
                 // State가 있을경우 설정. Test
-                if (this.gameData.stateMap[type][id]) {
-                    object.setState(this.gameData.stateMap[type][id]);
+                if (this.gameData.data[type][id].state) {
+                    object.setState(this.gameData.data[type][id].state);
                 }
                 // 코드 나중에 변경하자. 자신의 Parent로 삼을 Layer를 가지는 것으로..
                 if (type === "tiles") {

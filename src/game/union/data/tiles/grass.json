@@ -1,0 +1,37 @@
+{
+    "name": "풀",
+    "size": { "width": 24, "height": 24 },
+    "scale": { "x": 1.5, "y": 1.5 },
+    "weight": 10000000000000000000,
+    "tileNumber": 0,
+    "movingSpeed": 0,
+    "jumpForceVector": 0,
+    "baseStat": {
+        "health": 100,
+        "mana": 100,
+        "healthRecovery": 2,
+        "manaRecovery": 10,
+        "STR": 5,
+        "INT": 5,
+        "STA": 5,
+        "AGI": 5,
+        "critical": 0.1,
+        "criticalDamage": 1.2,
+        "speed": 0.1,
+        "armor": 0.1
+    },
+    "levelStat": {
+        "health": 10,
+        "mana": 10,
+        "healthRecovery": 0.2,
+        "manaRecovery": 1,
+        "STR": 0.5,
+        "INT": 0.5,
+        "STA": 0.5,
+        "AGI": 0.5,
+        "critical": 0.01,
+        "criticalDamage": 0.02,
+        "speed": 0.01,
+        "armor": 0.01
+    }
+}

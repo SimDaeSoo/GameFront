@@ -1,6 +1,6 @@
 {
     "name": "권성훈",
-    "size": { "x": 14, "y": 68 },
+    "size": { "width": 14, "height": 68 },
     "scale": { "x": 1, "y": 1 },
     "weight": 1,
     "movingSpeed": 0.15,
@@ -48,7 +48,7 @@
         "jump": {
             "animation": "jump",
             "mutations": {
-                "idle": [{ "arg": "Math.abs(data.vector.y)", "sign": "<", "value": "0.04"}]
+                "idle": [{ "arg": "Math.abs(data.vector.y)", "sign": "<", "value": "0.04" }, { "arg": "data.land", "sign": "===", "value": "true" }]
             }
         },
         "walk": {

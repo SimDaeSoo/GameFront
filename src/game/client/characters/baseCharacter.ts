@@ -33,7 +33,7 @@ export default class BaseCharacter extends BaseObject {
     public update(dt: number): void {
     }
 
-    // 음.. 이게 맞나싶어
+    // 음.. 이게 맞나싶어 <- 이제 너가하는게 아니야 -> 스테이트로 옮기자.
     private _updateProperties() {
         if (this.options.land && Math.abs(this.options.vector.y) >= 0.1) {
             this.options.land = false;
