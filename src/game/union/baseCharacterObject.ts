@@ -1,7 +1,6 @@
 import BaseGameObject from "./baseGameObject";
 import { State } from "./state";
 import { IObjectData } from "./define";
-import Keyboard from "../client/keyboard";
 
 export default class BaseCharacterObject extends BaseGameObject {
     public state: State = new State();
@@ -17,18 +16,6 @@ export default class BaseCharacterObject extends BaseGameObject {
 
     private load(): void {
         this.loadState();
-        this.test();
-    }
-
-    // 제거 되어야 한다 ( Union에는 DOM 이나 Window같은 것이 없기 때문에 해당 keyboard 못쓰지만 임시로 잠시 테스트 )
-    // 시간이 지나면 풀리는 State에 대해서 처리하고싶다. -> 어떻게 처리하면 좋을까?
-    private test(): void {
-        const keyBoard: Keyboard = new Keyboard();
-        keyBoard.onKeyDown = (a) => {
-            if (a === 32) {
-
-            }
-        }
     }
 
     private loadState(): void {
