@@ -3,6 +3,8 @@ import { IObjectData, Vector, Flip, Point, Size, Scale } from './define';
 export default class BaseGameObject {
     private _data: IObjectData;
     private _dirty: boolean = false;
+    private _collision: { x: boolean, y: boolean } = { x: false, y: false };
+    public _updatable: boolean = false;
 
     // 받아오는 데이터는 패킷 데이터. -> 해당 패킷 데이터를 이용해서 생성될 때 자신의 Data로 Initializing한다.
     constructor(data: IObjectData) {
@@ -28,21 +30,29 @@ export default class BaseGameObject {
     }
 
     public applyVector(dt: number): void {
-        if (this.vector.x !== 0 || this.vector.y !== 0) {
+        if (this.vector.x !== 0 && !this._collision.x) {
             this.position.x += dt * this.vector.x;
+            this.dirty();
+        }
+        if (this.vector.y !== 0 && !this._collision.y) {
             this.position.y += dt * this.vector.y;
             this.dirty();
         }
 
-        if (this.forceVector.x !== 0 || this.forceVector.y !== 0) {
+        if (this.forceVector.x !== 0) {
             this.vector.x += dt * this.forceVector.x / this.weight;
+        }
+        if (this.forceVector.y !== 0) {
             this.vector.y += dt * this.forceVector.y / this.weight;
         }
+        this.collisionCheckDone();
     }
 
     // Public getter
     public dirty(): void { this._dirty = true; }
     public clean(): void { this._dirty = false; }
+    public collision(data: any): void { this._collision.x = this._collision.x || data.direction.left || data.direction.right; this._collision.y = this._collision.y || data.direction.up || data.direction.down; }
+    public collisionCheckDone(): void { this._collision.x = false; this._collision.y = false; }
     public get data(): IObjectData { return this._data; }
     public get isDirty(): boolean { return this._dirty; }
     public get id(): string { return this.data.id; }

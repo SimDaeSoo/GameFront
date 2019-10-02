@@ -35,6 +35,7 @@ export default class GameLogic extends EventEmitter {
         if (result.length > 0) {
             result.forEach((collisionData) => {
                 CollisionEngine.applyTilePhysics(character, collisionData);
+                character.collision(collisionData);
             });
             return true;
         } else {

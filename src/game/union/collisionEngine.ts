@@ -5,9 +5,7 @@ export default class CollisionEngine {
 
         // xAxis
         if (collisionResult.direction.left || collisionResult.direction.right) {
-            const vectorA = objA.vector.x + objB.weight * (objB.vector.x - objA.vector.x) / (objA.weight + objB.weight) * 2;
-            objA.position.x += objA.vector.x * dt + (collisionResult.direction.left ? 0.15 : -0.15);
-            objA.vector.x = CollisionEngine.translateTinyValue(vectorA) * 0;
+            objA.position.x += objA.vector.x * dt + (collisionResult.direction.left ? 1 : -1);
         }
 
         // yAxis
