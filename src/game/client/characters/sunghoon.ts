@@ -1,24 +1,17 @@
 import BaseCharacter from './baseCharacter';
-import ChatBalloon from '../chatBalloon';
-import { State } from '../../union/state';
 
 // 아마 느낌상 제거될 가능성이 높다.
 export default class SungHoon extends BaseCharacter {
     public sprite: PIXI.AnimatedSprite;
-    public state: State;
 
     constructor(options: any) {
         super(options);
-
-        // const cb: ChatBalloon = new ChatBalloon('Hello Hellasdfasdf Hellsdo Heffallo Hsdello Helaasdfaslo Heflslo ');
-        // cb.position.y -= 100;
 
         this.addAnimation('idle', { src: 'ksh001_idle', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
         this.addAnimation('walk', { src: 'ksh001_walk', length: 4, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
         this.addAnimation('jump', { src: 'ksh001_jump', length: 1, offset: { x: -18, y: -4 }, animationSpeed: 0.1, loop: true });
 
         this.makeNameTag(`SOCKET ID:${options.id}`);
-        // this.addChild(cb);
     }
 
     public update(dt: number): void {

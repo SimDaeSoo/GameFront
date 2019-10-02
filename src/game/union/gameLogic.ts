@@ -10,7 +10,7 @@ export default class GameLogic extends EventEmitter {
 
     /* ----------------------- Logic ----------------------- */
 
-    public async update(dt: number): Promise<void> {
+    public update(dt: number): void {
         this.lastUpdate = Date.now();
         this.collision(dt);
         this.gameData.update(dt);

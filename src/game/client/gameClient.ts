@@ -80,11 +80,11 @@ export default class GameClient {
         })
 
         // TODO 다른 곳으로 뺄 것.
-        this.updater.onUpdate(async (dt: number): Promise<void> => {
+        this.updater.onUpdate((dt: number): void => {
             this.gameRenderer.systemData.ping = this.avgPing;
             this.gameRenderer.systemData.ups = this.updater.ups;
-            await this.gameLogic.update(dt);
-            await this.gameRenderer.update(dt);
+            this.gameLogic.update(dt);
+            this.gameRenderer.update(dt);
         });
         this.gameRenderer.start();
         this.isInitialized = true;
@@ -92,8 +92,8 @@ export default class GameClient {
 
     public run(): any {
         // this.io = io.connect("http://13.124.180.130:8080");
-        // this.io = io.connect("http://localhost:8080");
-        this.io = io.connect(`${this.server}:${this.channel}`);
+        this.io = io.connect("http://localhost:8080");
+        // this.io = io.connect(`${this.server}:${this.channel}`);
 
         this.io.on("connect", (): void => {
             system({ text: "connect success!" });

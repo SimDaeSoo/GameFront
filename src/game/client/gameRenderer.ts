@@ -119,26 +119,26 @@ export default class GameRenderer extends EventEmitter {
         });
     }
 
-    public async render(t_1: number, t_2: number): Promise<void> {
+    public render(t_1: number, t_2: number): void {
         const dt: number = t_1 - t_2;
         this.checkRenderingPerformance(dt);
-        await this.app.render();
+        this.app.render();
         window.requestAnimationFrame((now: number): void => {
             this.render(now, t_1);
         });
     }
 
-    public async update(dt: number): Promise<void> {
-        await this.objectGenerate();
-        await this.objectDelete();
-        await this.objectUpdate(dt);
-        await this.setLighting();
-        await this.ui.update();
-        await this.camera.update(dt);
+    public update(dt: number): void {
+        this.objectGenerate();
+        this.objectDelete();
+        this.objectUpdate(dt);
+        this.setLighting();
+        this.ui.update();
+        this.camera.update(dt);
         this.rayCaster.update(dt);
     }
 
-    private async objectUpdate(dt: number): Promise<void> {
+    private objectUpdate(dt: number): void {
         const boundary: any = {
             min: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) - this.SCREEN_WIDTH,
             max: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) + this.SCREEN_WIDTH
@@ -165,7 +165,7 @@ export default class GameRenderer extends EventEmitter {
         }
     }
 
-    private async objectDelete(): Promise<void> {
+    private objectDelete(): void {
         for (let type in this.gameData.beDeletes) {
             this.gameData.beDeletes[type].forEach((id: string): void => {
                 if (this.objectDict[type][id]) {
@@ -181,7 +181,7 @@ export default class GameRenderer extends EventEmitter {
         }
     }
 
-    private async objectGenerate(): Promise<void> {
+    private objectGenerate(): void {
         let generateCount: number = 0;
         for (let type in this.gameData.beGenerates) {
             this.gameData.beGenerates[type].every((id: string): any => {
@@ -209,7 +209,7 @@ export default class GameRenderer extends EventEmitter {
         }
     }
 
-    private async setLighting(): Promise<void> {
+    private setLighting(): void {
         if (this.gameData.worldProperties.height === 0) return;
         let depth = this.camera.position.y + (this.gameData.worldProperties.height * TILE_SIZE.HEIGHT * this.camera.currentZoom) - this.SCREEN_HEIGHT;
         depth /= (this.gameData.worldProperties.height - 17) * TILE_SIZE.HEIGHT;
