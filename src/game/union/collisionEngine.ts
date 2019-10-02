@@ -9,6 +9,7 @@ export default class CollisionEngine {
             objA.position.y += objA.vector.y * dt + (collisionResult.direction.up ? 0.15 : -0.15);
             objA.vector.y = CollisionEngine.translateTinyValue(vectorA) * 0;
             objA.land = collisionResult.direction.down;
+            objA.dirty();
         }
 
         return {

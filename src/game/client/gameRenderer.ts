@@ -40,6 +40,7 @@ export default class GameRenderer {
 
     constructor() {
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.settings.ROUND_PIXELS = true;
 
         this.app = new PIXI.Application({
             width: this.SCREEN_WIDTH,
@@ -47,7 +48,8 @@ export default class GameRenderer {
             backgroundColor: 0x7296D5,
             autoStart: false,
             antialias: false,
-            sharedLoader: true
+            sharedLoader: true,
+            powerPreference: 'high-performance'
         });
         this.app.stage = new PIXI.display.Stage();
         this.stage = new PIXI.Container();
