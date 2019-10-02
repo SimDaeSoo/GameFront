@@ -41,8 +41,6 @@ export default class UI extends PIXI.Container {
             this.updateFPS();
             this.updateUPS();
             this.updatePing();
-
-            // this.fpsText.style = { fontSize: 10, fill: "green" };
         }
     }
 

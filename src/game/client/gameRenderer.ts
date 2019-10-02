@@ -1,6 +1,5 @@
 import GameData from "../union/gameData";
 import { system } from "../union/utils";
-import { EventEmitter } from "events";
 import Camera from "./camera";
 import Display from "pixi-layers";
 import { TILE_SIZE } from "../union/define";
@@ -10,7 +9,7 @@ import ObjectFactory from "./objectFactory";
 import UI from "./ui";
 import BaseObject from "./baseObject";
 
-export default class GameRenderer extends EventEmitter {
+export default class GameRenderer {
     // Application
     private app: PIXI.Application;
     private SCREEN_WIDTH: number = window.innerWidth > 1024 ? 1024 : window.innerWidth;
@@ -40,8 +39,6 @@ export default class GameRenderer extends EventEmitter {
     public systemData: { fps: number, ups: number, ping: number } = { fps: 0, ups: 0, ping: 0 };
 
     constructor() {
-        super();
-
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
         this.app = new PIXI.Application({
@@ -185,7 +182,7 @@ export default class GameRenderer extends EventEmitter {
         let generateCount: number = 0;
         for (let type in this.gameData.beGenerates) {
             this.gameData.beGenerates[type].every((id: string): any => {
-                if (generateCount++ > 150) return false;
+                if (generateCount++ > 10) return false;
                 if (this.objectDict[type][id]) return true;
 
                 const object: BaseObject = ObjectFactory.create(this.gameData.data[type][id]);

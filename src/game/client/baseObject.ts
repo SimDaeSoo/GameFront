@@ -69,7 +69,7 @@ export default class BaseObject extends PIXI.Container {
     }
 
     public updateVibration(dt: number): void {
-        if (!this.strength) return;
+        if (this.strength === 0) return;
         const PERIOD: number = 10; // ms
 
         this.vibrationTimer += dt;
