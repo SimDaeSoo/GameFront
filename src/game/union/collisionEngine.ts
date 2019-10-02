@@ -3,11 +3,6 @@ export default class CollisionEngine {
         const dt: number = collisionResult.time;
         const objB: any = collisionResult.object;
 
-        // xAxis
-        if (collisionResult.direction.left || collisionResult.direction.right) {
-            objA.position.x += objA.vector.x * dt + (collisionResult.direction.left ? 1 : -1);
-        }
-
         // yAxis
         if (collisionResult.direction.up || collisionResult.direction.down) {
             const vectorA = objA.vector.y + objB.weight * (objB.vector.y - objA.vector.y) / (objA.weight + objB.weight) * 2;
@@ -67,7 +62,7 @@ export default class CollisionEngine {
                 hitTestResult.direction.down = hitTestResult.direction.down && (objB.startYAxis === objB.id);
 
                 if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time > hitTestResult.time) {
-                    result = [hitTestResult];
+                    result.push(hitTestResult);
                     time = hitTestResult.time;
                 } else if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time === hitTestResult.time) {
                     result.push(hitTestResult);
