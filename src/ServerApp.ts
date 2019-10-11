@@ -17,7 +17,7 @@ class ServerApp {
     public async initialize(): Promise<void> {
         this.middleware();
         this.routes();
-        this.setNormalizePort(7000);
+        this.setNormalizePort(80);
     }
 
     public createServer(): void {
