@@ -85,7 +85,6 @@ export default class GameClient {
     }
 
     public run(): any {
-        // this.io = io.connect("http://13.124.180.130:8080");
         this.io = io.connect("http://localhost:8080");
         // this.io = io.connect(`${this.server}:${this.channel}`);
 

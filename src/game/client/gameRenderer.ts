@@ -18,7 +18,8 @@ export default class GameRenderer {
     public camera: Camera;
     public ui: UI;
     public stage: PIXI.Container;
-    public map: PIXI.Container;
+    public groundLayer: PIXI.Container;
+    public characterLayer: PIXI.Container;
     public background: PIXI.Container;
 
     // Lighting
@@ -100,8 +101,11 @@ export default class GameRenderer {
         this.background.addChild(new Background(worldSize));
         this.stage.addChild(this.background);
 
-        this.map = new PIXI.Container();
-        this.stage.addChild(this.map);
+        this.groundLayer = new PIXI.Container();
+        this.stage.addChild(this.groundLayer);
+
+        this.characterLayer = new PIXI.Container();
+        this.stage.addChild(this.characterLayer);
 
         this.objectGenerate();
         this.camera.setSize(worldSize);
@@ -197,9 +201,9 @@ export default class GameRenderer {
                 }
                 // 코드 나중에 변경하자. 자신의 Parent로 삼을 Layer를 가지는 것으로..
                 if (type === "tiles") {
-                    this.map.addChild(object);
+                    this.groundLayer.addChild(object);
                 } else {
-                    this.stage.addChild(object);
+                    this.characterLayer.addChild(object);
                 }
                 if (id === this.owner) {
                     this.camera.setObject(this.gameData.data[type][id]);
