@@ -10,7 +10,7 @@ export default class GameLogic extends EventEmitter {
 
     /* ----------------------- Logic ----------------------- */
 
-    public async update(dt: number): Promise<void> {
+    public update(dt: number): void {
         this.lastUpdate = Date.now();
         this.collision(dt);
         this.gameData.update(dt);
@@ -35,6 +35,7 @@ export default class GameLogic extends EventEmitter {
         if (result.length > 0) {
             result.forEach((collisionData) => {
                 CollisionEngine.applyTilePhysics(character, collisionData);
+                character.collision(collisionData);
             });
             return true;
         } else {

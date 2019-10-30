@@ -20,7 +20,7 @@ export default class GameData {
     public update(dt: number): void {
         for (let type in this.data) {
             for (let id in this.data[type]) {
-                if (this.data[type][id]._update) {
+                if (this.data[type][id]._updatable && this.data[type][id]._update) {
                     this.data[type][id]._update(dt);
                     if (this.data[type][id].isDirty) {
                         this.dirty(id, type);

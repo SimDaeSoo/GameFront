@@ -3,6 +3,7 @@ import { State } from "./state";
 import { IObjectData } from "./define";
 
 export default class BaseCharacterObject extends BaseGameObject {
+    public _updatable: boolean = true;
     public state: State = new State();
 
     constructor(data: IObjectData) {

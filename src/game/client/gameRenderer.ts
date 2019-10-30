@@ -1,6 +1,5 @@
 import GameData from "../union/gameData";
 import { system } from "../union/utils";
-import { EventEmitter } from "events";
 import Camera from "./camera";
 import Display from "pixi-layers";
 import { TILE_SIZE } from "../union/define";
@@ -10,7 +9,7 @@ import ObjectFactory from "./objectFactory";
 import UI from "./ui";
 import BaseObject from "./baseObject";
 
-export default class GameRenderer extends EventEmitter {
+export default class GameRenderer {
     // Application
     private app: PIXI.Application;
     private SCREEN_WIDTH: number = window.innerWidth > 1024 ? 1024 : window.innerWidth;
@@ -19,7 +18,8 @@ export default class GameRenderer extends EventEmitter {
     public camera: Camera;
     public ui: UI;
     public stage: PIXI.Container;
-    public map: PIXI.Container;
+    public groundLayer: PIXI.Container;
+    public characterLayer: PIXI.Container;
     public background: PIXI.Container;
 
     // Lighting
@@ -40,9 +40,8 @@ export default class GameRenderer extends EventEmitter {
     public systemData: { fps: number, ups: number, ping: number } = { fps: 0, ups: 0, ping: 0 };
 
     constructor() {
-        super();
-
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.settings.ROUND_PIXELS = true;
 
         this.app = new PIXI.Application({
             width: this.SCREEN_WIDTH,
@@ -50,7 +49,8 @@ export default class GameRenderer extends EventEmitter {
             backgroundColor: 0x7296D5,
             autoStart: false,
             antialias: false,
-            sharedLoader: true
+            sharedLoader: true,
+            powerPreference: 'high-performance'
         });
         this.app.stage = new PIXI.display.Stage();
         this.stage = new PIXI.Container();
@@ -101,8 +101,11 @@ export default class GameRenderer extends EventEmitter {
         this.background.addChild(new Background(worldSize));
         this.stage.addChild(this.background);
 
-        this.map = new PIXI.Container();
-        this.stage.addChild(this.map);
+        this.groundLayer = new PIXI.Container();
+        this.stage.addChild(this.groundLayer);
+
+        this.characterLayer = new PIXI.Container();
+        this.stage.addChild(this.characterLayer);
 
         this.objectGenerate();
         this.camera.setSize(worldSize);
@@ -138,7 +141,7 @@ export default class GameRenderer extends EventEmitter {
         this.rayCaster.update(dt);
     }
 
-    private async objectUpdate(dt: number): Promise<void> {
+    private objectUpdate(dt: number): void {
         const boundary: any = {
             min: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) - this.SCREEN_WIDTH,
             max: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) + this.SCREEN_WIDTH
@@ -165,7 +168,7 @@ export default class GameRenderer extends EventEmitter {
         }
     }
 
-    private async objectDelete(): Promise<void> {
+    private objectDelete(): void {
         for (let type in this.gameData.beDeletes) {
             this.gameData.beDeletes[type].forEach((id: string): void => {
                 if (this.objectDict[type][id]) {
@@ -181,11 +184,11 @@ export default class GameRenderer extends EventEmitter {
         }
     }
 
-    private async objectGenerate(): Promise<void> {
+    private objectGenerate(): void {
         let generateCount: number = 0;
         for (let type in this.gameData.beGenerates) {
             this.gameData.beGenerates[type].every((id: string): any => {
-                if (generateCount++ > 150) return false;
+                if (generateCount++ > 10) return false;
                 if (this.objectDict[type][id]) return true;
 
                 const object: BaseObject = ObjectFactory.create(this.gameData.data[type][id]);
@@ -198,9 +201,9 @@ export default class GameRenderer extends EventEmitter {
                 }
                 // 코드 나중에 변경하자. 자신의 Parent로 삼을 Layer를 가지는 것으로..
                 if (type === "tiles") {
-                    this.map.addChild(object);
+                    this.groundLayer.addChild(object);
                 } else {
-                    this.stage.addChild(object);
+                    this.characterLayer.addChild(object);
                 }
                 if (id === this.owner) {
                     this.camera.setObject(this.gameData.data[type][id]);
@@ -209,7 +212,7 @@ export default class GameRenderer extends EventEmitter {
         }
     }
 
-    private async setLighting(): Promise<void> {
+    private setLighting(): void {
         if (this.gameData.worldProperties.height === 0) return;
         let depth = this.camera.position.y + (this.gameData.worldProperties.height * TILE_SIZE.HEIGHT * this.camera.currentZoom) - this.SCREEN_HEIGHT;
         depth /= (this.gameData.worldProperties.height - 17) * TILE_SIZE.HEIGHT;

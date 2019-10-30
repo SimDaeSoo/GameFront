@@ -73,12 +73,6 @@ export default class GameClient {
             }, this.PING_TEST);
         }
 
-        this.gameRenderer.on("broadcast", (data) => {
-            setTimeout(() => {
-                this.io.emit("broadcast", JSON.stringify(data), Date.now());
-            }, this.PING_TEST);
-        })
-
         // TODO 다른 곳으로 뺄 것.
         this.updater.onUpdate((dt: number): void => {
             this.gameRenderer.systemData.ping = this.avgPing;
@@ -91,7 +85,8 @@ export default class GameClient {
     }
 
     public run(): any {
-        this.io = io.connect(`${this.server}:${this.channel}`);
+        this.io = io.connect("http://localhost:8080");
+        // this.io = io.connect(`${this.server}:${this.channel}`);
 
         this.io.on("connect", (): void => {
             system({ text: "connect success!" });
