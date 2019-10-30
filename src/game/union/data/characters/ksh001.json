@@ -41,21 +41,35 @@
         "idle": {
             "animation": "idle",
             "mutations": {
-                "walk": [{ "arg": "data.vector.x", "sign": "!==", "value": 0}],
-                "jump": [{ "arg": "Math.abs(data.vector.y)", "sign": ">=", "value": "0.1"}]
+                "walk": [
+                    { "args": ["vector", "x"], "sign": "!==", "value": 0, "operator": "&&"}
+                ],
+                "jump": [
+                    { "args": ["vector", "y"], "sign": ">=", "value": 0.1, "operator": "||"},
+                    { "args": ["vector", "y"], "sign": "<=", "value": -0.1, "operator": "||"}
+                ]
             }
         },
         "jump": {
             "animation": "jump",
             "mutations": {
-                "idle": [{ "arg": "Math.abs(data.vector.y)", "sign": "<", "value": "0.04" }, { "arg": "data.land", "sign": "===", "value": "true" }]
+                "idle": [
+                    { "args": ["vector", "y"], "sign": "<=", "value": 0.04, "operator": "&&"}, 
+                    { "args": ["vector", "y"], "sign": ">=", "value": -0.04, "operator": "&&"},
+                    { "args": ["land"], "sign": "===", "value": true, "operator": "&&"}
+                ]
             }
         },
         "walk": {
             "animation": "walk",
             "mutations": {
-                "idle": [{ "arg": "data.vector.x", "sign": "===", "value": 0}],
-                "jump": [{ "arg": "Math.abs(data.vector.y)", "sign": ">=", "value": "0.1"}]
+                "idle": [
+                    { "args": ["vector", "x"], "sign": "===", "value": 0, "operator": "&&"}
+                ],
+                "jump": [
+                    { "args": ["vector", "y"], "sign": ">=", "value": 0.1, "operator": "||"},
+                    { "args": ["vector", "y"], "sign": "<=", "value": -0.1, "operator": "||"}
+                ]
             }
         }
     },
