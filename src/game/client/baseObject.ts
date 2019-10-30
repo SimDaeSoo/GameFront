@@ -1,5 +1,5 @@
 import { State } from "../union/state";
-import { Size } from "../union/define";
+import { Size, Flip, Point, Scale } from "../union/define";
 
 export default class BaseObject extends PIXI.Container {
     public container: PIXI.Container = new PIXI.Container();
@@ -12,10 +12,10 @@ export default class BaseObject extends PIXI.Container {
     private duration: number = 0;
     private vibrateFlag: boolean = true;
     public size: Size = { width: 0, height: 0 };
-    public _flip: { x: boolean, y: boolean } = { x: false, y: false };
-    public targetPosition: any = { x: 0, y: 0 };
-    public currentPosition: any = { x: 0, y: 0 };
-    public INTERPOLATION: any = 1.02;
+    public _flip: Flip = { x: false, y: false };
+    public targetPosition: Point = { x: 0, y: 0 };
+    public currentPosition: Point = { x: 0, y: 0 };
+    public INTERPOLATION: number = 1.02;
     public state: State;
 
     constructor(options: any) {
@@ -91,11 +91,11 @@ export default class BaseObject extends PIXI.Container {
         }
     }
 
-    public get flip(): { x: boolean, y: boolean } {
+    public get flip(): Flip {
         return this._flip;
     }
 
-    public set flip(flip: { x: boolean, y: boolean }) {
+    public set flip(flip: Flip) {
         this._flip.x = flip.x;
         this._flip.y = flip.y;
         this.outerContainer.position.x = this.flip.x ? this.size.width : 0;
@@ -115,19 +115,19 @@ export default class BaseObject extends PIXI.Container {
         this.state = state;
     }
 
-    public setPosition(position: any): void {
+    public setPosition(position: Point): void {
         if (!position) return;
         this.position.x = position.x;
         this.position.y = position.y;
     }
 
-    public setSize(size: any): void {
+    public setSize(size: Size): void {
         if (!size) return;
         this.size.width = size.width;
         this.size.height = size.height;
     }
 
-    public setScale(scale: any): void {
+    public setScale(scale: Scale): void {
         if (!scale) scale = { x: 1, y: 1 };
         this.container.scale.x = scale.x;
         this.container.scale.y = scale.y;
@@ -143,7 +143,7 @@ export default class BaseObject extends PIXI.Container {
     }
 
     public makeNameTag(name: string): void {
-        const nameTag = new PIXI.Text(name,
+        const nameTag: PIXI.Text = new PIXI.Text(name,
             { fontSize: 10, fill: "white" }
         );
         nameTag.anchor.x = 0.5;
@@ -151,7 +151,7 @@ export default class BaseObject extends PIXI.Container {
         nameTag.position.x += this.size.width / 2;
         nameTag.position.y = -nameTag.height;
 
-        const box = new PIXI.Sprite(PIXI.Texture.WHITE);
+        const box: PIXI.Sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
         box.tint = 0;
         box.alpha = 0.3;
         box.anchor.x = 0.5;

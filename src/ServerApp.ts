@@ -37,8 +37,7 @@ class ServerApp {
     }
 
     private routes(): void {
-        // 음.. 라우터를 달아야 하는데 우선 다 리턴하게 만들어둠.
-        this.express.get("*", (req: express.Request, res: express.Response, next: express.NextFunction): any => {
+        this.express.get("*", (req: express.Request, res: express.Response, next: express.NextFunction): void => {
             const filePath: string = path.join("dist", req.url);
             const isFile: boolean = fs.existsSync(filePath);
             if (isFile) {

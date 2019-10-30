@@ -1,7 +1,13 @@
+import { Dictionary } from "vuex";
+
+interface KeyState {
+    isDown: boolean;
+    isUp: boolean;
+}
 export default class Keyboard {
-    public keyData: any = {};
-    public onKeyDown: any;
-    public onKeyUp: any;
+    public keyData: Dictionary<KeyState> = {};
+    public onKeyDown: Function;
+    public onKeyUp: Function;
 
     constructor() {
         window.addEventListener("keydown", (e: KeyboardEvent): void => {

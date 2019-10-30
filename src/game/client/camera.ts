@@ -1,17 +1,20 @@
-import { TILE_SIZE, Size } from "../union/define";
+import { TILE_SIZE, Size, Point } from "../union/define";
+import GameRenderer from "./gameRenderer";
+import GameData from "../union/gameData";
 
 export default class Camera {
-    private renderer: any;
+    private renderer: GameRenderer;
     private screenWidth: number;
     private screenHeight: number;
     private targetVibration: number = 0;
     private currentVibration: number = 0;
+    private size: Size = { width: 0, height: 0 };
+    private stage: PIXI.Container = undefined;
+    private obj: any = undefined;
+
     public targetZoom: number = 1;
     public currentZoom: number = 1;
-    public position: any = { x: 0, y: 0 };
-    private size: Size = { width: 0, height: 0 };
-    private obj: any = undefined;
-    private stage: any = undefined;
+    public position: Point = { x: 0, y: 0 };
 
 
     constructor(width: number, height: number) {
@@ -20,8 +23,8 @@ export default class Camera {
     }
 
     public update(dt: number): void {
-        const FOLLOW_COEIFFICIENT = 1.004 ** dt - 1;
-        const ZOOM_COEIFFICIENT = 1.003 ** dt - 1;
+        const FOLLOW_COEIFFICIENT: number = 1.004 ** dt - 1;
+        const ZOOM_COEIFFICIENT: number = 1.003 ** dt - 1;
         this.clearVibration();
         this.updateFollowObj(FOLLOW_COEIFFICIENT);
         this.updateFollowZoom(ZOOM_COEIFFICIENT);
@@ -29,11 +32,11 @@ export default class Camera {
         this.updateStage();
     }
 
-    public setSize(size: any): void {
+    public setSize(size: Size): void {
         this.size = size;
     }
 
-    public setRenderer(renderer: any): void {
+    public setRenderer(renderer: GameRenderer): void {
         this.renderer = renderer;
     }
 
@@ -41,11 +44,11 @@ export default class Camera {
 
     }
 
-    public setStage(stage: any): void {
+    public setStage(stage: PIXI.Container): void {
         this.stage = stage;
     }
 
-    public setObject(obj: any): void {
+    public setObject(obj: PIXI.Container): void {
         this.obj = obj;
     }
 
@@ -67,7 +70,7 @@ export default class Camera {
 
     private updateStage(): void {
         if (this.stage === undefined) return;
-        const data: any = this.renderer.gameData;
+        const data: GameData = this.renderer.gameData;
         this.stage.scale.x = this.currentZoom;
         this.stage.scale.y = this.currentZoom;
 
@@ -88,7 +91,7 @@ export default class Camera {
     private updateFollowObj(coeifficient: number): void {
         if (this.obj === undefined) return;
 
-        const targetPosition: any = {
+        const targetPosition: Point = {
             x: ((-this.obj.position.x - this.obj.size.width / 2) * this.currentZoom + this.screenWidth / 2),
             y: ((-this.obj.position.y - this.obj.size.height / 2 + Math.round(this.screenHeight / 6)) * this.currentZoom + this.screenHeight / 2)
         };
@@ -99,7 +102,7 @@ export default class Camera {
 
     private updateFollowZoom(coeifficient: number): void {
         const zoom: number = this.currentZoom + (this.targetZoom - this.currentZoom) * coeifficient;
-        const centerPos: any = {
+        const centerPos: Point = {
             x: (this.position.x - this.screenWidth / 2) / this.currentZoom,
             y: (this.position.y - this.screenHeight / 2) / this.currentZoom
         };

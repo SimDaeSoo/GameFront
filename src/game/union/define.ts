@@ -5,9 +5,9 @@ export const enum ERROR_CODE {
     UNKNOWN = 4
 };
 
-export interface IResponse {
+export interface IResponse<T> {
     success: ERROR_CODE;
-    data: any;
+    data: T;
 };
 
 export const TILE_SIZE = {
@@ -15,9 +15,9 @@ export const TILE_SIZE = {
     HEIGHT: 24
 };
 
-export interface ICommand {
+export interface ICommand<T> {
     script: string;
-    data: any;
+    data: T;
 }
 
 export const enum CHAT_TYPE {
@@ -35,12 +35,6 @@ export interface Vector {
     x: number;
     y: number;
 }
-
-export interface Scale {
-    x: number;
-    y: number;
-}
-
 export interface Point {
     x: number;
     y: number;
@@ -61,9 +55,9 @@ export interface Flip {
     y: boolean;
 }
 
-export interface Scale {
-    x: number;
-    y: number;
+export interface Boundary<T> {
+    min: T;
+    max: T;
 }
 
 export interface IObjectData {

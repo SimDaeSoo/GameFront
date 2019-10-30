@@ -4,10 +4,10 @@ export default class Updater {
     private time: number = 0;
     public ups: number = 0;
     private updateCount: number = 0;
-    private updaterID: any;
+    private updaterID: NodeJS.Timeout;
     private GAME_UPDATE_MILLISEC: number = 10;
     private AVERAGE_LOOPING: number = 3;
-    public forceDisConnect: any;
+    public forceDisConnect: Function;
 
     public onUpdate(callback: Function): void {
         let lastTime: number = Date.now();

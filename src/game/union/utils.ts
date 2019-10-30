@@ -83,7 +83,7 @@ function format(date: Date, format: string) {
     const weekName: Array<string> = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
     let h;
 
-    return format.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function ($1: any) {
+    return format.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function ($1: string) {
         switch ($1) {
             case "yyyy": return date.getFullYear();
             case "yy": return (date.getFullYear() % 1000).toString().slice(0, 2);

@@ -18,7 +18,7 @@ export const store: Store<{}> = new Vuex.Store({
         setChannel: (state, payload): void => { state.channel = payload.channel; },
     },
     actions: {
-        async setServer({ commit, state }, payload): Promise<any> { await commit('setServer', payload); },
-        async setChannel({ commit, state }, payload): Promise<any> { await commit('setChannel', payload); },
+        async setServer({ commit, state }, payload): Promise<void> { await commit('setServer', payload); },
+        async setChannel({ commit, state }, payload): Promise<void> { await commit('setChannel', payload); },
     }
 });

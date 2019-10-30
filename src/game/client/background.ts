@@ -1,8 +1,10 @@
+import { Size } from "../union/define";
+
 export default class Background extends PIXI.Container {
-    constructor(worldSize: any) {
+    constructor(worldSize: Size) {
         super();
 
-        let backgroundSize: any = {
+        let backgroundSize: Size = {
             width: 0,
             height: 0
         };

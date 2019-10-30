@@ -2,7 +2,7 @@ import GameData from "../union/gameData";
 import { system } from "../union/utils";
 import Camera from "./camera";
 import Display from "pixi-layers";
-import { TILE_SIZE } from "../union/define";
+import { TILE_SIZE, Dictionary, Size, Boundary } from "../union/define";
 import RayCaster from "./rayCaster";
 import Background from "./background";
 import ObjectFactory from "./objectFactory";
@@ -31,7 +31,7 @@ export default class GameRenderer {
     // GameData
     public owner: string;
     public gameData: GameData;
-    private objectDict: any = { tiles: {}, characters: {}, objects: {} };
+    private objectDict: Dictionary<Dictionary<any>> = { tiles: {}, characters: {}, objects: {} };
 
     // Rendering Performance
     private time: number = 0;
@@ -88,7 +88,7 @@ export default class GameRenderer {
     }
 
     public initialize(): void {
-        const worldSize: any = {
+        const worldSize: Size = {
             width: this.gameData.worldProperties.width * TILE_SIZE.WIDTH,
             height: (this.gameData.worldProperties.height + 17) * TILE_SIZE.HEIGHT
         };
@@ -142,15 +142,15 @@ export default class GameRenderer {
     }
 
     private objectUpdate(dt: number): void {
-        const boundary: any = {
+        const boundary: Boundary<number> = {
             min: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) - this.SCREEN_WIDTH,
             max: ((-this.camera.position.x + this.SCREEN_WIDTH / 2) / this.camera.currentZoom) + this.SCREEN_WIDTH
         }
 
         for (let type in this.gameData.dirties) {
             this.gameData.dirties[type].forEach((id: string) => {
-                const obj = this.objectDict[type][id];
-                const data = this.gameData.data[type][id];
+                const obj: any = this.objectDict[type][id];
+                const data: any = this.gameData.data[type][id];
 
                 if (obj && data && (Math.round(obj.x) !== Math.round(data.position.x) || Math.round(obj.y) !== Math.round(data.position.y))) {
                     obj.targetPosition.x = Math.round(data.position.x);
@@ -187,7 +187,7 @@ export default class GameRenderer {
     private objectGenerate(): void {
         let generateCount: number = 0;
         for (let type in this.gameData.beGenerates) {
-            this.gameData.beGenerates[type].every((id: string): any => {
+            this.gameData.beGenerates[type].every((id: string): boolean => {
                 if (generateCount++ > 10) return false;
                 if (this.objectDict[type][id]) return true;
 
@@ -225,7 +225,7 @@ export default class GameRenderer {
         this.lightbulb.alpha = depth >= 1 ? 1 : depth;
     }
 
-    public get view(): any {
+    public get view(): HTMLCanvasElement {
         return this.app.view;
     }
 
@@ -243,7 +243,7 @@ export default class GameRenderer {
 
     private changeTile(id: string): void {
         const width: number = this.gameData.worldProperties.width;
-        const tiles: any = {}
+        const tiles: Dictionary<any> = {}
 
         tiles[(Number(id) - width).toString()] = this.objectDict["tiles"][(Number(id) - width).toString()];
         tiles[(Number(id) + width).toString()] = this.objectDict["tiles"][(Number(id) + width).toString()];

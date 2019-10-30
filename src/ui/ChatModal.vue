@@ -17,7 +17,7 @@ export default class ChatModal extends BaseUI {
 
   beforeDestroy() {
     if (!this.isVaild(this.text)) return;
-    const command: ICommand = this.parseChat(this.text);
+    const command: ICommand<any> = this.parseChat(this.text);
     this.emit('broadcast', command);
   }
 
@@ -25,8 +25,8 @@ export default class ChatModal extends BaseUI {
     return text.length > 0;
   }
 
-  private parseChat(text: string): ICommand {
-    const command: ICommand = { script: '', data: {} };
+  private parseChat(text: string): ICommand<any> {
+    const command: ICommand<any> = { script: '', data: {} };
 
     console.log('parse');
 

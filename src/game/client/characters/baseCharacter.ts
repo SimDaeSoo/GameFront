@@ -23,6 +23,7 @@ export default class BaseCharacter extends BaseObject {
         super(options);
         this.options = options;
     }
+
     public _update(dt: number): void {
         this._updateProperties();
         this.interpolationPosition(dt);
@@ -34,7 +35,7 @@ export default class BaseCharacter extends BaseObject {
     }
 
     // 음.. 이게 맞나싶어 <- 이제 너가하는게 아니야 -> 스테이트로 옮기자.
-    private _updateProperties() {
+    private _updateProperties(): void {
         if (this.options.land && Math.abs(this.options.vector.y) >= 0.1) {
             this.options.land = false;
         }

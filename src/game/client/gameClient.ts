@@ -84,7 +84,7 @@ export default class GameClient {
         this.isInitialized = true;
     }
 
-    public run(): any {
+    public run(): void {
         this.io = io.connect("http://localhost:8080");
         // this.io = io.connect(`${this.server}:${this.channel}`);
 
@@ -104,7 +104,7 @@ export default class GameClient {
 
     public broadcast(message: string, date: number): void {
         if (this.isInitialized) {
-            const command: any = JSON.parse(message);
+            const command: string = JSON.parse(message);
             this.gameLogic.runCommand(command, date - this.pingInterpolation);
         }
     }
