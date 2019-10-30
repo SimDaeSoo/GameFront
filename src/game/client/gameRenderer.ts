@@ -119,22 +119,22 @@ export default class GameRenderer extends EventEmitter {
         });
     }
 
-    public async render(t_1: number, t_2: number): Promise<void> {
+    public render(t_1: number, t_2: number): void {
         const dt: number = t_1 - t_2;
         this.checkRenderingPerformance(dt);
-        await this.app.render();
+        this.app.render();
         window.requestAnimationFrame((now: number): void => {
             this.render(now, t_1);
         });
     }
 
-    public async update(dt: number): Promise<void> {
-        await this.objectGenerate();
-        await this.objectDelete();
-        await this.objectUpdate(dt);
-        await this.setLighting();
-        await this.ui.update();
-        await this.camera.update(dt);
+    public update(dt: number): void {
+        this.objectGenerate();
+        this.objectDelete();
+        this.objectUpdate(dt);
+        this.setLighting();
+        this.ui.update();
+        this.camera.update(dt);
         this.rayCaster.update(dt);
     }
 
