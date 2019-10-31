@@ -6,7 +6,7 @@
           <span>{{status.name}}</span>
         </div>
         <button class="connect" @click="connect">Connect</button>
-        <div class="date">{{status.user}} user {{status.ping.toFixed(2)}} ms {{status.ups}} ups</div>
+        <div class="date">{{status.user}} user / {{status.ups}} ups</div>
       </h2>
     </div>
   </div>
