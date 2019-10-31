@@ -104,7 +104,7 @@ export default class GameClient {
         if (this.isInitialized) {
             const command: string = JSON.parse(message);
             this.gameLogic.runCommand(command, date - this.pingInterpolation);
-            console.log(date, this.pingInterpolation);
+            console.log(date, this.pingInterpolation, date - this.pingInterpolation - Date.now());
         }
     }
 
