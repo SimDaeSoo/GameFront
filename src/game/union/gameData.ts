@@ -1,8 +1,10 @@
 import MapGenerator from "./mapGenerator";
 import { Size, Dictionary } from "./define";
 import ObjectFactory from "./objectFactory";
+import Clock from "./clock";
 
 export default class GameData {
+    public clock: Clock = new Clock;
     public worldProperties: Size = { width: 0, height: 0 };
     public data: Dictionary<Dictionary<any>> = { tiles: {}, objects: {}, characters: {} };
     public beGenerates: Dictionary<Array<string>> = { tiles: [], objects: [], characters: [] };
@@ -15,6 +17,7 @@ export default class GameData {
                 this.generate(id, data[type][id]);
             }
         }
+        this.clock.initialize(0);
     }
 
     public update(dt: number): void {
@@ -28,6 +31,7 @@ export default class GameData {
                 }
             }
         }
+        this.clock.applySecond(dt / 144);
     }
 
     public get exportData(): Dictionary<Dictionary<any>> {

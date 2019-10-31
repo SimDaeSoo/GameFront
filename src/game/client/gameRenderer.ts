@@ -27,6 +27,7 @@ export default class GameRenderer {
     private lighting: PIXI.display.Layer;
     private lightbulb: PIXI.Graphics;
     private rayCaster: RayCaster;
+    private lastTime: number;
 
     // GameData
     public owner: string;
@@ -64,7 +65,7 @@ export default class GameRenderer {
         this.lighting = new PIXI.display.Layer();
         this.lighting.on("display", (element) => { element.blendMode = PIXI.BLEND_MODES.LIGHTEN; });
         this.lighting.useRenderTexture = true;
-        this.lighting.clearColor = [0.12, 0.12, 0.12, 1];
+        this.lighting.clearColor = [1, 1, 1, 1];
         this.app.stage.addChild(this.lighting);
 
         const lightingSprite: PIXI.Sprite = new PIXI.Sprite(this.lighting.getRenderTexture());
@@ -73,7 +74,7 @@ export default class GameRenderer {
 
         this.lightbulb = new PIXI.Graphics();
         this.lightbulb.parentLayer = this.lighting;
-        this.lightbulb.beginFill(0xFFFFFF, 1);
+        this.lightbulb.beginFill(0xFFFFFF, 0);
         this.lightbulb.drawRect(0, 0, this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
         this.lightbulb.endFill();
         this.app.stage.addChild(this.lightbulb);
@@ -213,16 +214,11 @@ export default class GameRenderer {
     }
 
     private setLighting(): void {
-        if (this.gameData.worldProperties.height === 0) return;
-        let depth = this.camera.position.y + (this.gameData.worldProperties.height * TILE_SIZE.HEIGHT * this.camera.currentZoom) - this.SCREEN_HEIGHT;
-        depth /= (this.gameData.worldProperties.height - 17) * TILE_SIZE.HEIGHT;
-        depth = (depth * 1.5) < 0 ? 0 : (depth * 1.5);
-
-        if (this.camera.currentZoom < 0.9) {
-            depth = depth < 0.15 ? 0.15 : depth;
-        }
-
-        this.lightbulb.alpha = depth >= 1 ? 1 : depth;
+        const currentTime: number = (this.gameData.clock.currentTimePeriod + 1) / 2;
+        if (this.lastTime && Math.abs(this.lastTime - currentTime) <= 0.01) return;
+        this.lighting.clearColor = [currentTime + 0.05, currentTime + 0.05, currentTime + 0.05, 1];
+        this.rayCaster.rayContainer.alpha = currentTime + 0.1;
+        this.lastTime = currentTime;
     }
 
     public get view(): HTMLCanvasElement {

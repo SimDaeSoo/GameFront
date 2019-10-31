@@ -79,7 +79,7 @@ export default class RayCaster {
 
         this.rayPolygon = new PIXI.Graphics();
         this.rayPolygon.parentLayer = this.lighting;
-        this.rayPolygon.beginFill(0xFFFFFF, 1);
+        this.rayPolygon.beginFill(0xF0F0E0, 1);
         this.rayPolygon.drawPolygon(points);
         this.rayPolygon.endFill();
         this.rayContainer.addChild(this.rayPolygon);

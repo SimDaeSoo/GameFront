@@ -140,30 +140,4 @@ export default class GameLogic extends EventEmitter {
             (this as any)[command.script](command.data, dt);
         }
     }
-
-    /* ----------------------- Legacy ----------------------- */
-
-    private applyForceVector(dt: number): void {
-        for (let type in this.gameData.data) {
-            for (let id in this.gameData.data[type]) {
-                if (this.gameData.data[type][id].forceVector.x !== 0 || this.gameData.data[type][id].forceVector.y !== 0) {
-                    this.gameData.data[type][id].vector.x += dt * this.gameData.data[type][id].forceVector.x / this.gameData.data[type][id].weight;
-                    this.gameData.data[type][id].vector.y += dt * this.gameData.data[type][id].forceVector.y / this.gameData.data[type][id].weight;
-                    this.gameData.dirty(id, type);
-                }
-            }
-        }
-    }
-
-    private applyVector(dt: number): void {
-        for (let type in this.gameData.data) {
-            for (let id in this.gameData.data[type]) {
-                if (this.gameData.data[type][id].vector.x !== 0 || this.gameData.data[type][id].vector.y !== 0) {
-                    this.gameData.data[type][id].position.x += dt * this.gameData.data[type][id].vector.x;
-                    this.gameData.data[type][id].position.y += dt * this.gameData.data[type][id].vector.y;
-                    this.gameData.dirty(id, type);
-                }
-            }
-        }
-    }
 }
