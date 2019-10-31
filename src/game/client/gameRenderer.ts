@@ -12,8 +12,8 @@ import BaseObject from "./baseObject";
 export default class GameRenderer {
     // Application
     private app: PIXI.Application;
-    private SCREEN_WIDTH: number = window.innerWidth > 1024 ? 1024 : window.innerWidth;
-    private SCREEN_HEIGHT: number = Math.floor(this.SCREEN_WIDTH * this.SCREEN_RATIO);
+    private SCREEN_WIDTH: number = window.innerWidth;
+    private SCREEN_HEIGHT: number = window.innerHeight;
 
     public camera: Camera;
     public ui: UI;
@@ -34,13 +34,7 @@ export default class GameRenderer {
     public gameData: GameData;
     private objectDict: Dictionary<Dictionary<any>> = { tiles: {}, characters: {}, objects: {} };
 
-    // Rendering Performance
-    private time: number = 0;
-    private renderCount: number = 0;
-    private AVERAGE_LOOPING: number = 3;
-    public systemData: { fps: number, ups: number, ping: number } = { fps: 0, ups: 0, ping: 0 };
-
-    constructor() {
+    constructor(element: HTMLElement) {
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         PIXI.settings.ROUND_PIXELS = true;
 
@@ -51,7 +45,8 @@ export default class GameRenderer {
             autoStart: false,
             antialias: false,
             sharedLoader: true,
-            powerPreference: 'high-performance'
+            powerPreference: 'high-performance',
+            resizeTo: element
         });
         this.app.stage = new PIXI.display.Stage();
         this.stage = new PIXI.Container();
@@ -83,8 +78,7 @@ export default class GameRenderer {
         this.rayCaster.setLightingLayer(this.lighting);
         // ----------------------------- Lightings
 
-        this.ui = new UI({ size: { width: this.SCREEN_WIDTH, height: this.SCREEN_HEIGHT }, fpsChecker: true, upsChecker: true, pingInterpolationChecker: true });
-        this.ui.systemData = this.systemData;
+        this.ui = new UI({ size: { width: this.SCREEN_WIDTH, height: this.SCREEN_HEIGHT } });
         this.app.stage.addChild(this.ui);
     }
 
@@ -111,24 +105,22 @@ export default class GameRenderer {
         this.objectGenerate();
         this.camera.setSize(worldSize);
         this.rayCaster.setObjects(this.gameData.data.tiles);
-        this.rayCaster.setPosition({ x: worldSize.width / 2, y: -600 });
+        this.rayCaster.setPosition({ x: worldSize.width / 2, y: -1400 });
         this.rayCaster.setSize(worldSize);
         this.rayCaster.initializeRay();
         this.stage.addChild(this.rayCaster.rayContainer);
     }
 
     public start() {
-        window.requestAnimationFrame((now: number): void => {
-            this.render(now, 0);
+        window.requestAnimationFrame((): void => {
+            this.render();
         });
     }
 
-    public render(t_1: number, t_2: number): void {
-        const dt: number = t_1 - t_2;
-        this.checkRenderingPerformance(dt);
+    public render(): void {
         this.app.render();
-        window.requestAnimationFrame((now: number): void => {
-            this.render(now, t_1);
+        window.requestAnimationFrame((): void => {
+            this.render();
         });
     }
 
@@ -186,10 +178,8 @@ export default class GameRenderer {
     }
 
     private objectGenerate(): void {
-        let generateCount: number = 0;
         for (let type in this.gameData.beGenerates) {
             this.gameData.beGenerates[type].every((id: string): boolean => {
-                if (generateCount++ > 10) return false;
                 if (this.objectDict[type][id]) return true;
 
                 const object: BaseObject = ObjectFactory.create(this.gameData.data[type][id]);
@@ -221,20 +211,25 @@ export default class GameRenderer {
         this.lastTime = currentTime;
     }
 
-    public get view(): HTMLCanvasElement {
-        return this.app.view;
+    public resize(): void {
+        this.SCREEN_WIDTH = window.innerWidth;
+        this.SCREEN_HEIGHT = window.innerHeight;
+
+        if (this.lightbulb) {
+            this.lightbulb.parent.removeChild(this.lightbulb);
+        }
+        this.lightbulb = new PIXI.Graphics();
+        this.lightbulb.parentLayer = this.lighting;
+        this.lightbulb.beginFill(0xFFFFFF, 0);
+        this.lightbulb.drawRect(0, 0, this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
+        this.lightbulb.endFill();
+        this.app.stage.addChild(this.lightbulb);
+
+        this.camera.resize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
     }
 
-    private checkRenderingPerformance(dt: number): void {
-        this.time += dt;
-        this.renderCount++;
-
-        if (this.time > 1000 * this.AVERAGE_LOOPING) {
-            this.systemData.fps = Number((this.renderCount / this.AVERAGE_LOOPING).toFixed(2));
-            system({ text: `render: ${(this.renderCount / this.AVERAGE_LOOPING).toFixed(2)}fps (${(this.renderCount / this.AVERAGE_LOOPING / 60 * 100).toFixed(2)}%)` });
-            this.time = 0;
-            this.renderCount = 0;
-        }
+    public get view(): HTMLCanvasElement {
+        return this.app.view;
     }
 
     private changeTile(id: string): void {

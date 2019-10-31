@@ -32,6 +32,11 @@ export default class Camera {
         this.updateStage();
     }
 
+    public resize(width: number, height: number): void {
+        this.screenWidth = width;
+        this.screenHeight = height;
+    }
+
     public setSize(size: Size): void {
         this.size = size;
     }
@@ -93,7 +98,7 @@ export default class Camera {
 
         const targetPosition: Point = {
             x: ((-this.obj.position.x - this.obj.size.width / 2) * this.currentZoom + this.screenWidth / 2),
-            y: ((-this.obj.position.y - this.obj.size.height / 2 + Math.round(this.screenHeight / 6)) * this.currentZoom + this.screenHeight / 2)
+            y: ((-this.obj.position.y - this.obj.size.height / 2 + Math.round(this.screenHeight / 8)) * this.currentZoom + this.screenHeight / 2)
         };
 
         this.position.x += (targetPosition.x - this.position.x) * coeifficient;

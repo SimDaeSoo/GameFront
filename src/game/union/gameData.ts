@@ -4,7 +4,7 @@ import ObjectFactory from "./objectFactory";
 import Clock from "./clock";
 
 export default class GameData {
-    public clock: Clock = new Clock;
+    public clock: Clock = new Clock();
     public worldProperties: Size = { width: 0, height: 0 };
     public data: Dictionary<Dictionary<any>> = { tiles: {}, objects: {}, characters: {} };
     public beGenerates: Dictionary<Array<string>> = { tiles: [], objects: [], characters: [] };
@@ -12,12 +12,13 @@ export default class GameData {
     public dirties: Dictionary<Array<string>> = { tiles: [], objects: [], characters: [] };
 
     public initialize(data: any): void {
-        for (let type in data) {
-            for (let id in data[type]) {
-                this.generate(id, data[type][id]);
+        this.worldProperties = data.worldProperties;
+        for (let type in data.game) {
+            for (let id in data.game[type]) {
+                this.generate(id, data.game[type][id]);
             }
         }
-        this.clock.initialize(0);
+        this.clock.initialize(data.clock);
     }
 
     public update(dt: number): void {
@@ -34,7 +35,7 @@ export default class GameData {
         this.clock.applySecond(dt / 144);
     }
 
-    public get exportData(): Dictionary<Dictionary<any>> {
+    public get export(): any {
         const data: Dictionary<Dictionary<any>> = {};
 
         for (let key in this.data) {
@@ -44,7 +45,7 @@ export default class GameData {
             }
         }
 
-        return data;
+        return { game: data, clock: this.clock.time, worldProperties: this.worldProperties };
     }
 
     public generate(id: string, data: any): void {

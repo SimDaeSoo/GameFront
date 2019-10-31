@@ -17,20 +17,21 @@ export default class GameClient {
     public updater: Updater;
     public keyboard: Keyboard;
     public isInitialized: boolean;
+
+    // Ping Test
     public pings: Array<number> = [];
     public avgPings: Array<number> = [];
     public checkPing: any;
     public pingInterpolation: number = 0;
     public avgPing: number = 0;
     private PING_CHECK_TIME: number = 200;
-    private PING_TEST: number = 0;
 
-    constructor(server: string, channel: string) {
+    constructor(server: string, channel: string, element: HTMLElement) {
         this.server = server;
         this.channel = channel;
         this.keyboard = new Keyboard();
         this.gameLogic = new GameLogic();
-        this.gameRenderer = new GameRenderer();
+        this.gameRenderer = new GameRenderer(element);
         this.updater = new Updater();
         this.isInitialized = false;
         this.gameData;
@@ -38,21 +39,20 @@ export default class GameClient {
             start: 0,
             end: 0
         };
-
-        this.gameLogic.on("setWorldProperties", () => {
-            this.gameRenderer.initialize();
-        });
     }
 
     public initialize(message: string, date: number): void {
         this.updater.forceDisConnect = () => { this.io.disconnect(); };
-        this.gameData = new GameData();
-        this.gameLogic.gameData = this.gameData;
-        this.gameRenderer.gameData = this.gameData;
-        this.gameRenderer.owner = this.io.id;
 
         const data: any = JSON.parse(message);
+        this.gameData = new GameData();
         this.gameData.initialize(data);
+
+        this.gameRenderer.gameData = this.gameData;
+        this.gameRenderer.owner = this.io.id;
+        this.gameRenderer.initialize();
+
+        this.gameLogic.gameData = this.gameData;
 
         this.keyboard.onKeyDown = (keyCode: number) => {
             if (keyCode === 77) {
@@ -62,21 +62,15 @@ export default class GameClient {
                     this.gameRenderer.camera.setZoom(0.5);
                 }
             }
-            setTimeout(() => {
-                this.io.emit("keydown", keyCode);
-            }, this.PING_TEST);
+            this.io.emit("keydown", keyCode);
         }
 
         this.keyboard.onKeyUp = (keyCode: number) => {
-            setTimeout(() => {
-                this.io.emit("keyup", keyCode);
-            }, this.PING_TEST);
+            this.io.emit("keyup", keyCode);
         }
 
         // TODO 다른 곳으로 뺄 것.
         this.updater.onUpdate((dt: number): void => {
-            this.gameRenderer.systemData.ping = this.avgPing;
-            this.gameRenderer.systemData.ups = this.updater.ups;
             this.gameLogic.update(dt);
             this.gameRenderer.update(dt);
         });
@@ -85,8 +79,8 @@ export default class GameClient {
     }
 
     public run(): void {
-        this.io = io.connect("http://localhost:8080");
-        // this.io = io.connect(`${this.server}:${this.channel}`);
+        // this.io = io.connect("http://localhost:8080");
+        this.io = io.connect(`${this.server}:${this.channel}`);
 
         this.io.on("connect", (): void => {
             system({ text: "connect success!" });
@@ -100,6 +94,10 @@ export default class GameClient {
             this.checkPing.start = Date.now();
             this.io.emit("pingTest", this.checkPing.start);
         });
+    }
+
+    public resize(): void {
+        this.gameRenderer.resize();
     }
 
     public broadcast(message: string, date: number): void {

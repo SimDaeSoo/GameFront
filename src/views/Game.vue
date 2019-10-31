@@ -1,9 +1,9 @@
 <template>
   <GameLayout>
     <div class="Game" ref="Game">
-      <DomUI />
+      <DomUI/>
     </div>
-    <GameController />
+    <GameController/>
   </GameLayout>
 </template>
 
@@ -26,8 +26,6 @@ export default class Game extends Vue {
   private client: GameClient;
   private loader: Loader;
 
-  created() {}
-
   mounted() {
     // 가려고 하는 서버가 없을때.
     if (!this.$store.getters.server) {
@@ -35,6 +33,12 @@ export default class Game extends Vue {
     } else {
       this.start();
     }
+
+    window.addEventListener('resize', this.resize);
+  }
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resize)
   }
 
   private async start(): Promise<void> {
@@ -45,7 +49,7 @@ export default class Game extends Vue {
     await this.$preload();
 
     this.loader.load(() => {
-      this.client = new GameClient(server, channel);
+      this.client = new GameClient(server, channel, (this.$refs.Game as HTMLElement));
       this.client.run();
 
       (this.$refs.Game as HTMLElement).appendChild(
@@ -54,7 +58,7 @@ export default class Game extends Vue {
     });
   }
 
-  private async $preload() {
+  private async $preload(): Promise<void> {
     const preloads = require("../json/preloads.json");
 
     for (const r of preloads) {
@@ -63,11 +67,21 @@ export default class Game extends Vue {
 
     await this.loader.asyncLoad();
   }
+
+  private resize(): void {
+    this.client.resize();
+  }
 }
 </script>
 
 <style>
 .Home {
   text-align: center;
+}
+
+.Game {
+  max-width: 5000px;
+  width: 100%;
+  height: 100%;
 }
 </style>

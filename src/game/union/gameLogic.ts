@@ -61,11 +61,6 @@ export default class GameLogic extends EventEmitter {
         return result;
     }
 
-    public setWorldProperties(worldProperties: any): void {
-        this.gameData.worldProperties = worldProperties;
-        this.emit("setWorldProperties");
-    }
-
     private interpolationCharacterPosition(dt: number): void {
         for (let id in this.gameData.data["characters"]) {
             const character: any = this.gameData.data["characters"][id];

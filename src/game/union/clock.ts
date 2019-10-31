@@ -8,6 +8,10 @@ export default class Clock {
     private _minutes: number;
     private _seconds: number;
 
+    constructor() {
+        this._hours = this._minutes = this._seconds = 0;
+    }
+
     public initialize(sec: number): void {
         this._seconds = sec;
         this._minutes = this._hours = 0;

@@ -9,6 +9,7 @@ export default class RayCaster {
     private size: Size;
     private triangles: any = {};
     public rayContainer: PIXI.Container;
+    private period: number = 0;
     private rayPolygon: any;
     private RAY_DENSITY: number = 0.15;
 
@@ -17,8 +18,13 @@ export default class RayCaster {
     }
 
     public update(dt: number) {
-        this.changeDetect();
-        this.makeRay();
+        if (this.period > 500) {
+            this.changeDetect();
+            this.makeRay();
+            this.period = 0;
+        } else {
+            this.period += dt;
+        }
     }
 
     public setPosition(position: any): void {
@@ -105,8 +111,8 @@ export default class RayCaster {
         const startPoint: Array<any> = [
             new PIXI.Point(boundaryAngle.min.x, boundaryAngle.min.y),
             new PIXI.Point(0, 0),
-            new PIXI.Point(this.position.x, this.position.y),
-            new PIXI.Point(this.size.width, 0),
+            new PIXI.Point(0, this.position.y),
+            new PIXI.Point(this.size.width, this.position.y),
             new PIXI.Point(boundaryAngle.max.x, boundaryAngle.max.y)
         ];
 

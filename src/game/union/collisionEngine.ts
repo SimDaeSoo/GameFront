@@ -53,7 +53,8 @@ export default class CollisionEngine {
         let time: number = Infinity;
         const tickInterpolation: number = 24;
 
-        objects.forEach((objB: any) => {
+        for (let i = 0; i < objects.length; i++) {
+            const objB: any = objects[i];
             if (objB.endXAxis === objB.id || objB.startXAxis === objB.id || objB.endYAxis === objB.id || objB.startYAxis === objB.id) {
                 const hitTestResult: any = CollisionEngine.hitTest(objA, objB);
 
@@ -70,7 +71,7 @@ export default class CollisionEngine {
                     time = hitTestResult.time;
                 }
             }
-        });
+        }
 
         return result;
     }
@@ -80,7 +81,8 @@ export default class CollisionEngine {
         let time: number = Infinity;
         const tickInterpolation: number = 24;
 
-        objects.forEach((objB: any) => {
+        for (let i = 0; i < objects.length; i++) {
+            const objB: any = objects[i];
             const hitTestResult: any = CollisionEngine.hitTest(objA, objB);
 
             if (hitTestResult.time <= dt && hitTestResult.time >= -tickInterpolation && time > hitTestResult.time) {
@@ -90,7 +92,7 @@ export default class CollisionEngine {
                 result.push(hitTestResult);
                 time = hitTestResult.time;
             }
-        });
+        }
 
         return result;
     }

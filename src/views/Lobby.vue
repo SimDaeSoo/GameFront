@@ -34,8 +34,8 @@ export default class Lobby extends Vue {
 
   public polling(): void {
     this.pollingID = setInterval(async () => {
-      const result: any = await axios.get('http://localhost:8000/server/status');
-      // const result: any = await axios.get('http://13.124.180.130:8000/server/status');
+      // const result: any = await axios.get('http://localhost:8000/server/status');
+      const result: any = await axios.get('http://15.164.141.35:8000/server/status');
       const data: Array<IServerStatus> = result.data;
 
       this.serServerStatus(data);
