@@ -1,19 +1,22 @@
 <template>
   <div class="UI" ref="UI">
     <button class="send_button" @click="chat()">Chat</button>
-    <Controller :ui="this"/>
+    <ArrowController :ui="this"/>
+    <ActionController :ui="this"/>
   </div>
 </template>
 
 <script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import ChatModal from "./ChatModal.vue";
-import Controller from './Controller.vue';
+import ArrowController from './ArrowController.vue';
+import ActionController from './ActionController.vue';
 import { EventEmitter } from 'events';
 
 @Component({
   components: {
-    Controller
+    ArrowController,
+    ActionController
   }
 })
 export default class DomUI extends Vue {
