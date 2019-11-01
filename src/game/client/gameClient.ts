@@ -5,9 +5,12 @@ import GameData from "../union/gameData";
 import { system } from "../union/utils";
 import GameRenderer from "./gameRenderer";
 import Keyboard from "./keyboard";
+import { EventEmitter } from 'events';
+
 
 // Main Socket Server의 Room과 흡사.
 export default class GameClient {
+    private emitter: EventEmitter = new EventEmitter();
     private server: string;
     private channel: string;
     public io: SocketIOClient.Socket;
@@ -42,7 +45,7 @@ export default class GameClient {
     }
 
     public initialize(message: string, date: number): void {
-        this.updater.forceDisConnect = () => { this.io.disconnect(); };
+        this.updater.forceDisConnect = () => { this.io.disconnect(); this.emit('disconnect'); };
 
         const data: any = JSON.parse(message);
         this.gameData = new GameData();
@@ -132,5 +135,13 @@ export default class GameClient {
             this.checkPing.start = Date.now();
             this.io.emit("pingTest", this.checkPing.start);
         }, this.PING_CHECK_TIME);
+    }
+
+    public on(eventName: string, listener: any): void {
+        this.emitter.on(eventName, listener);
+    }
+
+    public emit(eventName: string, ...args): void {
+        this.emitter.emit(eventName, ...args);
     }
 }

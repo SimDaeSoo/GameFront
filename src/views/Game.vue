@@ -51,6 +51,9 @@ export default class Game extends Vue {
 
     this.loader.load(() => {
       this.client = new GameClient(server, channel, (this.$refs.Game as HTMLElement));
+      this.client.on('disconnect', (): void => {
+        this.$router.replace("/");
+      });
       this.client.run();
 
       (this.$refs.Game as HTMLElement).appendChild(
