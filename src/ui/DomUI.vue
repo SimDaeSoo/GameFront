@@ -1,6 +1,7 @@
 <template>
   <div class="UI no-drag" ref="UI">
-    <button class="send_button" @click="chat()">Chat</button>
+    <ChatController :ui="this"/>
+    <ZoomController :ui="this"/>
     <ArrowController :ui="this"/>
     <ActionController :ui="this"/>
   </div>
@@ -11,12 +12,16 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import ChatModal from "./ChatModal.vue";
 import ArrowController from './ArrowController.vue';
 import ActionController from './ActionController.vue';
+import ChatController from './ChatController.vue';
+import ZoomController from './ZoomController.vue';
 import { EventEmitter } from 'events';
 
 @Component({
   components: {
     ArrowController,
-    ActionController
+    ActionController,
+    ChatController,
+    ZoomController
   }
 })
 export default class DomUI extends Vue {

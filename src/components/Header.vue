@@ -29,7 +29,6 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 export default class Header extends Vue {
   private linkTo(to: string): void {
     if (this.$router.currentRoute.path.replace(/\//g, '') !== to.replace(/\//g, '')) {
-      console.log(this.$router);
       this.$router.push(to);
     }
     this.toggle();

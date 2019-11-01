@@ -21,6 +21,9 @@ export default class GameClient {
     public keyboard: Keyboard;
     public isInitialized: boolean;
 
+    // TODO : 제거되어야 할 각.
+    private zoomLevel: number = 0;
+
     // Ping Test
     public pings: Array<number> = [];
     public avgPings: Array<number> = [];
@@ -59,11 +62,7 @@ export default class GameClient {
 
         this.keyboard.onKeyDown = (keyCode: number) => {
             if (keyCode === 77) {
-                if (this.gameRenderer.camera.targetZoom < 1) {
-                    this.gameRenderer.camera.setZoom(1);
-                } else {
-                    this.gameRenderer.camera.setZoom(0.5);
-                }
+                this.zoom();
             }
             this.io.emit("keydown", keyCode);
         }
@@ -135,6 +134,18 @@ export default class GameClient {
             this.checkPing.start = Date.now();
             this.io.emit("pingTest", this.checkPing.start);
         }, this.PING_CHECK_TIME);
+    }
+
+    public zoom(value?: number): void {
+        const zoomRatio: Array<number> = [1, 2, 0.5];
+        if (!value) value = 1;
+        this.zoomLevel += Number(value);
+        if (this.zoomLevel < 0) {
+            this.zoomLevel = 0;
+        } else if (this.zoomLevel > 2) {
+            this.zoomLevel = 2;
+        }
+        this.gameRenderer.camera.setZoom(zoomRatio[this.zoomLevel]);
     }
 
     public on(eventName: string, listener: any): void {

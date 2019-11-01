@@ -1,8 +1,29 @@
-.send_button {
+.option_button {
+    width: 50px;
     background: bottom;
     color: #fff;
     box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    margin-left: 8px;
-    margin-right: 1px;
+}
+
+.send_button {
+    width: 50px;
+    background: bottom;
+    color: #fff;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin-left: 5px;
+    margin-top: 1px;
+}
+
+.chat_controller {
+    position: absolute;
+    left: 0;
+    margin: 10px;
+}
+
+.zoom_controller {
+    position: absolute;
+    right: 0;
+    margin: 10px;
 }

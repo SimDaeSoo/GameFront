@@ -38,7 +38,11 @@ export default class Game extends Vue {
     this.ui = this.$refs.ui as DomUI;
 
     this.ui.on('controller', (command: any): void => {
-      this.client.io.emit(command.script, command.data.keyCode);
+      if (command.script === 'keydown' || command.script === 'keyup') {
+        this.client.io.emit(command.script, command.data.keyCode);
+      } else if (command.script === 'zoom') {
+        this.client.zoom(command.data.zoom);
+      }
     });
   }
 

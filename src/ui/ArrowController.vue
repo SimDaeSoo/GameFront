@@ -21,15 +21,13 @@ export default class ArrowController extends BaseUI {
   }
 
   private initializeTouchEvent(el: HTMLElement, keyCode: number): void {
-    el.addEventListener("touchstart", (): void => { this.touchStart(keyCode); }, false);
-    el.addEventListener("touchend", (): void => { this.touchEnd(keyCode); }, false);
-    el.addEventListener("touchcancel", (): void => { this.touchEnd(keyCode); }, false);
+    el.addEventListener("touchstart", (): void => { this.touchStart(keyCode); });
+    el.addEventListener("touchend", (): void => { this.touchEnd(keyCode); });
   }
 
   private destroyedTouchEvent(el: HTMLElement, keyCode: number): void {
-    el.removeEventListener("touchstart", (): void => { this.touchStart(keyCode); }, false);
-    el.removeEventListener("touchend", (): void => { this.touchEnd(keyCode); }, false);
-    el.removeEventListener("touchcancel", (): void => { this.touchEnd(keyCode); }, false);
+    el.removeEventListener("touchstart", (): void => { this.touchStart(keyCode); });
+    el.removeEventListener("touchend", (): void => { this.touchEnd(keyCode); });
   }
 
   private touchStart(keyCode: number): void {
