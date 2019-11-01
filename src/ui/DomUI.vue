@@ -1,5 +1,5 @@
 <template>
-  <div class="UI" ref="UI">
+  <div class="UI no-drag" ref="UI">
     <button class="send_button" @click="chat()">Chat</button>
     <ArrowController :ui="this"/>
     <ActionController :ui="this"/>

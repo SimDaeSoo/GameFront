@@ -7,7 +7,7 @@ $display-default:block;
 
 body,
 .custom_button:after {
-	font-family: Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background: #dce1df;
   color: #4f585e;
   overflow-x: hidden;
@@ -98,4 +98,12 @@ $color: #444444;
 
 .chat-bar__message {
   display: flex;
+}
+
+.no-drag {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
