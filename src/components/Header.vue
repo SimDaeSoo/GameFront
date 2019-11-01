@@ -1,23 +1,42 @@
 <template>
-  <div class="header" ref="header">Hello Im Header</div>
+  <div class="header">
+    <a @click="toggle()" class="logo">Multi Shooting Game Project ADI</a>
+    <input class="menu-btn" type="checkbox" id="menu-btn">
+    <label class="menu-icon" for="menu-btn" ref="closeNav">
+      <span class="navicon"></span>
+    </label>
+    <ul class="menu">
+      <li>
+        <a @click="linkTo('/')">· Home</a>
+      </li>
+      <li>
+        <a @click="linkTo('lobby')">· Lobby</a>
+      </li>
+      <li>
+        <a @click="linkTo('login')">· Login</a>
+      </li>
+      <li>
+        <a @click="linkTo('register')">· Register</a>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script lang = "ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class Header extends Vue {}
-</script>
+export default class Header extends Vue {
+  mounted() {
+  }
 
-<style scoped>
-.header {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 40px;
-  background-color: tomato;
-  color: white;
-  z-index: 2;
+  private linkTo(to: string): void {
+    this.$router.push(to);
+    this.toggle();
+  }
+
+  private toggle(): void {
+    (this.$refs.closeNav as HTMLElement).click();
+  }
 }
-</style>
+</script>

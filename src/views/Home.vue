@@ -1,11 +1,6 @@
 <template>
   <DefaultLayout>
-    <div class="Home" ref="Home">
-      Hello this is Home
-      <button @click="go('lobby')">Go To Lobby</button>
-      <button @click="go('login')">Go To Login</button>
-      <button @click="go('register')">Go To Register</button>
-    </div>
+    <div class="Home" ref="Home">this is Home Form</div>
   </DefaultLayout>
 </template>
 
@@ -19,13 +14,10 @@ import DefaultLayout from "../layout/DefaultLayout.vue";
   }
 })
 export default class Home extends Vue {
-  mounted() {}
+  mounted() { }
 
-  public go(to: string): void {
+  public linkTo(to: string): void {
     this.$router.replace(to);
   }
 }
 </script>
-
-<style>
-</style>

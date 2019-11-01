@@ -1,5 +1,7 @@
 <template>
-  <div class="UI" ref="UI"></div>
+  <div class="UI" ref="UI">
+    <button class="send_button" @click="chat()">Chat</button>
+  </div>
 </template>
 
 <script lang = "ts">
@@ -24,9 +26,18 @@ export default class DomUI extends Vue {
     this.initialize();
   }
 
+  beforeDestroy() {
+    window.removeEventListener("keydown", this.keyDown);
+    window.removeEventListener("keyup", this.keyUp);
+  }
+
   private initialize(): void {
     window.addEventListener("keydown", this.keyDown);
     window.addEventListener("keyup", this.keyUp);
+  }
+
+  private chat(): void {
+    this.toggleChatting();
   }
 
   // Keyboard Event
@@ -61,7 +72,8 @@ export default class DomUI extends Vue {
         name: 'ChatModal',
         classes: 'ChatModal',
         width: '100%',
-        height: '40px',
+        height: 'auto',
+        pivotY: 1,
         clickToClose: false,
         backgroundColor: 'transparent'
       });
@@ -72,6 +84,3 @@ export default class DomUI extends Vue {
   }
 }
 </script>
-
-<style>
-</style>

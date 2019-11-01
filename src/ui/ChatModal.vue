@@ -2,6 +2,7 @@
   <div id="js-chatbar" class="chat-bar">
     <div class="chat-bar__message">
       <input v-focus class="chat-bar__input" type="text" v-model="text" placeholder="Message...">
+      <button class="send_button" @click="close()">Send</button>
     </div>
   </div>
 </template>
@@ -28,12 +29,11 @@ export default class ChatModal extends BaseUI {
   private parseChat(text: string): ICommand<any> {
     const command: ICommand<any> = { script: '', data: {} };
 
-    console.log('parse');
-
     return command;
+  }
+
+  private close(): void {
+    this.ui.toggleChatting();
   }
 }
 </script>
-
-<style>
-</style>

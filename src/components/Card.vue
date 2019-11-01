@@ -40,6 +40,3 @@ export default class Card extends Vue {
   }
 }
 </script>
-
-<style>
-</style>

@@ -1,6 +1,7 @@
 <template>
   <DefaultLayout>
     <div class="Register" ref="Register">
+      this is Register Form
     </div>
   </DefaultLayout>
 </template>
@@ -18,6 +19,3 @@ export default class Register extends Vue {
 
 }
 </script>
-
-<style>
-</style>

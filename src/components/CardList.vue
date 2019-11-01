@@ -26,6 +26,3 @@ export default class CardList extends Vue {
   }
 }
 </script>
-
-<style>
-</style>

@@ -3,7 +3,6 @@
     <div class="Game" ref="Game">
       <DomUI/>
     </div>
-    <GameController/>
   </GameLayout>
 </template>
 
@@ -11,15 +10,13 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import DomUI from "../ui/DomUI.vue";
 import GameLayout from "../layout/GameLayout.vue";
-import GameController from "../ui/GameController.vue";
 import GameClient from "../game/client/gameClient";
 import Loader from "../game/client/loader";
 
 @Component({
   components: {
     GameLayout,
-    DomUI,
-    GameController
+    DomUI
   }
 })
 export default class Game extends Vue {
@@ -73,15 +70,3 @@ export default class Game extends Vue {
   }
 }
 </script>
-
-<style>
-.Home {
-  text-align: center;
-}
-
-.Game {
-  max-width: 5000px;
-  width: 100%;
-  height: 100%;
-}
-</style>
