@@ -52,7 +52,7 @@ export default class Game extends Vue {
     this.loader.load(() => {
       this.client = new GameClient(server, channel, (this.$refs.Game as HTMLElement));
       this.client.on('disconnect', (): void => {
-        this.$router.replace("/");
+        this.linkTo("/");
       });
       this.client.run();
 
@@ -62,9 +62,15 @@ export default class Game extends Vue {
     });
   }
 
+  private linkTo(to: string): void {
+    if (this.$router.currentRoute.path.replace(/\//g, '') !== to.replace(/\//g, '')) {
+      this.$router.push(to);
+    }
+  }
+
   private checkVaildRoute(): void {
     if (!this.$store.getters.server) {
-      this.$router.replace("/");
+      this.linkTo("/");
     } else {
       this.start();
     }

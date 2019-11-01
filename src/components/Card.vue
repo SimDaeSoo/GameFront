@@ -21,7 +21,10 @@ export default class Card extends Vue {
   @Prop()
   private status: IServerStatus;
 
-  mounted() {
+  private linkTo(to: string): void {
+    if (this.$router.currentRoute.path.replace(/\//g, '') !== to.replace(/\//g, '')) {
+      this.$router.push(to);
+    }
   }
 
   private connect(): void {
@@ -29,7 +32,7 @@ export default class Card extends Vue {
     const server: string = this.status.address.replace(`:${channel}`, '');
     this.$store.dispatch('setServer', { server });
     this.$store.dispatch('setChannel', { channel });
-    this.$router.replace('game');
+    this.linkTo('game');
     this.$emit('connect');
 
   }

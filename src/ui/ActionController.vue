@@ -1,6 +1,8 @@
 <template>
   <div class="action_container">
-    <div class="action" ref="jump"></div>
+    <div class="action" ref="jump">
+      <span class="button_text">Jump</span>
+    </div>
   </div>
 </template>
 

@@ -14,10 +14,5 @@ import DefaultLayout from "../layout/DefaultLayout.vue";
   }
 })
 export default class Home extends Vue {
-  mounted() { }
-
-  public linkTo(to: string): void {
-    this.$router.replace(to);
-  }
 }
 </script>

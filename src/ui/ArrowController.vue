@@ -1,7 +1,11 @@
 <template>
   <div class="arrow_container">
-    <div class="arrow" ref="left"></div>
-    <div class="arrow" ref="right"></div>
+    <div class="arrow" ref="left">
+      <span class="button_text">Left</span>
+    </div>
+    <div class="arrow" ref="right">
+      <span class="button_text">Right</span>
+    </div>
   </div>
 </template>
 

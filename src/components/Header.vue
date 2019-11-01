@@ -27,11 +27,11 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class Header extends Vue {
-  mounted() {
-  }
-
   private linkTo(to: string): void {
-    this.$router.push(to);
+    if (this.$router.currentRoute.path.replace(/\//g, '') !== to.replace(/\//g, '')) {
+      console.log(this.$router);
+      this.$router.push(to);
+    }
     this.toggle();
   }
 
