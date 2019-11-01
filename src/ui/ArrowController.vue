@@ -1,7 +1,7 @@
 <template>
   <div class="arrow_container">
-    <div v-touch:start="leftStart" v-touch:end="leftEnd" class="arrow"></div>
-    <div v-touch:start="rightStart" v-touch:end="rightEnd" class="arrow"></div>
+    <div class="arrow" ref="left"></div>
+    <div class="arrow" ref="right"></div>
   </div>
 </template>
 
@@ -11,33 +11,35 @@ import BaseUI from './baseUI';
 
 @Component
 export default class ArrowController extends BaseUI {
-  private leftStart(): void {
+  mounted() {
+    this.initializeTouchEvent(this.$refs.left as HTMLElement, 37);
+    this.initializeTouchEvent(this.$refs.right as HTMLElement, 39);
+  }
+
+  private initializeTouchEvent(el: HTMLElement, keyCode: number): void {
+    el.addEventListener("touchstart", (): void => { this.touchStart(keyCode); }, false);
+    el.addEventListener("touchend", (): void => { this.touchEnd(keyCode); }, false);
+    el.addEventListener("touchcancel", (): void => { this.touchEnd(keyCode); }, false);
+  }
+
+  private destroyedTouchEvent(el: HTMLElement, keyCode: number): void {
+    el.removeEventListener("touchstart", (): void => { this.touchStart(keyCode); }, false);
+    el.removeEventListener("touchend", (): void => { this.touchEnd(keyCode); }, false);
+    el.removeEventListener("touchcancel", (): void => { this.touchEnd(keyCode); }, false);
+  }
+
+  private touchStart(keyCode: number): void {
     const command: any = {
       script: 'keydown',
-      data: { keyCode: 37 }
+      data: { keyCode }
     };
     this.ui.emit('controller', command);
   }
 
-  private leftEnd(): void {
+  private touchEnd(keyCode: number): void {
     const command: any = {
       script: 'keyup',
-      data: { keyCode: 37 }
-    };
-    this.ui.emit('controller', command);
-  }
-  private rightStart(): void {
-    const command: any = {
-      script: 'keydown',
-      data: { keyCode: 39 }
-    };
-    this.ui.emit('controller', command);
-  }
-
-  private rightEnd(): void {
-    const command: any = {
-      script: 'keyup',
-      data: { keyCode: 39 }
+      data: { keyCode }
     };
     this.ui.emit('controller', command);
   }

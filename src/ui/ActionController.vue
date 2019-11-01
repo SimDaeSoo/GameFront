@@ -1,6 +1,6 @@
 <template>
   <div class="action_container">
-    <div v-touch:start="jumpStart" v-touch:end="jumpEnd" class="action"></div>
+    <div class="action" ref="jump"></div>
   </div>
 </template>
 
@@ -10,18 +10,34 @@ import BaseUI from './baseUI';
 
 @Component
 export default class ActionController extends BaseUI {
-  private jumpStart(): void {
+  mounted() {
+    this.initializeTouchEvent(this.$refs.jump as HTMLElement, 38);
+  }
+
+  private initializeTouchEvent(el: HTMLElement, keyCode: number): void {
+    el.addEventListener("touchstart", (): void => { this.touchStart(keyCode); }, false);
+    el.addEventListener("touchend", (): void => { this.touchEnd(keyCode); }, false);
+    el.addEventListener("touchcancel", (): void => { this.touchEnd(keyCode); }, false);
+  }
+
+  private destroyedTouchEvent(el: HTMLElement, keyCode: number): void {
+    el.removeEventListener("touchstart", (): void => { this.touchStart(keyCode); }, false);
+    el.removeEventListener("touchend", (): void => { this.touchEnd(keyCode); }, false);
+    el.removeEventListener("touchcancel", (): void => { this.touchEnd(keyCode); }, false);
+  }
+
+  private touchStart(keyCode: number): void {
     const command: any = {
       script: 'keydown',
-      data: { keyCode: 38 }
+      data: { keyCode }
     };
     this.ui.emit('controller', command);
   }
 
-  private jumpEnd(): void {
+  private touchEnd(keyCode: number): void {
     const command: any = {
       script: 'keyup',
-      data: { keyCode: 38 }
+      data: { keyCode }
     };
     this.ui.emit('controller', command);
   }
