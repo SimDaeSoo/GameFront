@@ -1,15 +1,21 @@
 <template>
   <div class="UI" ref="UI">
     <button class="send_button" @click="chat()">Chat</button>
+    <Controller :ui="this"/>
   </div>
 </template>
 
 <script lang = "ts">
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component, Prop } from "vue-property-decorator";
 import ChatModal from "./ChatModal.vue";
+import Controller from './Controller.vue';
 import { EventEmitter } from 'events';
 
-@Component
+@Component({
+  components: {
+    Controller
+  }
+})
 export default class DomUI extends Vue {
   private emitter: EventEmitter = new EventEmitter();
   private chatFlag: boolean = false;

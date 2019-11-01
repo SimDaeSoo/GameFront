@@ -1,11 +1,13 @@
 @import './Header.scss';
 @import './CustomButton.scss';
 @import './Card.scss';
+@import './Arrow.scss';
 
 $display-default:block;
 
 body,
 .custom_button:after {
+	font-family: Arial, sans-serif;
   background: #dce1df;
   color: #4f585e;
   overflow-x: hidden;

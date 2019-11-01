@@ -8,9 +8,9 @@ import Keyboard from "./keyboard";
 
 // Main Socket Server의 Room과 흡사.
 export default class GameClient {
-    private io: SocketIOClient.Socket;
     private server: string;
     private channel: string;
+    public io: SocketIOClient.Socket;
     public gameLogic: GameLogic;
     public gameData: GameData;
     public gameRenderer: GameRenderer;

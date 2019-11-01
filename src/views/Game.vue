@@ -1,7 +1,7 @@
 <template>
   <GameLayout>
     <div class="Game" ref="Game">
-      <DomUI/>
+      <DomUI ref="ui"/>
     </div>
   </GameLayout>
 </template>
@@ -22,20 +22,24 @@ import Loader from "../game/client/loader";
 export default class Game extends Vue {
   private client: GameClient;
   private loader: Loader;
+  private ui: DomUI;
 
   mounted() {
-    // 가려고 하는 서버가 없을때.
-    if (!this.$store.getters.server) {
-      this.$router.replace("/");
-    } else {
-      this.start();
-    }
-
-    window.addEventListener('resize', this.resize);
+    this.checkVaildRoute();
+    this.initialize();
   }
 
   beforeDestroy() {
     window.removeEventListener('resize', this.resize)
+  }
+
+  private initialize(): void {
+    window.addEventListener('resize', this.resize);
+    this.ui = this.$refs.ui as DomUI;
+
+    this.ui.on('controller', (command: any): void => {
+      this.client.io.emit(command.script, command.data.keyCode);
+    });
   }
 
   private async start(): Promise<void> {
@@ -53,6 +57,14 @@ export default class Game extends Vue {
         this.client.gameRenderer.view
       );
     });
+  }
+
+  private checkVaildRoute(): void {
+    if (!this.$store.getters.server) {
+      this.$router.replace("/");
+    } else {
+      this.start();
+    }
   }
 
   private async $preload(): Promise<void> {

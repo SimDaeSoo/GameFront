@@ -4,11 +4,11 @@ export default class BaseUI extends Vue {
     @Prop()
     public ui: any;
 
-    public on(event, listener): any {
-        this.ui.on(event, listener);
+    public on(eventName: string, listener: any): any {
+        this.ui.on(eventName, listener);
     }
 
-    public emit(event, ...args): any {
-        this.ui.emit(event, ...args);
+    public emit(eventName: string, ...args): any {
+        this.ui.emit(eventName, ...args);
     }
 }
