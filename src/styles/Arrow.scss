@@ -21,19 +21,3 @@
     position: relative;
     font-style: normal;
 }
-
-.arrow-left i {
-    left: -1px;
-}
-
-.arrow-right i {
-    left: 1px;
-}
-
-.fi-arrow-right:before {
-    content: "▶";
-}
-
-.fi-arrow-left:before {
-    content: "◀";
-}
